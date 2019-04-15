@@ -24,3 +24,86 @@
 // Spinkit
 $spinkit-spinner-color: $body-color;
 @import '~spinkit/scss/spinkit.scss';
+
+//###########################################
+//TELA DE LOGIN 
+//CONFIGURAÇÕES PERSONALIZADAS 
+//ANDERSON HENRIQUE GONÇALVES 15/04/2019
+.botaoAzulBitflix {
+    background: #054785;
+    border: #366b9d solid 1px;
+}
+.espacoLogoCadastro{
+    padding-bottom: 35px;
+    padding-top: 30px;
+}
+.tituloLogin{
+    padding-bottom: 25px;
+    text-align: center;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #054785;
+    border-color: #366b9d;
+  }
+  
+  .btn-primary:hover {
+    color: #fff;
+    background-color: #366b9d;
+    border-color: #6990b5;
+  }
+  
+  .btn-primary:focus, .btn-primary.focus {
+    box-shadow: 0 0 0 0.2rem rgba(65, 181, 222, 0.5);
+  }
+  
+  .btn-primary.disabled, .btn-primary:disabled {
+    color: #fff;
+    background-color: #054785;
+    border-color: #366b9d;
+  }
+  
+  .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+  .show > .btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #054785;
+    border-color: #366b9d;
+  }
+  
+  .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
+  .show > .btn-primary.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(65, 181, 222, 0.5);
+  }
+  
+  .btn-outline-light {
+    color: #333;
+    border-color: #e4e7ea;
+  }
+  
+  .btn-outline-light:hover {
+    color: #054785;
+    background-color: #f0f3f5;
+    border-color: #e4e7ea;
+  }
+  
+  .btn-outline-light:focus, .btn-outline-light.focus {
+    box-shadow: 0 0 0 0.2rem rgba(240, 243, 245, 0.5);
+  }
+  
+  .btn-outline-light.disabled, .btn-outline-light:disabled {
+    color: #333;
+    background-color: transparent;
+  }
+  
+  .btn-outline-light:not(:disabled):not(.disabled):active, .btn-outline-light:not(:disabled):not(.disabled).active,
+  .show > .btn-outline-light.dropdown-toggle {
+    color: #333;
+    background-color: #f0f3f5;
+    border-color: #e4e7ea;
+  }
+  
+  .btn-outline-light:not(:disabled):not(.disabled):active:focus, .btn-outline-light:not(:disabled):not(.disabled).active:focus,
+  .show > .btn-outline-light.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(240, 243, 245, 0.5);
+  }
+

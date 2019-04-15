@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import logo from '../../assets/img/brand/MeuML-logo2.png'
+
+
 
 class Login extends Component {
   render() {
@@ -10,18 +13,28 @@ class Login extends Component {
           <Row className="justify-content-center">
             <Col md="8">
               <CardGroup>
-                <Card className="p-4">
+              <Card class="col-md-6 text-muted py-5 d-md-down-none" style={{ width: '50%' }}>
+                  <CardBody className="text-center">
+                    <div>
+                      <h2><img src={logo} width="90%" class="espacoLogoCadastro" alt="MeuML" /></h2>
+                      <p>Ainda não é cadastrado?</p>
+                      <Link to="/register">
+                        <Button color="primary" className="px-4" tabIndex={-1}>Cadastre-se!</Button>
+                      </Link>
+                    </div>
+                  </CardBody>
+                </Card>
+                <Card class="col-md-6" style={{ width: '50%' }}>
                   <CardBody>
                     <Form>
-                      <h1>Login</h1>
-                      <p className="text-muted">Sign In to your account</p>
+                      <h2 class="tituloLogin">Acesse sua conta</h2>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Username" autoComplete="username" />
+                        <Input type="text" placeholder="Usuário" autoComplete="username" />
                       </InputGroup>
                       <InputGroup className="mb-4">
                         <InputGroupAddon addonType="prepend">
@@ -29,31 +42,20 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="password" placeholder="Password" autoComplete="current-password" />
+                        <Input type="password" placeholder="Senha" autoComplete="current-password" />
                       </InputGroup>
                       <Row>
-                        <Col xs="6">
-                          <Button color="primary" className="px-4">Login</Button>
+                        <Col xs="8">
+                        <Button color="outline-light" className="px-4">Esqueci minha senha</Button>
                         </Col>
-                        <Col xs="6" className="text-right">
-                          <Button color="link" className="px-0">Forgot password?</Button>
+                        <Col xs="4" className="text-right">
+                          <Button color="primary" className="px-4">Entrar</Button>
                         </Col>
                       </Row>
                     </Form>
                   </CardBody>
                 </Card>
-                <Card className="text-white bg-primary py-5 d-md-down-none" style={{ width: '44%' }}>
-                  <CardBody className="text-center">
-                    <div>
-                      <h2>Sign up</h2>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua.</p>
-                      <Link to="/register">
-                        <Button color="primary" className="mt-3" active tabIndex={-1}>Register Now!</Button>
-                      </Link>
-                    </div>
-                  </CardBody>
-                </Card>
+                
               </CardGroup>
             </Col>
           </Row>
