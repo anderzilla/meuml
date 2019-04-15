@@ -45,11 +45,13 @@ class Login extends Component {
                         <Input type="password" placeholder="Senha" autoComplete="current-password" />
                       </InputGroup>
                       <Row>
-                        <Col xs="8">
-                        <Button color="outline-light" className="px-4">Esqueci minha senha</Button>
+                        <Col xs="7">
+                        <Button color="outline-light" className="px-4">Recuperar senha</Button>
                         </Col>
-                        <Col xs="4" className="text-right">
+                        <Col xs="5" className="text-right">
+                        <Link to="/dashboard">
                           <Button color="primary" className="px-4">Entrar</Button>
+                          </Link>
                         </Col>
                       </Row>
                     </Form>
