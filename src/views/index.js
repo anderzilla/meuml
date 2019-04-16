@@ -1,8 +1,19 @@
 import Dashboard from './Dashboard';
+//Autenticação
 import Login from './Login';
+import Cadastro from './Cadastro';
+//Sistema
 import Page404 from './Page404';
 import Page500 from './Page500';
-import Register from './Register';
 
-export { Dashboard, Login, Page404, Page500, Register };
+
+export { 
+    Dashboard, 
+    //Autenticação
+    Login, 
+    Cadastro, 
+    //Sistema
+    Page404, 
+    Page500 
+};
 
