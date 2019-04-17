@@ -23,15 +23,20 @@ const Cadastro = Loadable({
   loading
 });
 
+const RecuperarSenha = Loadable({
+  loader: () => import('./views/Autenticacao/RecuperarSenha'),
+  loading
+});
 
 
+//Sistema
 const Page404 = Loadable({
-  loader: () => import('./views/Page404'),
+  loader: () => import('./views/Sistema/Page404'),
   loading
 });
 
 const Page500 = Loadable({
-  loader: () => import('./views/Page500'),
+  loader: () => import('./views/Sistema/Page500'),
   loading
 });
 
@@ -43,6 +48,7 @@ class App extends Component {
         <Switch>
         <Route exact path="/login" name="Página de Login" component={Login} />
           <Route exact path="/cadastro" name="Página de Cadastro" component={Cadastro} />
+          <Route exact path="/recuperarsenha" name="Recuperar Senha" component={RecuperarSenha} />
           <Route exact path="/404" name="Page 404" component={Page404} />
           <Route exact path="/500" name="Page 500" component={Page500} />
           <Route path="/" name="Home" component={DefaultLayout} />
