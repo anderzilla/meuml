@@ -83,9 +83,14 @@ export default {
           icon: 'icon-user',
         },
         {
-          name: 'Register',
-          url: '/register',
+          name: 'Cadastro',
+          url: '/cadastro',
           icon: 'icon-user-follow',
+        },
+        {
+          name: 'Recuperar Senha',
+          url: '/recuperarsenha',
+          icon: 'icon-wrench',
         },
       ]
     },

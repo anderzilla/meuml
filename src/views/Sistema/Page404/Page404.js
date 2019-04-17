@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Col, Container, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Button, Col, Container, Row } from 'reactstrap';
 
 class Page404 extends Component {
   render() {
@@ -10,20 +11,12 @@ class Page404 extends Component {
             <Col md="6">
               <div className="clearfix">
                 <h1 className="float-left display-3 mr-4">404</h1>
-                <h4 className="pt-3">Oops! Cominho errado.</h4>
+                <h4 className="pt-3">Oops! Caminho errado.</h4>
                 <p className="text-muted float-left">A página que você está tentando acessar não foi encontrada.</p>
+                <Link to="/dashboard">
+                  <Button type="submit" color="primary">Voltar</Button>
+                </Link>
               </div>
-              <InputGroup className="input-prepend">
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>
-                    <i className="fa fa-search"></i>
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input size="16" type="text" placeholder="Oque você está prcurando?" />
-                <InputGroupAddon addonType="append">
-                  <Button color="info">Buscar</Button>
-                </InputGroupAddon>
-              </InputGroup>
             </Col>
           </Row>
         </Container>

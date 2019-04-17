@@ -79,7 +79,6 @@ class Cadastro extends Component {
       fadeIn: true,
       timeout: 300
     };
-
   }
 
   toggle() {
@@ -149,6 +148,7 @@ class Cadastro extends Component {
                   <Form>
                     <img src={logo} width="80%" class="logoFormCadastro" alt="MeuML" />
                     <h2 className="text-center">Cadastro</h2>
+                    <p class="alert alert-info text-center">Informe um e-mail válido e em uso, enviaremos um link de confirmação de cadastro para o e-mail informado abaixo.</p>
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
@@ -173,9 +173,9 @@ class Cadastro extends Component {
                         <InputGroupText>@</InputGroupText>
                       </InputGroupAddon>
                       <Input type="email"
-                                 name="email"
+                                name="email"
                                  id="email"
-                                 placeholder="Email"
+                                 placeholder="E-mail"
                                  autoComplete="email"
                                  valid={!errors.email}
                                  invalid={touched.email && !!errors.email}

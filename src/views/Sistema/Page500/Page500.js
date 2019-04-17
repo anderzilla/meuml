@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Col, Container, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Button, Col, Container, Row } from 'reactstrap';
 
 class Page500 extends Component {
   render() {
@@ -12,18 +13,10 @@ class Page500 extends Component {
                 <h1 className="float-left display-3 mr-4">500</h1>
                 <h4 className="pt-3">Houston, nós temos um problema!</h4>
                 <p className="text-muted float-left">A página requisitada está temporariamente indisponível.</p>
+                <Link to="/dashboard">
+                  <Button type="submit" color="primary">Voltar</Button>
+                </Link>
               </span>
-              <InputGroup className="input-prepend">
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>
-                    <i className="fa fa-search"></i>
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input size="16" type="text" placeholder="Oque vocẽ está procurando?" />
-                <InputGroupAddon addonType="append">
-                  <Button color="info">Buscar</Button>
-                </InputGroupAddon>
-              </InputGroup>
             </Col>
           </Row>
         </Container>
