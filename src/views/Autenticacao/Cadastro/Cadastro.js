@@ -251,7 +251,7 @@ class Cadastro extends Component {
                 </CardBody>
                 <CardFooter className="p-4">
                 <div className="card-footer-actions">
-                <b>Termos de Uso</b> <a className="card-footer-action badge badge-dark badge-pill float-right text-light" data-target="#collapseTermos" onClick={this.toggle}><i className="icon-arrow-down"></i></a>
+                <b>Termos de Uso</b> <buttom className="card-footer-action badge badge-dark badge-pill float-right text-light" data-target="#collapseTermos" onClick={this.toggle}><i className="icon-arrow-down"></i></buttom>
                 </div>
                 <Collapse isOpen={this.state.collapse} id="collapseTermos">
                   <Row>
