@@ -11,66 +11,45 @@ export default {
     },
     {
       name: 'Contas',
-      url: '/dashboard',
+      url: '/listacontas',
       icon: 'fa fa-address-book',
-      badge: {
-        variant: 'info',
-        text: '',
-      },
+      
     },
     {
-      name: 'Anuncios',
+      name: 'Anúncios',
       url: '/dashboard',
       icon: 'fa fa-bullhorn',
-      badge: {
-        variant: 'info',
-        text: '',
-      },
+      
     },
     {
       name: 'Vendas',
       url: '/dashboard',
       icon: 'fa fa-shopping-cart',
-      badge: {
-        variant: 'info',
-        text: '',
-      },
+      
     },
     {
-      name: 'Pesos e Dimenções',
+      name: 'Pesos e Dimensões',
       url: '/dashboard',
       icon: 'fa fa-balance-scale',
-      badge: {
-        variant: 'info',
-        text: '',
-      },
+      
     },
     {
       name: 'Bloqueios',
       url: '/dashboard',
       icon: 'fa fa-lock',
-      badge: {
-        variant: 'info',
-        text: '',
-      },
+      
     },
     {
       name: 'Processos',
       url: '/dashboard',
       icon: 'fa fa-file-powerpoint-o',
-      badge: {
-        variant: 'info',
-        text: '',
-      },
+      
     },
     {
       name: 'Perguntas',
       url: '/dashboard',
       icon: 'fa fa-question-circle',
-      badge: {
-        variant: 'info',
-        text: '',
-      },
+      
     },
     {
       name: 'Autenticação',
@@ -110,6 +89,12 @@ export default {
           icon: 'icon-ban',
         }
       ]
+    },
+    {
+      name: 'Sair',
+      url: '/sair',
+      icon: 'fa fa-sign-out',
+      variant: 'danger',
     },
   ]
 };

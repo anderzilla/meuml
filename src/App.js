@@ -28,6 +28,11 @@ const RecuperarSenha = Loadable({
   loading
 });
 
+const Sair = Loadable({
+  loader: () => import('./views/Autenticacao/Login'),
+  loading
+});
+
 
 //Sistema
 const Page404 = Loadable({
@@ -40,6 +45,7 @@ const Page500 = Loadable({
   loading
 });
 
+
 class App extends Component {
 
   render() {
@@ -47,11 +53,12 @@ class App extends Component {
       <HashRouter>
         <Switch>
         <Route exact path="/login" name="Página de Login" component={Login} />
-          <Route exact path="/cadastro" name="Página de Cadastro" component={Cadastro} />
-          <Route exact path="/recuperarsenha" name="Recuperar Senha" component={RecuperarSenha} />
-          <Route exact path="/404" name="Page 404" component={Page404} />
-          <Route exact path="/500" name="Page 500" component={Page500} />
-          <Route path="/" name="Home" component={DefaultLayout} />
+        <Route exact path="/cadastro" name="Página de Cadastro" component={Cadastro} />
+        <Route exact path="/recuperarsenha" name="Recuperar Senha" component={RecuperarSenha} />
+        <Route exact path="/sair" name="Página de Login" component={Sair} />
+        <Route exact path="/404" name="Page 404" component={Page404} />
+        <Route exact path="/500" name="Page 500" component={Page500} />          
+        <Route path="/" name="Home" component={DefaultLayout} />
         </Switch>
       </HashRouter>
     );

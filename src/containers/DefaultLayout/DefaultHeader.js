@@ -6,7 +6,7 @@ import { AppAsideToggler, AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler }
 
 import logo from '../../assets/img/brand/MeuML-logo2.png'
 import sygnet from '../../assets/img/brand/sygnet-logo.png'
-import avatar from '../../assets/img/avatars/6.jpg'
+import avatar from '../../assets/img/avatars/user.svg'
 
 const propTypes = {
   children: PropTypes.node,
@@ -24,7 +24,7 @@ class DefaultHeader extends Component {
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
         <AppNavbarBrand
-          full={{ src: logo, width: 89, height: 25, alt: 'MeuML' }}
+          full={{ src: logo, width:150, alt: 'MeuML' }}
           minimized={{ src: sygnet, width: 30, height: 30, alt: 'MeuML' }}
         />
         <AppSidebarToggler className="d-md-down-none" display="lg" />
