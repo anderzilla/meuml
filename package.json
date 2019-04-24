@@ -27,6 +27,7 @@
     "@coreui/coreui-pro": "^2.1.7",
     "@coreui/icons": "^0.3.0",
     "@coreui/react": "^2.1.5",
+    "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.7.3",
     "classnames": "^2.2.6",
@@ -61,6 +62,8 @@
     "reactstrap": "^7.1.0",
     "simple-line-icons": "^2.4.1",
     "spinkit": "1.2.5",
+    "styled-components": "^4.2.0",
+    "yarn": "^1.15.2",
     "yup": "^0.26.10"
   },
   "devDependencies": {

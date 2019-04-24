@@ -35,8 +35,25 @@ export default {
     },
     {
       name: 'Bloqueios',
-      url: '/dashboard',
+      url: '/bloqueios',
       icon: 'fa fa-lock',
+      children: [
+        {
+          name: 'Bloquear Comprador',
+          url: '/bloquearcomprador',
+          icon: 'fa fa-user-times',
+        },
+        {
+          name: 'Meus Bloqueios',
+          url: '/meusbloqueios',
+          icon: 'fa fa-lock',
+        },
+        {
+          name: 'Bloquear em massa',
+          url: '/bloquearemmassa',
+          icon: 'fa fa-users',
+        },
+      ]
       
     },
     {
