@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Card, CardBody, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, CardFooter, CardHeader, Col, Row } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import sygnet from '../../../assets/img/brand/sygnet-logo.png'
 
 
@@ -38,9 +39,9 @@ class ListaContas extends Component {
                     Opções
                   </DropdownToggle>
                   <DropdownMenu>
-                    <DropdownItem><i class="fa fa-edit"></i> Renomear</DropdownItem>
-                    <DropdownItem><i class="fa fa-refresh"></i> Sincronizar</DropdownItem>
-                    <DropdownItem><i class="fa fa-remove"></i> Excluir</DropdownItem>
+                    <DropdownItem><Link to="/renomearconta"><i class="fa fa-edit"></i> Renomear</Link></DropdownItem>
+                    <DropdownItem><Link to="/sincronizarConta"><i class="fa fa-refresh"></i> Sincronizar</Link></DropdownItem>
+                    <DropdownItem><Link to="/excluirconta"><i class="fa fa-remove"></i> Excluir</Link></DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
                 </div>
