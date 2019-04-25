@@ -111,7 +111,6 @@ export default {
       name: 'Sair',
       url: '/sair',
       icon: 'fa fa-sign-out',
-      variant: 'danger',
     },
   ]
 };
