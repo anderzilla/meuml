@@ -72,6 +72,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-homolog": "PORT=5000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:cov": "react-scripts test --coverage",
