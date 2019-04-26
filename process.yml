@@ -1,7 +1,7 @@
 apps:
-  - script: run start-homolog
+  - script: npm run start-homolog
     name: 'homologacao-react-panel'
     watch: true
-  - script   : run start
+  - script   : npm run start
     name     : 'producao-react-panel'
     watch: true
