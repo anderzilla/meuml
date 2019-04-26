@@ -14,7 +14,7 @@ homologacao:
     name: homologacao
   script:
     - cd /home/bitflix/front-end && git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end && git checkout homolog
-    - ./script/run-homolog.sh
+    - ./scripts/run-homolog.sh
   only:
     - homolog
     - merge-request
