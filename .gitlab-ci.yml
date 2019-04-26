@@ -16,6 +16,7 @@ homologacao:
     - cd /home/bitflix/homolog/front-end
     - git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end
     - git checkout homolog
+    - whoami
     - npm run build
     - pm2 restart homologacao-react-panel
   only:
