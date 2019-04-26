@@ -13,7 +13,9 @@ homologacao:
   environment:
     name: homologacao
   script:
-    - cd /home/bitflix/front-end && git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end && git checkout homolog
+    - cd /home/bitflix/homolog/front-end
+    - git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end
+    - git checkout homolog
     - ./scripts/run-homolog.sh
   only:
     - homolog
