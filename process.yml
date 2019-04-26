@@ -1,5 +1,5 @@
 apps:
-  - script: npm run start-homolog
+  - script: start-homolog
     name: 'homologacao-react-panel'
-  - script   : npm run start
+  - script   : start
     name     : 'producao-react-panel'
