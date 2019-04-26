@@ -18,7 +18,7 @@ homologacao:
     - git checkout homolog
     - whoami
     - npm i
-    - npm run build
+    - CI=false npm run build
     - pm2 restart homologacao-react-panel
   only:
     - homolog
