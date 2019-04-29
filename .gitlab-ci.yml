@@ -6,10 +6,6 @@ homologacao:
   stage: homologacao
   tags:
     - front-homologacao
-  before_script:
-    - mkdir -p ~/.ssh
-    - echo -e "$ALCATRA_PRIVATE_KEY" > ~/.ssh/id_rsa_bitflix_homologacao
-    - chmod 600 ~/.ssh/id_rsa
   environment:
     name: homologacao
   script:
