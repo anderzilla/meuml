@@ -1,5 +1,0 @@
-apps:
-  - script: start-homolog
-    name: 'homologacao-react-panel'
-  - script   : start
-    name     : 'producao-react-panel'
