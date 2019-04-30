@@ -5,13 +5,15 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 
-class RecuperarSenha extends Component {
+class AlterarSenha extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      token: '',
+      email: this.props.match.params.email ,
+      password: '',
+      password2: '',
+      hash: this.props.match.params.hash,
       message: '',
       status: '',
       show: false,
@@ -37,8 +39,11 @@ class RecuperarSenha extends Component {
     
     this.setState({auth: 'true'});
     
-    axios.post(`https://api.app2.meuml.com/auth/resetpassword`, {
-      "email":this.state.email
+    axios.put(`https://api.app2.meuml.com/user/updatepassword`, {
+      "hash":this.state.hash,
+      "email":this.state.email,
+      "password":this.state.password,
+      "password2":this.state.password2
     })
     .then(res => {
       const status = res.data.status;
@@ -56,10 +61,6 @@ class RecuperarSenha extends Component {
     })
   }
 
-  toggleShow = show => {
-    this.setState({show});
-  }
-
   render() {
     return (
       <div className="app flex-row align-items-center">
@@ -73,8 +74,7 @@ class RecuperarSenha extends Component {
                     <div>
                       <h2><img src={logo} width="60%" className="espacoLogoCadastro" alt="MeuML" /></h2>
                       <Form onSubmit={this.handleSubmit}>
-                      <h2 className="tituloLogin">Recuperar Senha</h2>
-                      <p className="alert alert-warning fade show">Será enviado para o <b>e-mail informado abaixo</b> as instruções e informações de recuperação de senha.</p>
+                      <h2 className="tituloLogin">Alterar Senha</h2>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
@@ -83,12 +83,25 @@ class RecuperarSenha extends Component {
                         </InputGroupAddon>
                         <Input type="email" name="email"  value={this.state.email} onChange={this.handleInputChange} id="email" placeholder="E-mail" autoComplete="email" required/>
                       </InputGroup>
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="fa fa-at"></i>
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="password" name="password"  value={this.state.password} onChange={this.handleInputChange} id="password" placeholder="Senha" autoComplete="password" required/>
+                      </InputGroup>
+                      <InputGroup className="mb-3">
+                        <InputGroupAddon addonType="prepend">
+                          <InputGroupText>
+                            <i className="fa fa-at"></i>
+                          </InputGroupText>
+                        </InputGroupAddon>
+                        <Input type="password" name="password2"  value={this.state.password2} onChange={this.handleInputChange} id="password2" placeholder="Repita a Senha" autoComplete="password2" required/>
+                      </InputGroup>
                       <Row>
                         <Col xs="12" className="text-center">
-                          <Button type="submit" color="primary"><i className="fa fa-check"></i> Enviar</Button>
-                          <Link to="./" >
-                            <Button className="btn btn-danger" title="Voltar" ><i className="fa fa-arrow-left"></i> Voltar</Button>
-                          </Link>
+                          <Button type="submit" color="primary"><i className="fa fa-check"></i> Confirmar</Button>
                         </Col>
                       </Row>
                     </Form>
@@ -103,4 +116,4 @@ class RecuperarSenha extends Component {
   }
 }
 
-export default RecuperarSenha;
+export default AlterarSenha;

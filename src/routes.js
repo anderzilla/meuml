@@ -2,6 +2,8 @@ import React from 'react';
 import DefaultLayout from './containers/DefaultLayout';
 
 const Dashboard = React.lazy(() => import('./views/Dashboard'));
+const AlterarSenha = React.lazy(() => import('./views/Autenticacao/AlterarSenha'));
+const ConfirmarCadastro = React.lazy(() => import('./views/Autenticacao/ConfirmarCadastro/ConfirmarCadastro'));
 //Contas
 const ListaContas = React.lazy(() => import('./views/Contas/ListaContas'));
 const RenomearConta = React.lazy(() => import('./views/Contas/RenomearConta'));
@@ -18,19 +20,23 @@ const MeusBloqueios = React.lazy(() => import('./views/Bloqueios/MeusBloqueios')
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', name: 'Home', component: DefaultLayout, exact: true },
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  //Contas
-  { path: '/listacontas', name: 'Contas', component: ListaContas },
-  { path: '/renomearconta', name: 'Renomear Conta', component: RenomearConta },
-  { path: '/excluirconta', name: 'Excluir Conta', component: ExcluirConta },
-  { path: '/sincronizarconta', name: 'SincronizarConta', component: SincronizarConta },
-  //Bloqueios
-  { path: '/bloqueios', name: 'Bloqueios', component: Bloqueios },
-  { path: '/bloquearcomprador', name: 'Bloquear Comprador', component: BloquearComprador },
-  { path: '/bloquearemmassa', name: 'Bloquear em Massa', component: BloquearEmMassa },
-  { path: '/meusbloqueios', name: 'Meus Bloqueios', component: MeusBloqueios },
-  { path: '/adicionaritemlista', name: 'Adicionar a Lista', component: AdicionarItemLista },
-  
+  { path: '/alterarsenha', name: 'Alterar Senha', component: AlterarSenha, exact: true}, 
+  { path: '/confirmarcadastro', name: 'Confirmar Cadastro', component: ConfirmarCadastro, exact: true}, 
+  { path: '/dashboard', name: 'Dashboard', component: Dashboard, 
+      routes: [
+      //Contas
+        { path: '/dashboard/listacontas', name: 'Contas', component: ListaContas },
+        { path: '/dashboard/renomearconta', name: 'Renomear Conta', component: RenomearConta },
+        { path: '/dashboard/excluirconta', name: 'Excluir Conta', component: ExcluirConta },
+        { path: '/dashboard/sincronizarconta', name: 'SincronizarConta', component: SincronizarConta },
+      //Bloqueios
+        { path: '/dashboard/bloqueios', name: 'Bloqueios', component: Bloqueios },
+        { path: '/dashboard/bloquearcomprador', name: 'Bloquear Comprador', component: BloquearComprador },
+        { path: '/dashboard/bloquearemmassa', name: 'Bloquear em Massa', component: BloquearEmMassa },
+        { path: '/dashboard/meusbloqueios', name: 'Meus Bloqueios', component: MeusBloqueios },
+        { path: '/dashboard/adicionaritemlista', name: 'Adicionar a Lista', component: AdicionarItemLista },
+      ]
+  },
 ];
 
 export default routes;

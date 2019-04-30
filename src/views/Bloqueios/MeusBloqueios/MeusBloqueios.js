@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Table, Badge, Button} from 'reactstrap';
+import { Card, CardHeader, CardBody, CardFooter, Table, Button} from 'reactstrap';
 
 
 
@@ -43,7 +43,7 @@ class MeusBloqueios extends Component {
                     <td class="text-center"><i class="fa fa-ban text-danger"></i></td>
                     <td>qwerty qwerty qwerty</td>
                     <td>
-                    <a href="" class="btn btn-danger btn-small"><i class="fa fa-unlock"></i> Desbloquear</a>
+                    <Button class="btn btn-danger btn-small"><i class="fa fa-unlock"></i> Desbloquear</Button>
                     </td>
                   </tr>
                   <tr>
@@ -52,7 +52,7 @@ class MeusBloqueios extends Component {
                     <td class="text-center"><i class="fa fa-check text-success"></i></td>
                     <td>qwerty qwerty qwerty</td>
                     <td>
-                    <a href="" class="btn btn-danger btn-small"><i class="fa fa-unlock"></i> Desbloquear</a>
+                    <Button class="btn btn-danger btn-small"><i class="fa fa-unlock"></i> Desbloquear</Button>
                     </td>
                   </tr>
                   <tr>
@@ -61,7 +61,7 @@ class MeusBloqueios extends Component {
                     <td class="text-center"><i class="fa fa-ban text-danger"></i></td>
                     <td>qwerty qwerty qwerty</td>
                     <td>
-                    <a href="" class="btn btn-danger btn-small"><i class="fa fa-unlock"></i> Desbloquear</a>
+                    <Button class="btn btn-danger btn-small"><i class="fa fa-unlock"></i> Desbloquear</Button>
                     </td>
                   </tr>
                   <tr>
@@ -70,7 +70,7 @@ class MeusBloqueios extends Component {
                     <td class="text-center"><i class="fa fa-ban text-danger"></i></td>
                     <td>qwerty qwerty qwerty</td>
                     <td>
-                    <a href="" class="btn btn-danger btn-small"><i class="fa fa-unlock"></i> Desbloquear</a>
+                    <Button class="btn btn-danger btn-small"><i class="fa fa-unlock"></i> Desbloquear</Button>
                     </td>
                   </tr>
                   <tr>
@@ -79,7 +79,7 @@ class MeusBloqueios extends Component {
                     <td class="text-center"><i class="fa fa-ban text-danger"></i></td>
                     <td>qwerty qwerty qwerty</td>
                     <td>
-                    <a href="" class="btn btn-danger btn-small"><i class="fa fa-unlock"></i> Desbloquear</a>
+                    <Button class="btn btn-danger btn-small"><i class="fa fa-unlock"></i> Desbloquear</Button>
                     </td>
                   </tr>
                   </tbody>

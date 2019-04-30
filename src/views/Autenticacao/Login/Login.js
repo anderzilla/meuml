@@ -1,11 +1,83 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 
-
-
 class Login extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+      auth: 'false',
+      token: '',
+      message: '',
+      status: '',
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+  handleSubmit(event) {
+
+    event.preventDefault();
+    
+    //alert('Email: ' + this.state.email);
+    //alert('Senha: ' + this.state.password);
+    this.setState({auth: 'true'});
+    
+    axios.post(`https://api.app2.meuml.com/auth/login`, {
+      "email":this.state.email,
+      "password":this.state.password
+    })
+    .then(res => {
+      const status = res.data.status;
+      this.setState({status});
+      if (this.state.status === 'success'){
+        const message = res.data.message;
+        this.setState({message});
+        Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: true, showConfirmButton: false,});
+        //TO DO: Inserir redirect
+      }else{
+        const message = res.data.message;
+        this.setState({message});
+        alert(this.state.message);
+      }
+    })
+       
+    if (this.state.status === 'success'){
+      this.setState({auth: 'true'});
+      alert (this.state.message);
+      Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+      //TO DO: Inserir redirect
+    }else{
+      this.setState({auth: 'false'});
+      Swal.fire({title:this.state.message, type: 'error', confirmButtonText:'<i class="fa fa-close"></i> Great!',});
+      //alert(this.state.message + ' : ' + this.state.erroEmail);
+    }
+    
+    
+    //realizar os testes da API aqui (login)
+  }
+
   render() {
     return (
       <div className="app flex-row align-items-center">
@@ -13,28 +85,28 @@ class Login extends Component {
           <Row className="justify-content-center">
             <Col md="8">
               <CardGroup>
-              <Card class="col-md-6 text-muted py-5 d-md-down-none" style={{ width: '50%' }}>
+              <Card className="col-md-6 col-xm-12">
                   <CardBody className="text-center">
                     <div>
-                      <h2><img src={logo} width="90%" class="espacoLogoCadastro" alt="MeuML" /></h2>
+                      <h2><img src={logo} width="90%" className="espacoLogoCadastro" alt="MeuML" /></h2>
                       <p>Ainda não é cadastrado?</p>
-                      <Link to="/register">
+                      <Link to="/cadastro">
                         <Button color="primary" className="px-4" tabIndex={-1}>Cadastre-se!</Button>
                       </Link>
                     </div>
                   </CardBody>
                 </Card>
-                <Card class="col-md-6" style={{ width: '50%' }}>
+                <Card className="col-md-6 col-xm-12">
                   <CardBody>
-                    <Form>
-                      <h2 class="tituloLogin">Acesse sua conta</h2>
+                    <Form onSubmit={this.handleSubmit}>
+                      <h2 className="tituloLogin">Acesse sua conta</h2>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="icon-user"></i>
+                            <i className="icon-envelope"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Usuário" autoComplete="username" />
+                        <Input type="text" name="email" value={this.state.email} placeholder="E-mail" onChange={this.handleInputChange} />
                       </InputGroup>
                       <InputGroup className="mb-4">
                         <InputGroupAddon addonType="prepend">
@@ -42,16 +114,16 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="password" placeholder="Senha" autoComplete="current-password" />
+                        <Input type="password" name="password" value={this.state.password} placeholder="Senha" onChange={this.handleInputChange} />
                       </InputGroup>
                       <Row>
                         <Col xs="7">
+                        <Link to="/recuperarsenha">
                         <Button color="outline-light" className="px-4">Recuperar senha</Button>
+                        </Link>
                         </Col>
                         <Col xs="5" className="text-right">
-                        <Link to="/dashboard">
-                          <Button color="primary" className="px-4">Entrar</Button>
-                          </Link>
+                          <Input type="submit" value="Entrar" className="px-4 btn btn-primary" />
                         </Col>
                       </Row>
                     </Form>
