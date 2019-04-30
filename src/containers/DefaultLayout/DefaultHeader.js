@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { DropdownMenu, DropdownToggle, Nav } from 'reactstrap';
 import PropTypes from 'prop-types';
 
-import { AppAsideToggler, AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
+import { AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 
 import logo from '../../assets/img/brand/MeuML-logo2.png'
 import sygnet from '../../assets/img/brand/sygnet-logo.png'
