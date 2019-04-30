@@ -11,7 +11,7 @@ export default {
     },
     {
       name: 'Contas',
-      url: '/listacontas',
+      url: '/dashboard/listacontas',
       icon: 'fa fa-address-book',
       
     },
@@ -40,17 +40,17 @@ export default {
       children: [
         {
           name: 'Bloquear Comprador',
-          url: '/bloquearcomprador',
+          url: '/dashboard/bloquearcomprador',
           icon: 'fa fa-user-times',
         },
         {
           name: 'Meus Bloqueios',
-          url: '/meusbloqueios',
+          url: '/dashboard/meusbloqueios',
           icon: 'fa fa-lock',
         },
         {
           name: 'Bloquear em massa',
-          url: '/bloquearemmassa',
+          url: '/dashboard/bloquearemmassa',
           icon: 'fa fa-users',
         },
       ]
@@ -67,45 +67,6 @@ export default {
       url: '/dashboard',
       icon: 'fa fa-question-circle',
       
-    },
-    {
-      name: 'Autenticação',
-      url: '/dashboard',
-      icon: 'fa fa-cog',
-      children: [
-        {
-          name: 'Login',
-          url: '/login',
-          icon: 'icon-user',
-        },
-        {
-          name: 'Cadastro',
-          url: '/cadastro',
-          icon: 'icon-user-follow',
-        },
-        {
-          name: 'Recuperar Senha',
-          url: '/recuperarsenha',
-          icon: 'icon-wrench',
-        },
-      ]
-    },
-    {
-      name: 'Sistema',
-      url: '',
-      icon: 'fa fa-cog',
-      children: [
-        {
-          name: 'Error 404',
-          url: '/404',
-          icon: 'icon-ban',
-        },
-        {
-          name: 'Error 500',
-          url: '/500',
-          icon: 'icon-ban',
-        }
-      ]
     },
     {
       name: 'Sair',

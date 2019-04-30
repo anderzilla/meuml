@@ -1,84 +1,53 @@
 import React, { Component } from 'react';
+import { Button, Card, CardBody, CardFooter, Col, Container, Form, Collapse, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { Button, Card, CardBody, CardFooter, Col, Container, CustomInput, Form, Collapse, FormFeedback, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
-import logo from '../../../assets/img/brand/MeuML-logo2.png'
-import { Formik } from 'formik';
-import * as Yup from 'yup'
-import './ValidationForms.css'
-
-const validationSchema = function (values) {
-  return Yup.object().shape({
-    userName: Yup.string()
-    .min(5, `O Usuário deve ter no mínimo de 5 caracteres`)
-    .required('Usuário é Obrigatório!'),
-    email: Yup.string()
-    .email('Email informado é inválido')
-    .required('Email é Obrigatório!'),
-    password: Yup.string()
-    .min(6, `A Seha não pode ser menor que ${6} caracteres!`)
-    .matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/, 'A Senha deve conter: números, letras maiúscuas e minusculas\n')
-    .required('Senha é Obrigatória!'),
-    confirmPassword: Yup.string()
-    .oneOf([values.password], 'A confirmação da Senha precisa conferir com a Senha')
-    .required('Confirmação da senha é obrigatória!'),
-    accept: Yup.bool()
-    .required('* Obrigatório')
-    .test('accept', 'Você precisa aceitar os Termos e Condições de Uso!', value => value === true),
-  })
-}
-
-const validate = (getValidationSchema) => {
-  return (values) => {
-    const validationSchema = getValidationSchema(values)
-    try {
-      validationSchema.validateSync(values, { abortEarly: false })
-      return {}
-    } catch (error) {
-      return getErrorsFromValidationError(error)
-    }
-  }
-}
-
-const getErrorsFromValidationError = (validationError) => {
-  const FIRST_ERROR = 0
-  return validationError.inner.reduce((errors, error) => {
-    return {
-      ...errors,
-      [error.path]: error.errors[FIRST_ERROR],
-    }
-  }, {})
-}
-
-const initialValues = {
-  userName: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-  accept: false
-}
-
-const onSubmit = (values, { setSubmitting, setErrors }) => {
-  setTimeout(() => {
-    alert(JSON.stringify(values, null, 2))
-    // console.log('O Cadastro foi concluído com Sucesso!', values)
-    setSubmitting(false)
-  }, 2000)
-}
+import logo from '../../../assets/img/brand/MeuML-logo2.png';
+import { AppSwitch } from '@coreui/react';
+import axios from 'axios';
 
 
 class Cadastro extends Component {
 
   constructor(props){
     super(props);
-    this.touchAll = this.touchAll.bind(this);
-
+    
     this.toggle = this.toggle.bind(this);
     this.toggleFade = this.toggleFade.bind(this);
     this.state = {
       collapse: false,
       fadeIn: true,
-      timeout: 300
+      timeout: 300,
+      userName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      termos: false,
+      token: '',
+      message: '',
+      status: '',
     };
+
+    this.mudaTermos = this.mudaTermos.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  mudaTermos(){
+    if (this.state.termos === false){
+      this.setState({ termos: true });  
+    }else{
+      this.setState({ termos: false });
+    }
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
   }
 
   toggle() {
@@ -88,33 +57,49 @@ class Cadastro extends Component {
   toggleFade() {
     this.setState((prevState) => { return { fadeIn: !prevState }});
   }
+  
+  handleSubmit(event) {
 
-  findFirstError (formName, hasError) {
-    const form = document.forms[formName]
-    for (let i = 0; i < form.length; i++) {
-      if (hasError(form[i].name)) {
-        form[i].focus()
-        break
+    event.preventDefault();
+    
+    if (this.state.userName === ''){
+      alert('Preencha  o seu Usuário! Nã deixe campos em branco');
+    }else if(this.state.email === ''){
+      alert('Preencha  o seu E-mail! Nã deixe campos em branco');
+    }else if(this.state.password === '' || this.state.confirmPassword === ''){
+      alert('Preencha  o sua Senha! Não deixe campos em branco');
+    }else if(this.state.password.length < 6 || this.state.confirmPassword < 6){
+      alert('A senha deve ter um mínimo de 6 caracteres!');
+    }else if(this.state.password !== this.state.confirmPassword ){
+      alert('As senhas não conferem!');
+    }else if (this.state.termos === '' ){
+      alert('Aceite os termos de uso!' + this.state.termos);
+    }else{
+      axios.post(`https://api.app2.meuml.com/user`, {
+        "email":this.state.email,
+        "name":this.state.userName,
+        "password":this.state.password
+      })
+      .then(res => {
+        //console.log(res.data);
+        const status = res.data.status;
+        this.setState({status});
+        const message = res.data.message;
+        this.setState({message});
+        const token = res.data.data.jwt;
+        this.setState({token});
+        const erroEmail = res.errors.email;
+        this.setState({erroEmail});
+      })
+        
+      if (this.state.status === 'success'){
+        this.setState({auth: 'true'});
+        alert (this.state.message);
+      }else{
+        this.setState({auth: 'false'});
+        alert(this.state.message + ' : ' + this.state.erroEmail);
       }
-    }
   }
-
-  validateForm (errors) {
-    this.findFirstError('simpleForm', (fieldName) => {
-      return Boolean(errors[fieldName])
-    })
-  }
-
-  touchAll(setTouched, errors) {
-    setTouched({
-        userName: true,
-        email: true,
-        password: true,
-        confirmPassword: true,
-        accept: true
-      }
-    )
-    this.validateForm(errors)
   }
 
 
@@ -126,29 +111,10 @@ class Cadastro extends Component {
             <Col md="9" lg="7" xl="6">
               <Card className="mx-4">
                 <CardBody className="p-4">
-                <Formik
-              initialValues={initialValues}
-              validate={validate(validationSchema)}
-              onSubmit={onSubmit}
-              render={
-                ({
-                  values,
-                  errors,
-                  touched,
-                  status,
-                  dirty,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  isSubmitting,
-                  isValid,
-                  handleReset,
-                  setTouched
-                }) => (
-                  <Form>
-                    <img src={logo} width="80%" class="logoFormCadastro" alt="MeuML" />
+                  <Form  onSubmit={this.handleSubmit}>
+                    <img src={logo} width="80%" className="logoFormCadastro" alt="MeuML" />
                     <h2 className="text-center">Cadastro</h2>
-                    <p class="alert alert-info text-center">Informe um e-mail válido e em uso, enviaremos um link de confirmação de cadastro para o e-mail informado abaixo.</p>
+                    <p className="alert alert-info text-center">Informe um e-mail válido e em uso, enviaremos um link de confirmação de cadastro para o e-mail informado abaixo.</p>
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
@@ -160,13 +126,9 @@ class Cadastro extends Component {
                                  id="userName"
                                  placeholder="Usuário"
                                  autoComplete="username"
-                                 valid={!errors.userName}
-                                 invalid={touched.userName && !!errors.userName}
                                  required
-                                 onChange={handleChange}
-                                 onBlur={handleBlur}
-                                 value={values.userName} />
-                                 <FormFeedback>{errors.userName}</FormFeedback>
+                                 onChange={this.handleInputChange}
+                                 value={this.state.userName} />
                     </InputGroup>
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -177,13 +139,9 @@ class Cadastro extends Component {
                                  id="email"
                                  placeholder="E-mail"
                                  autoComplete="email"
-                                 valid={!errors.email}
-                                 invalid={touched.email && !!errors.email}
                                  required
-                                 onChange={handleChange}
-                                 onBlur={handleBlur}
-                                 value={values.email} />
-                                 <FormFeedback>{errors.email}</FormFeedback>           
+                                 onChange={this.handleInputChange}
+                                 value={this.state.email} />
                     </InputGroup>
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -194,16 +152,11 @@ class Cadastro extends Component {
                       <Input type="password"
                                      name="password"
                                      id="password"
-                                     placeholder="Senha"
+                                     placeholder="Senha (min. 6 caracteres)"
                                      autoComplete="new-password"
-                                     valid={!errors.password}
-                                     invalid={touched.password && !!errors.password}
                                      required
-                                     onChange={handleChange}
-                                     onBlur={handleBlur}
-                                     value={values.password} />
-                              {/*<FormFeedback>Required password containing at least: number, uppercase and lowercase letter, 8 characters</FormFeedback>*/}
-                              <FormFeedback>{errors.password}</FormFeedback>
+                                     onChange={this.handleInputChange}
+                                     value={this.state.password} />
                     </InputGroup>
                     <InputGroup className="mb-4">
                       <InputGroupAddon addonType="prepend">
@@ -216,42 +169,29 @@ class Cadastro extends Component {
                                      id="confirmPassword"
                                      placeholder="Confirmar Senha"
                                      autoComplete="new-password"
-                                     valid={!errors.confirmPassword}
-                                     invalid={touched.confirmPassword && !!errors.confirmPassword}
                                      required
-                                     onChange={handleChange}
-                                     onBlur={handleBlur}
-                                     value={values.confirmPassword} />
-                              <FormFeedback>{errors.confirmPassword}</FormFeedback>
+                                     onChange={this.handleInputChange}
+                                     value={this.state.confirmPassword} />
                     </InputGroup>
                     <Row>
-                      <Col xs="12" sm="6">
+                      <Col xs="12" sm="4">
                       <InputGroup>
-                          <CustomInput
-                            type="checkbox"
-                            id="accept"
-                            label="Eu aceito os Termos de Uso"
-                            required
-                            valid={!errors.accept}
-                            invalid={touched.accept && !!errors.accept}
-                            onChange={handleChange}
-                            onBlur={handleBlur} >
-                            <FormFeedback>{errors.accept}</FormFeedback>
-                          </CustomInput>
+                      
+                      <AppSwitch className={'mx-1'} variant={'3d'} color={'success'} name="termos" onChange={this.mudaTermos} defaultChecked={this.state.termos} label dataOn={'\u2713'} dataOff={'\u2715'}/> Aceito os termos de uso.
                         </InputGroup>
                       </Col>
-                      <Col xs="12" sm="6" className="text-right">
-                      <Link to="/dashboard">
-                      <Button type="submit" color="primary" disabled={isSubmitting || !isValid}>{isSubmitting ? 'Aguarde...' : 'Concluir Cadastro'}</Button>
+                      <Col xs="12" sm="8" className="text-right">
+                      <Button type="submit" color="primary" disabled={this.state.submitButton}><i className="fa fa-check"></i> Concluir Cadastro</Button>
+                      <Link to="./" >
+                        <Button className="btn btn-danger" title="Voltar" ><i className="fa fa-arrow-left"></i> Voltar</Button>
                       </Link>
                       </Col>
                     </Row>
                   </Form>
-                  )} />
                 </CardBody>
                 <CardFooter className="p-4">
                 <div className="card-footer-actions">
-                <b>Termos de Uso</b> <buttom className="card-footer-action badge badge-dark badge-pill float-right text-light" data-target="#collapseTermos" onClick={this.toggle}><i className="icon-arrow-down"></i></buttom>
+                <b>Termos de Uso</b> <Button className="card-footer-action badge badge-dark badge-pill float-right text-light" data-target="#collapseTermos" onClick={this.toggle}><i className="icon-arrow-down"></i></Button>
                 </div>
                 <Collapse isOpen={this.state.collapse} id="collapseTermos">
                   <Row>

@@ -5,13 +5,13 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 
-class RecuperarSenha extends Component {
+class ConfirmarCadastro extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      token: '',
+      email: this.props.match.params.email ,
+      hash: this.props.match.params.hash,
       message: '',
       status: '',
       show: false,
@@ -37,8 +37,9 @@ class RecuperarSenha extends Component {
     
     this.setState({auth: 'true'});
     
-    axios.post(`https://api.app2.meuml.com/auth/resetpassword`, {
-      "email":this.state.email
+    axios.post(`https://api.app2.meuml.com//auth/confirm`, {
+      "hash":this.state.hash,
+      "email":this.state.email,
     })
     .then(res => {
       const status = res.data.status;
@@ -56,10 +57,6 @@ class RecuperarSenha extends Component {
     })
   }
 
-  toggleShow = show => {
-    this.setState({show});
-  }
-
   render() {
     return (
       <div className="app flex-row align-items-center">
@@ -73,25 +70,10 @@ class RecuperarSenha extends Component {
                     <div>
                       <h2><img src={logo} width="60%" className="espacoLogoCadastro" alt="MeuML" /></h2>
                       <Form onSubmit={this.handleSubmit}>
-                      <h2 className="tituloLogin">Recuperar Senha</h2>
-                      <p className="alert alert-warning fade show">Será enviado para o <b>e-mail informado abaixo</b> as instruções e informações de recuperação de senha.</p>
-                      <InputGroup className="mb-3">
-                        <InputGroupAddon addonType="prepend">
-                          <InputGroupText>
-                            <i className="fa fa-at"></i>
-                          </InputGroupText>
-                        </InputGroupAddon>
-                        <Input type="email" name="email"  value={this.state.email} onChange={this.handleInputChange} id="email" placeholder="E-mail" autoComplete="email" required/>
-                      </InputGroup>
-                      <Row>
-                        <Col xs="12" className="text-center">
-                          <Button type="submit" color="primary"><i className="fa fa-check"></i> Enviar</Button>
-                          <Link to="./" >
-                            <Button className="btn btn-danger" title="Voltar" ><i className="fa fa-arrow-left"></i> Voltar</Button>
-                          </Link>
-                        </Col>
-                      </Row>
-                    </Form>
+                        <h2 className="tituloLogin">Confrmar Cadastro</h2>
+                        <p className="alert alert-primary fadeIn show">Se este é o seu email: <b>{this.state.email}</b> Confirme no botão abaixo!</p>
+                        <Button type="submit" color="primary"><i className="fa fa-check"></i> Confirmar</Button>
+                      </Form>
                     </div>
                   </CardBody>
                 </Card>
@@ -103,4 +85,4 @@ class RecuperarSenha extends Component {
   }
 }
 
-export default RecuperarSenha;
+export default ConfirmarCadastro;
