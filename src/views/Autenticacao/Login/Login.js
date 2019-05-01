@@ -54,25 +54,11 @@ class Login extends Component {
       }else{
         const message = res.data.message;
         this.setState({message});
-        alert(this.state.message);
+        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showCloseButton: true, showConfirmButton: false,});
       }
-    })
-       
-    if (this.state.status === 'success'){
-      this.setState({auth: 'true'});
-      alert (this.state.message);
-      Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000
-      });
-      //TO DO: Inserir redirect
-    }else{
-      this.setState({auth: 'false'});
-      Swal.fire({title:this.state.message, type: 'error', confirmButtonText:'<i class="fa fa-close"></i> Great!',});
-      //alert(this.state.message + ' : ' + this.state.erroEmail);
-    }
+    }).catch(error => {
+      Swal.fire({html:'<p>Indisponibilidade Temporária</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+  });
     
     
     //realizar os testes da API aqui (login)
@@ -83,7 +69,7 @@ class Login extends Component {
       <div className="app flex-row align-items-center">
         <Container>
           <Row className="justify-content-center">
-            <Col md="8">
+            <Col md="10">
               <CardGroup>
               <Card className="col-md-6 col-xm-12">
                   <CardBody className="text-center">

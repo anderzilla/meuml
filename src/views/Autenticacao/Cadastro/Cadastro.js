@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Card, CardBody, CardFooter, Col, Container, Form, Collapse, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import logo from '../../../assets/img/brand/MeuML-logo2.png';
 import { AppSwitch } from '@coreui/react';
 import axios from 'axios';
@@ -84,21 +85,19 @@ class Cadastro extends Component {
         //console.log(res.data);
         const status = res.data.status;
         this.setState({status});
-        const message = res.data.message;
-        this.setState({message});
-        const token = res.data.data.jwt;
-        this.setState({token});
-        const erroEmail = res.errors.email;
-        this.setState({erroEmail});
-      })
-        
-      if (this.state.status === 'success'){
-        this.setState({auth: 'true'});
-        alert (this.state.message);
-      }else{
-        this.setState({auth: 'false'});
-        alert(this.state.message + ' : ' + this.state.erroEmail);
-      }
+        if (this.state.status === 'success'){
+          const message = res.data.message;
+          this.setState({message});
+          Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: true, showConfirmButton: false,});
+          //TO DO: Inserir redirect
+        }else{
+          const message = res.data.message;
+          this.setState({message});
+          Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showCloseButton: true, showConfirmButton: false,});
+        }
+      }).catch(error => {
+        Swal.fire({html:'<p>Indisponibilidade Temporária</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    });
   }
   }
 

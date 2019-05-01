@@ -51,9 +51,11 @@ class RecuperarSenha extends Component {
       }else{
         const message = res.data.message;
         this.setState({message});
-        alert(this.state.message);
+        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showCloseButton: true, showConfirmButton: false,});
       }
-    })
+    }).catch(error => {
+      Swal.fire({html:'<p>Indisponibilidade Temporária</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+  });
   }
 
   toggleShow = show => {
