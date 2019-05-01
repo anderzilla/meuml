@@ -35,7 +35,7 @@ export default {
     },
     {
       name: 'Bloqueios',
-      url: '/bloqueios',
+      url: '/dashboard/bloqueios',
       icon: 'fa fa-lock',
       children: [
         {

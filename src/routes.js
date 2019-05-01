@@ -25,16 +25,16 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, 
       routes: [
       //Contas
-        { path: '/dashboard/listacontas', name: 'Contas', component: ListaContas },
-        { path: '/dashboard/renomearconta', name: 'Renomear Conta', component: RenomearConta },
-        { path: '/dashboard/excluirconta', name: 'Excluir Conta', component: ExcluirConta },
-        { path: '/dashboard/sincronizarconta', name: 'SincronizarConta', component: SincronizarConta },
+        { path: '/dashboard/listacontas', name: 'Contas', component: ListaContas, exact: true },
+        { path: '/dashboard/renomearconta', name: 'Renomear Conta', component: RenomearConta , exact: true},
+        { path: '/dashboard/excluirconta', name: 'Excluir Conta', component: ExcluirConta, exact: true },
+        { path: '/dashboard/sincronizarconta', name: 'SincronizarConta', component: SincronizarConta, exact: true },
       //Bloqueios
-        { path: '/dashboard/bloqueios', name: 'Bloqueios', component: Bloqueios },
-        { path: '/dashboard/bloquearcomprador', name: 'Bloquear Comprador', component: BloquearComprador },
-        { path: '/dashboard/bloquearemmassa', name: 'Bloquear em Massa', component: BloquearEmMassa },
-        { path: '/dashboard/meusbloqueios', name: 'Meus Bloqueios', component: MeusBloqueios },
-        { path: '/dashboard/adicionaritemlista', name: 'Adicionar a Lista', component: AdicionarItemLista },
+        { path: '/dashboard/bloqueios', name: 'Bloqueios', component: Bloqueios, exact: true },
+        { path: '/dashboard/bloquearcomprador', name: 'Bloquear Comprador', component: BloquearComprador, exact: true },
+        { path: '/dashboard/bloquearemmassa', name: 'Bloquear em Massa', component: BloquearEmMassa, exact: true },
+        { path: '/dashboard/meusbloqueios', name: 'Meus Bloqueios', component: MeusBloqueios, exact: true },
+        { path: '/dashboard/adicionaritemlista', name: 'Adicionar a Lista', component: AdicionarItemLista, exact: true },
       ]
   },
 ];
