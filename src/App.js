@@ -24,7 +24,7 @@ const Cadastro = Loadable({
 });
 
 const RecuperarSenha = Loadable({
-  loader: () => import('./views/Autenticacao/ConfirmarCadastro/ConfirmarCadastro'),
+  loader: () => import('./views/Autenticacao/RecuperarSenha'),
   loading
 });
 

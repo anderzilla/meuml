@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Card, CardBody, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Button, Card, CardBody, Col, Container, Form, Row } from 'reactstrap';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
@@ -52,9 +51,11 @@ class ConfirmarCadastro extends Component {
       }else{
         const message = res.data.message;
         this.setState({message});
-        alert(this.state.message);
+        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showCloseButton: true, showConfirmButton: false,});
       }
-    })
+    }).catch(error => {
+      Swal.fire({html:'<p>Indisponibilidade Temporária</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+  });
   }
 
   render() {
@@ -70,7 +71,7 @@ class ConfirmarCadastro extends Component {
                     <div>
                       <h2><img src={logo} width="60%" className="espacoLogoCadastro" alt="MeuML" /></h2>
                       <Form onSubmit={this.handleSubmit}>
-                        <h2 className="tituloLogin">Confrmar Cadastro</h2>
+                        <h2 className="tituloLogin">Confirmar Cadastro</h2>
                         <p className="alert alert-primary fadeIn show">Se este é o seu email: <b>{this.state.email}</b> Confirme no botão abaixo!</p>
                         <Button type="submit" color="primary"><i className="fa fa-check"></i> Confirmar</Button>
                       </Form>

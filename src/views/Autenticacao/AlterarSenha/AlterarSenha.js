@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Card, CardBody, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
@@ -56,19 +55,21 @@ class AlterarSenha extends Component {
       }else{
         const message = res.data.message;
         this.setState({message});
-        alert(this.state.message);
+        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showCloseButton: true, showConfirmButton: false,});
       }
-    })
+    }).catch(error => {
+      Swal.fire({html:'<p>Indisponibilidade Temporária</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+  });
   }
 
   render() {
     return (
-      <div className="app flex-row align-items-center">
+      <div className=" align-items-center">
         <Container>
           <Row className="justify-content-center">
-            <Col md="6">
+            <Col md="6" sm="12" xs="12">
             
-              <Card className="col-md-12 text-muted py-5 d-md-down-none">
+              <Card className="col-md-12">
                 
                   <CardBody className="text-center">
                     <div>
