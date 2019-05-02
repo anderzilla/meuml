@@ -10,7 +10,7 @@ homologacao:
     name: homologacao
   script:
     - cd /home/bitflix/homolog/front-end
-    - git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end
+    - git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end homolog
     - git checkout homolog
     - whoami
     - npm i
