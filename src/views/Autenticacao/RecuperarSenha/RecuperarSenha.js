@@ -46,15 +46,30 @@ class RecuperarSenha extends Component {
       if (this.state.status === 'success'){
         const message = res.data.message;
         this.setState({message});
-        Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: true, showConfirmButton: false,});
+        Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showConfirmButton: true,
+        onClose: () => {
+          this.props.history.push('/login');
+          window.location.reload();
+        }
+      });
         //TO DO: Inserir redirect
       }else{
         const message = res.data.message;
         this.setState({message});
-        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showCloseButton: true, showConfirmButton: false,});
+        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true,
+        onClose: () => {
+          this.props.history.push('/login');
+          window.location.reload();
+        }
+      });
       }
     }).catch(error => {
-      Swal.fire({html:'<p>Indisponibilidade Temporária</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+      Swal.fire({html:'<p>Indisponibilidade Temporária<br /> '+ error+'</p>', type: 'error', showConfirmButton: true,
+      onClose: () => {
+        this.props.history.push('/login');
+        window.location.reload();
+      }
+    });
   });
   }
 

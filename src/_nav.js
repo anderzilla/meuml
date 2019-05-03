@@ -11,7 +11,7 @@ export default {
     },
     {
       name: 'Contas',
-      url: '/dashboard/listacontas',
+      url: '/listacontas',
       icon: 'fa fa-address-book',
       
     },
@@ -35,22 +35,22 @@ export default {
     },
     {
       name: 'Bloqueios',
-      url: '/dashboard/bloqueios',
+      url: '/bloqueios',
       icon: 'fa fa-lock',
       children: [
         {
           name: 'Bloquear Comprador',
-          url: '/dashboard/bloquearcomprador',
+          url: '/bloquearcomprador',
           icon: 'fa fa-user-times',
         },
         {
           name: 'Meus Bloqueios',
-          url: '/dashboard/meusbloqueios',
+          url: '/meusbloqueios',
           icon: 'fa fa-lock',
         },
         {
           name: 'Bloquear em massa',
-          url: '/dashboard/bloquearemmassa',
+          url: '/bloquearemmassa',
           icon: 'fa fa-users',
         },
       ]
@@ -70,7 +70,7 @@ export default {
     },
     {
       name: 'Sair',
-      url: '/sair',
+      url: '/logout',
       icon: 'fa fa-sign-out',
     },
   ]

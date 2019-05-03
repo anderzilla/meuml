@@ -88,7 +88,8 @@ class Cadastro extends Component {
         if (this.state.status === 'success'){
           const message = res.data.message;
           this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: true, showConfirmButton: false,});
+          Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+          this.props.history.push("/");
           //TO DO: Inserir redirect
         }else{
           const message = res.data.message;

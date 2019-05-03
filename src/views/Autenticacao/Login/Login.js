@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import api from '../../../api';
+import {login} from '../../../auth';
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 
 class Login extends Component {
@@ -34,9 +36,7 @@ class Login extends Component {
   handleSubmit(event) {
 
     event.preventDefault();
-    
-    //alert('Email: ' + this.state.email);
-    //alert('Senha: ' + this.state.password);
+
     this.setState({auth: 'true'});
     
     axios.post(`https://api.app2.meuml.com/auth/login`, {
@@ -49,19 +49,28 @@ class Login extends Component {
       if (this.state.status === 'success'){
         const message = res.data.message;
         this.setState({message});
-        Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: true, showConfirmButton: false,});
-        //TO DO: Inserir redirect
+        const token = res.data.jwt;
+        this.setState({token});
+        login(this.state.token);
+        this.props.history.push("/");
       }else{
         const message = res.data.message;
         this.setState({message});
-        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showCloseButton: true, showConfirmButton: false,});
+        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true,
+        onClose: () => {
+          this.props.history.push('/login');
+          window.location.reload();
+        }
+      });
       }
     }).catch(error => {
-      Swal.fire({html:'<p>Indisponibilidade Temporária</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+      Swal.fire({html:'<p>Indisponibilidade Temporária: <br/> '+error+'</p>', type: 'error', showConfirmButton: true,
+      onClose: () => {
+        this.props.history.push('/login');
+        window.location.reload();
+      }
+    });
   });
-    
-    
-    //realizar os testes da API aqui (login)
   }
 
   render() {

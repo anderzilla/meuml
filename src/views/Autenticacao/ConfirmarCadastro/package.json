@@ -1,6 +1,6 @@
 {
-  "name": "ConfirmaCadastro",
+  "name": "ConfirmarCadastro",
   "version": "0.0.0",
   "private": true,
-  "main": "./ConfirmaCadastro.js"
+  "main": "./ConfirmarCadastro.js"
 }
