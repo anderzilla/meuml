@@ -20,6 +20,9 @@ class Login extends Component {
       status: '',
     };
 
+    this.submitInput = React.createRef();
+    this.focusSubmitInput = this.focusSubmitInput.bind(this);
+
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -73,6 +76,12 @@ class Login extends Component {
   });
   }
 
+  focusSubmitInput() {
+    // Explicitly focus the text input using the raw DOM API
+    // Note: we're accessing "current" to get the DOM node
+    this.submitInput.current.focus();
+  }
+
   render() {
     return (
       <div className="app flex-row align-items-center">
@@ -109,16 +118,16 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="password" name="password" value={this.state.password} placeholder="Senha" onChange={this.handleInputChange} />
+                        <Input type="password" name="password" value={this.state.password} onChange={this.focusSubmitInput} placeholder="Senha" onChange={this.handleInputChange} />
                       </InputGroup>
                       <Row>
-                        <Col xs="7">
+                        <Col xs="5" className="text-right ">
+                          <Input type="submit" value="Entrar" className="px-4 btn btn-primary" />
+                        </Col>
+                        <Col xs="7" className="text-right ">
                         <Link to="/recuperarsenha">
                         <Button color="outline-light" className="px-4">Recuperar senha</Button>
                         </Link>
-                        </Col>
-                        <Col xs="5" className="text-right">
-                          <Input type="submit" value="Entrar" className="px-4 btn btn-primary" />
                         </Col>
                       </Row>
                     </Form>
