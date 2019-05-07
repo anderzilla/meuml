@@ -10,6 +10,7 @@ const Cadastro = React.lazy(() => import('./views/Autenticacao/Cadastro'));
 const RecuperarSenha = React.lazy(() => import('./views/Autenticacao/RecuperarSenha'));
 //Contas
 const ListaContas = React.lazy(() => import('./views/Contas/ListaContas'));
+const AdicionarConta = React.lazy(() => import('./views/Contas/AdicionarConta'));
 const RenomearConta = React.lazy(() => import('./views/Contas/RenomearConta'));
 const ExcluirConta = React.lazy(() => import('./views/Contas/ExcluirConta'));
 const SincronizarConta = React.lazy(() => import('./views/Contas/SincronizarConta'));
@@ -34,9 +35,10 @@ const routes = [
   { path: '/recuperarsenha', name: 'Recuperar Senha', component: RecuperarSenha, exact: true},
   //Contas
   { path: '/listacontas', name: 'Contas', component: ListaContas, exact: true },
-  { path: '/renomearconta', name: 'Renomear Conta', component: RenomearConta , exact: true},
-  { path: '/excluirconta', name: 'Excluir Conta', component: ExcluirConta, exact: true },
-  { path: '/dashboard/sincronizarconta', name: 'SincronizarConta', component: SincronizarConta, exact: true },
+  { path: '/adicionarconta/:code', name: 'Adicionar Conta', component: AdicionarConta , exact: true},
+  { path: '/renomearconta/:id', name: 'Renomear Conta', component: RenomearConta , exact: true},
+  { path: '/excluirconta/:id', name: 'Excluir Conta', component: ExcluirConta, exact: true },
+  { path: '/dashboard/sincronizarconta/:id', name: 'SincronizarConta', component: SincronizarConta, exact: true },
   //Bloqueios
   { path: '/bloqueios', name: 'Bloqueios', component: Bloqueios, exact: true },
   { path: '/bloquearcomprador', name: 'Bloquear Comprador', component: BloquearComprador, exact: true },

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import api from '../../../api';
 import {login} from '../../../auth';
+
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 
 class Login extends Component {
@@ -14,10 +14,10 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      auth: 'false',
       token: '',
       message: '',
       status: '',
+      tipoErro: '',
     };
 
     this.submitInput = React.createRef();
@@ -39,9 +39,12 @@ class Login extends Component {
   handleSubmit(event) {
 
     event.preventDefault();
-
-    this.setState({auth: 'true'});
-    
+    //Constantes para serem utilizadas na montagem dos dados do usuário no sistema
+    const USER_ID = "@MeuML-UserId";
+    const USER_NAME = "@MeuML-UserName";
+    const USER_EMAIL = "@MeuML-UserEmail";
+    const USER_SELLER_ID = "@MeuML-UserSellerId";
+    //Realiza o login testando os dados do usuário no servidor
     axios.post(`https://api.app2.meuml.com/auth/login`, {
       "email":this.state.email,
       "password":this.state.password
@@ -52,9 +55,27 @@ class Login extends Component {
       if (this.state.status === 'success'){
         const message = res.data.message;
         this.setState({message});
-        const token = res.data.jwt;
+        const token = res.data.data.jwt;
         this.setState({token});
+        const user_id = res.data.user_id;
+        this.setState({user_id});
         login(this.state.token);
+        //Pega os dados do usuário baseado na resposta do servidor
+        axios.get(`https://api.app2.meuml.com/user/`+this.state.user_id, {
+          "hash":this.state.token,
+	        "email" : this.state.email,
+	        "password" : this.state.password,
+	        "password2" : this.state.password
+        }).then(resp =>{
+          localStorage.setItem(USER_ID, resp.data.id);
+          localStorage.setItem(USER_NAME, resp.data.name);
+          localStorage.setItem(USER_EMAIL, resp.data.email);
+          localStorage.setItem(USER_SELLER_ID, resp.data.seller_id);
+        })
+        .catch(error => {
+          Swal.fire({html:'<p>Não foi possivel carregar os dados do Usuário! <br/> '+error+'</p>', type: 'error', showConfirmButton: true,});
+      });
+        //Redireciona para a tela inicial do sistema DASHBOARD
         this.props.history.push("/");
       }else{
         const message = res.data.message;
@@ -67,12 +88,17 @@ class Login extends Component {
       });
       }
     }).catch(error => {
-      Swal.fire({html:'<p>Indisponibilidade Temporária: <br/> '+error+'</p>', type: 'error', showConfirmButton: true,
-      onClose: () => {
-        this.props.history.push('/login');
-        window.location.reload();
-      }
-    });
+        if (error.response.data.errors.email !== '' || error.response.data.errors.email !== 'undefined'){
+          this.setState({tipoErro: error.response.data.errors.email});
+            
+        }else if(error.response.data.errors.password !== '' || error.response.data.errors.password !== 'undefined'){
+          this.setState({tipoErro: error.response.data.errors.password});
+            
+        }else{
+          this.setState({tipoErro: "Erro desconhecido, Tente novamente!"});
+            
+        }
+        Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
   });
   }
 
@@ -118,7 +144,7 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="password" name="password" value={this.state.password} onChange={this.focusSubmitInput} placeholder="Senha" onChange={this.handleInputChange} />
+                        <Input type="password" name="password" value={this.state.password} placeholder="Senha" onChange={this.handleInputChange} />
                       </InputGroup>
                       <Row>
                         <Col xs="5" className="text-right ">
