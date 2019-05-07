@@ -52,9 +52,7 @@ class ListaContas extends Component {
         
         
       }else{
-        const message = res.data.message;
-        this.setState({message});
-        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
       }
       
       console.log(res);
