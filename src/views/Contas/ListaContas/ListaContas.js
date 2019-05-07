@@ -117,9 +117,9 @@ class ListaContas extends Component {
     return (
       <div className="animated fadeIn">
         <h1>Contas
-          <Link to="/adicionarconta"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
+          <a href="https://api.app2.meuml.com/oauth/mercado-livre/authorize"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
           <Button className="btn btn-primary float-right"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
-          </Link>
+          </a>
         </h1>
         <Row>
           {contas}
