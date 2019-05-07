@@ -103,7 +103,7 @@ class Cadastro extends Component {
           this.setState({message});
           Swal.fire({html:'<p>'+this.state.message+' <br /> <b>'+ this.state.tipoErro +'</b> </p>', type: 'error', showConfirmButton: true});
         }
-      }).catch((error) => {
+      })/*.catch((error) => {
         
         if (error.response.data.data.email !== '' || error.response.data.data.email !== 'undefined'){
           this.setState({tipoErro: error.response.data.data.email});
@@ -114,7 +114,7 @@ class Cadastro extends Component {
         }
        
         Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
+    })*/;
   }
   }
 
