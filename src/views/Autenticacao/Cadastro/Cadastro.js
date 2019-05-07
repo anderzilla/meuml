@@ -104,12 +104,14 @@ class Cadastro extends Component {
           Swal.fire({html:'<p>'+this.state.message+' <br /> <b>'+ this.state.tipoErro +'</b> </p>', type: 'error', showConfirmButton: true});
         }
       }).catch((error) => {
+        if (error !== ''){
         if (error.response.data.data.email !== '' || error.response.data.data.email !== 'undefined'){
           this.setState({tipoErro: error.response.data.data.email});
         }else if(error.response.data.data._schema !== '' || error.response.data.data._schema !== 'undefined'){
           this.setState({tipoErro: error.response.data.data._schema});
         }else{
           this.setState({tipoErro: "Erro desconhecido, tente novamente!"});
+        }
         }
         Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     });
