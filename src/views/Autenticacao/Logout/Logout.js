@@ -1,6 +1,5 @@
-import React ,{ Component } from 'react';
+import { Component } from 'react';
 import {logout} from '../../../auth';
-import { Redirect } from 'react-router-dom';
 import history from '../../../history';
 import Swal from 'sweetalert2';
 

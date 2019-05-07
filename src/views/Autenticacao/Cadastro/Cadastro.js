@@ -93,11 +93,25 @@ class Cadastro extends Component {
           //TO DO: Inserir redirect
         }else{
           const message = res.data.message;
+          if (res.data.email !== '' || res.data.email !== 'undefined'){
+            this.setState({tipoErro: res.data.data.email});
+          }else if(res.data.data._schema !== '' || res.data.data._schema !== 'undefined'){
+            this.setState({tipoErro: res.data.data._schema});
+          }else{
+            this.setState({tipoErro: "Erro desconhecido, tente novamente!"});
+          }
           this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showCloseButton: true, showConfirmButton: false,});
+          Swal.fire({html:'<p>'+this.state.message+' <br /> <b>'+ this.state.tipoErro +'</b> </p>', type: 'error', showConfirmButton: true});
         }
-      }).catch(error => {
-        Swal.fire({html:'<p>Indisponibilidade Temporária</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+      }).catch((error) => {
+        if (error.response.data.data.email !== '' || error.response.data.data.email !== 'undefined'){
+          this.setState({tipoErro: error.response.data.data.email});
+        }else if(error.response.data.data._schema !== '' || error.response.data.data._schema !== 'undefined'){
+          this.setState({tipoErro: error.response.data.data._schema});
+        }else{
+          this.setState({tipoErro: "Erro desconhecido, tente novamente!"});
+        }
+        Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     });
   }
   }
