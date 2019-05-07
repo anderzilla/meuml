@@ -38,7 +38,7 @@ const routes = [
   { path: '/adicionarconta/:code', name: 'Adicionar Conta', component: AdicionarConta , exact: true},
   { path: '/renomearconta/:id', name: 'Renomear Conta', component: RenomearConta , exact: true},
   { path: '/excluirconta/:id', name: 'Excluir Conta', component: ExcluirConta, exact: true },
-  { path: '/dashboard/sincronizarconta/:id', name: 'SincronizarConta', component: SincronizarConta, exact: true },
+  { path: '/sincronizarconta/:id', name: 'SincronizarConta', component: SincronizarConta, exact: true },
   //Bloqueios
   { path: '/bloqueios', name: 'Bloqueios', component: Bloqueios, exact: true },
   { path: '/bloquearcomprador', name: 'Bloquear Comprador', component: BloquearComprador, exact: true },
