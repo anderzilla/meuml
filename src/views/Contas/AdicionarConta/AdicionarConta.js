@@ -26,21 +26,25 @@ class AdicionarConta extends Component {
       if (res.data.status === 'success'){
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
         onClose: () => {
-          this.props.history.push('/listacontas');
+          console.log(res.data.status);
+          //this.props.history.push('/listacontas');
           //window.location.reload();
         }});
       }else{
        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
        onClose: () => {
-         this.props.history.push('/listacontas');
+        console.log(res.data.message); 
+        //this.props.history.push('/listacontas');
          //window.location.reload();
        }});
       }
     }).catch(error => {
       Swal.fire({html:'<p>'+ error+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
-        this.props.history.push('/listacontas');
-        window.location.reload();
+        console.log(error);
+        
+        //this.props.history.push('/listacontas');
+        //window.location.reload();
       }});
     });
   }
