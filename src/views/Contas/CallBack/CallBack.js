@@ -52,7 +52,7 @@ class CallBack extends Component {
   }
 
   render(){
-    alert(this.state.token);
+    
     return(
       <div className="app flex-row align-items-center">
       <p>{this.state.token}</p>
