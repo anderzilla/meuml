@@ -14,7 +14,7 @@ const CallBack = React.lazy(() => import('./views/Contas/CallBack'));
 const RenomearConta = React.lazy(() => import('./views/Contas/RenomearConta'));
 const ExcluirConta = React.lazy(() => import('./views/Contas/ExcluirConta'));
 const SincronizarConta = React.lazy(() => import('./views/Contas/SincronizarConta'));
-const AdicionarConta = React.lazy(() => window.location = 'https://api.app2.meuml.com/oauth/mercado-livre/authorize');
+const AdicionarConta = React.lazy(() => window.location.href = 'https://api.app2.meuml.com/oauth/mercado-livre/authorize');
 //Bloqueios
 const Bloqueios = React.lazy(() => import('./views/Bloqueios'));
 const BloquearComprador = React.lazy(() => import('./views/Bloqueios/BloquearComprador'));
