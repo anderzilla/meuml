@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 //import { Button, Card, CardBody, CardHeader, CardFooter, Col, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 //import { Link } from 'react-router-dom';
+import {getToken} from '../../../auth';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -21,10 +22,10 @@ class CallBack extends Component {
       status: '',
     };
     
-    axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, {
-      "code": token,
-    })
-    .then(res => {
+    axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, 
+    {"code": token,},
+    { headers: {"Authorization" : 'Bearer '+getToken()}},
+    ).then(res => {
       if (res.data.status === 'success'){
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
         onClose: () => {
