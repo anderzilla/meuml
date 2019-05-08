@@ -9,7 +9,8 @@ class CallBack extends Component {
   constructor(props) {
     super(props);
     
-    const query = new URLSearchParams(this.props.location.search);
+    const search = props.location.search;
+    const query = new URLSearchParams(search);
     const token = query.get('code')
     console.log(token)//retorno do mercado livre
     
@@ -20,7 +21,7 @@ class CallBack extends Component {
     };
     
     axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, {
-      "code": this.state.token,
+      "code": token,
     })
     .then(res => {
       if (res.data.status === 'success'){
@@ -43,7 +44,7 @@ class CallBack extends Component {
       onClose: () => {
         //console.log(error);
         this.props.history.push('/listacontas');
-        window.location.reload();
+        //window.location.reload();
       }});
     });
 
