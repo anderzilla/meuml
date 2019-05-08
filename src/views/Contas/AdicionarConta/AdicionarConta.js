@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React,{ Component } from 'react';
 //import { Button, Card, CardBody, CardHeader, CardFooter, Col, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 //import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -19,6 +19,8 @@ class AdicionarConta extends Component {
       status: '',
     };
 
+    console.log('Código recebido: '+this.state.token);
+    
     axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, {
       "code": this.state.token,
     })
@@ -39,7 +41,7 @@ class AdicionarConta extends Component {
        }});
       }
     }).catch(error => {
-      Swal.fire({html:'<p>'+ error+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
+      Swal.fire({html:'<p>ErroGeral::'+ error+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
         console.log(error);
         
@@ -49,6 +51,8 @@ class AdicionarConta extends Component {
     });
 
   }
+  
+
 }
 
 export default AdicionarConta;

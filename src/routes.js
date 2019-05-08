@@ -14,6 +14,7 @@ const AdicionarConta = React.lazy(() => import('./views/Contas/AdicionarConta'))
 const RenomearConta = React.lazy(() => import('./views/Contas/RenomearConta'));
 const ExcluirConta = React.lazy(() => import('./views/Contas/ExcluirConta'));
 const SincronizarConta = React.lazy(() => import('./views/Contas/SincronizarConta'));
+const AuthorizeAccount = React.lazy(() => window.location = 'https://api.app2.meuml.com/oauth/mercado-livre/authorize');
 //Bloqueios
 const Bloqueios = React.lazy(() => import('./views/Bloqueios'));
 const BloquearComprador = React.lazy(() => import('./views/Bloqueios/BloquearComprador'));
@@ -39,6 +40,7 @@ const routes = [
   { path: '/renomearconta/:id', name: 'Renomear Conta', component: RenomearConta , exact: true},
   { path: '/excluirconta/:id', name: 'Excluir Conta', component: ExcluirConta, exact: true },
   { path: '/sincronizarconta/:id', name: 'SincronizarConta', component: SincronizarConta, exact: true },
+  { path: '/contas/authorize', name: 'Autorizar Conta Mercado Livre', component: AuthorizeAccount, exact: true },
   //Bloqueios
   { path: '/bloqueios', name: 'Bloqueios', component: Bloqueios, exact: true },
   { path: '/bloquearcomprador', name: 'Bloquear Comprador', component: BloquearComprador, exact: true },
