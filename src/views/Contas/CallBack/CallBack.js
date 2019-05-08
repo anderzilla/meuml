@@ -4,7 +4,7 @@ import { Component } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-class AdicionarConta extends Component {
+class CallBack extends Component {
 
   constructor(props) {
     super(props);
@@ -55,4 +55,4 @@ class AdicionarConta extends Component {
 
 }
 
-export default AdicionarConta;
+export default CallBack;

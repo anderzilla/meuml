@@ -10,11 +10,11 @@ const Cadastro = React.lazy(() => import('./views/Autenticacao/Cadastro'));
 const RecuperarSenha = React.lazy(() => import('./views/Autenticacao/RecuperarSenha'));
 //Contas
 const ListaContas = React.lazy(() => import('./views/Contas/ListaContas'));
-const AdicionarConta = React.lazy(() => import('./views/Contas/AdicionarConta'));
+const CallBack = React.lazy(() => import('./views/Contas/CallBack'));
 const RenomearConta = React.lazy(() => import('./views/Contas/RenomearConta'));
 const ExcluirConta = React.lazy(() => import('./views/Contas/ExcluirConta'));
 const SincronizarConta = React.lazy(() => import('./views/Contas/SincronizarConta'));
-const AuthorizeAccount = React.lazy(() => window.location = 'https://api.app2.meuml.com/oauth/mercado-livre/authorize');
+const AdicionarConta = React.lazy(() => window.location = 'https://api.app2.meuml.com/oauth/mercado-livre/authorize');
 //Bloqueios
 const Bloqueios = React.lazy(() => import('./views/Bloqueios'));
 const BloquearComprador = React.lazy(() => import('./views/Bloqueios/BloquearComprador'));
@@ -36,11 +36,11 @@ const routes = [
   { path: '/recuperarsenha', name: 'Recuperar Senha', component: RecuperarSenha, exact: true},
   //Contas
   { path: '/listacontas', name: 'Contas', component: ListaContas, exact: true },
-  { path: '/adicionarconta/:code', name: 'Adicionar Conta', component: AdicionarConta , exact: true},
+  { path: '/callback/:code', name: 'Adicionar Conta', component: CallBack , exact: true},
   { path: '/renomearconta/:id', name: 'Renomear Conta', component: RenomearConta , exact: true},
   { path: '/excluirconta/:id', name: 'Excluir Conta', component: ExcluirConta, exact: true },
   { path: '/sincronizarconta/:id', name: 'SincronizarConta', component: SincronizarConta, exact: true },
-  { path: '/contas/authorize', name: 'Autorizar Conta Mercado Livre', component: AuthorizeAccount, exact: true },
+  { path: '/adicionarconta', name: 'Autorizar Conta Mercado Livre', component: AdicionarConta, exact: true },
   //Bloqueios
   { path: '/bloqueios', name: 'Bloqueios', component: Bloqueios, exact: true },
   { path: '/bloquearcomprador', name: 'Bloquear Comprador', component: BloquearComprador, exact: true },
