@@ -117,7 +117,7 @@ class ListaContas extends Component {
     return (
       <div className="animated fadeIn">
         <h1>Contas
-          <Link to="/contas/authorize"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
+          <Link to="/adicionarcontas"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
           <Button className="btn btn-primary float-right"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
           </Link>
         </h1>
