@@ -7,7 +7,7 @@ class CallBack extends Component {
 
   constructor(props) {
     super(props);
-    const token = window.location.href.split('?')[1].split('=')[1];
+    const token = window.location.href.split('?')[1].split('=')[1].split('&')[0];
     this.state = {
       token: token,
       message: '',
