@@ -13,6 +13,11 @@ const DefaultLayout = Loadable({
   loading
 });
 
+const AdicionarConta = Loadable({
+  loader: () => import('./views/Contas/AdicionarConta'),
+  loading
+});
+
 // Autenticação
 const Login = Loadable({
   loader: () => import('./views/Autenticacao/Login'),
@@ -82,6 +87,7 @@ class App extends Component {
           <Route exact path="/alterarsenha/:email/:hash" component={AlterarSenha} />
           {/*acesso restrito */}
           <PrivateRoute path="/" name="MeuML.com" component={DefaultLayout} />
+          <PrivateRoute path="/adicionarconta" name="MeuML.com - Adicionar Conta" component={AdicionarConta} />
           <PrivateRoute path="/logout" name="MeuML.com" component={Logout} />
           <Route exact path="/404" name="Page 404" component={Page404} />
           <Route exact path="/500" name="Page 500" component={Page500} />          
