@@ -1,4 +1,4 @@
-import React,{ Component } from 'react';
+import { Component } from 'react';
 //import { Button, Card, CardBody, CardHeader, CardFooter, Col, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 //import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -21,7 +21,7 @@ class AdicionarConta extends Component {
 
     console.log('Código recebido: '+this.state.token);
     
-    axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, {
+    /*axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, {
       "code": this.state.token,
     })
     .then(res => {
@@ -48,7 +48,7 @@ class AdicionarConta extends Component {
         //this.props.history.push('/listacontas');
         //window.location.reload();
       }});
-    });
+    });*/
 
   }
   
