@@ -18,7 +18,12 @@ class CallBack extends Component {
       message: '',
       status: '',
     };
-
+    Swal.fire({html:'<p>'+this.state.token+'</p>', type: 'error', showConfirmButton: true,
+       onClose: () => {
+        console.log(this.state.token); 
+        this.props.history.push('/listacontas');
+        window.location.reload();
+       }});
     console.log('Código recebido: '+this.state.token);
     
     /*axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, {
