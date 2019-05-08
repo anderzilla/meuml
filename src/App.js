@@ -87,7 +87,7 @@ class App extends Component {
           <Route exact path="/alterarsenha/:email/:hash" component={AlterarSenha} />
           {/*acesso restrito */}
           <PrivateRoute path="/" name="MeuML.com" component={DefaultLayout} />
-          <Route path="/callback" name="MeuML.com - Callback" component={CallBack} />
+          <Route path="/callback/:code" name="MeuML.com - Callback" component={CallBack} />
           <PrivateRoute path="/logout" name="MeuML.com" component={Logout} />
           <Route exact path="/404" name="Page 404" component={Page404} />
           <Route exact path="/500" name="Page 500" component={Page500} />          

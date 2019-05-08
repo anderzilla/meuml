@@ -9,9 +9,10 @@ class CallBack extends Component {
   constructor(props) {
     super(props);
     
-    const search = props.location.search;
-    const query = new URLSearchParams(search);
-    const token = query.get('code')
+    //const search = props.location.search;
+    //const query = new URLSearchParams(search);
+    const token = window.location.href.split('?')[1].split('=')[1]
+    //query.get('code')
     console.log(token)//retorno do mercado livre
     
     this.state = {
