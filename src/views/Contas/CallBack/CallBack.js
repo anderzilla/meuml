@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 //import { Button, Card, CardBody, CardHeader, CardFooter, Col, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 //import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -50,6 +50,14 @@ class CallBack extends Component {
       }});
     });*/
 
+  }
+
+  render(){
+    return(
+      <div className="app flex-row align-items-center">
+      <p>{this.state.token}</p>
+      </div>
+    );
   }
   
 
