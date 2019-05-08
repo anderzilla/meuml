@@ -36,7 +36,7 @@ const routes = [
   { path: '/recuperarsenha', name: 'Recuperar Senha', component: RecuperarSenha, exact: true},
   //Contas
   { path: '/listacontas', name: 'Contas', component: ListaContas, exact: true },
-  { path: '/callback/:code', name: 'Adicionar Conta', component: CallBack , exact: true},
+  { path: '/callback', name: 'Adicionar Conta', component: CallBack , exact: true},
   { path: '/renomearconta/:id', name: 'Renomear Conta', component: RenomearConta , exact: true},
   { path: '/excluirconta/:id', name: 'Excluir Conta', component: ExcluirConta, exact: true },
   { path: '/sincronizarconta/:id', name: 'SincronizarConta', component: SincronizarConta, exact: true },
