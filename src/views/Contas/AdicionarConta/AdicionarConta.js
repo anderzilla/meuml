@@ -14,12 +14,12 @@ class AdicionarConta extends Component {
     console.log(token)//retorno do mercado livre
     
     this.state = {
-      token: '',
+      token: token,
       message: '',
       status: '',
     };
 
-    axios.post(`https://api.app2.meuml.com/from-mercado-livre`, {
+    axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, {
       "code": this.state.token,
     })
     .then(res => {
@@ -47,6 +47,7 @@ class AdicionarConta extends Component {
         //window.location.reload();
       }});
     });
+
   }
 }
 
