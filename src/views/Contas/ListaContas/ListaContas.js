@@ -56,35 +56,37 @@ class ListaContas extends Component {
       input: 'text',
       showCancelButton: true,
       inputPlaceholder: 'Preencha o novo nome'
-    })
+    }).then((result) => {
 
-    if (novoNome) {
-    axios.put(`https://api.app2.meuml.com/accounts/` + account_id,
-        {'name' : novoNome},
-        { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-      console.log(res);
-      if (res.data.status === 'success'){
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
-          onClose: () => {
-            this.props.history.push('/listacontas');
-            //window.location.reload();
-          }});
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
-          onClose: () => {
-            this.props.history.push('/listacontas');
-            //window.location.reload();
-          }});
+
+      if (result.novoNome) {
+        axios.put(`https://api.app2.meuml.com/accounts/` + account_id,
+            {'name' : result.novoNome},
+            { headers: {"Authorization" : 'Bearer '+getToken()}},
+        ).then(res => {
+          console.log(res);
+          if (res.data.status === 'success'){
+            Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
+              onClose: () => {
+                this.props.history.push('/listacontas');
+                //window.location.reload();
+              }});
+          }else{
+            Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
+              onClose: () => {
+                this.props.history.push('/listacontas');
+                //window.location.reload();
+              }});
+          }
+        }).catch(error => {
+          Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
+            onClose: () => {
+              this.props.history.push('/listacontas');
+              //window.location.reload();
+            }});
+        });
       }
-    }).catch(error => {
-      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
-        onClose: () => {
-          this.props.history.push('/listacontas');
-          //window.location.reload();
-        }});
     });
-  }
   }
 
   fetchAccounts() {
