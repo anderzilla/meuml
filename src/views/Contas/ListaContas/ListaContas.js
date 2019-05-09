@@ -120,7 +120,7 @@ class ListaContas extends Component {
           </Link>
         </h1>
         <Row>
-          {contas}
+          {xcontas}
         </Row>
 
       </div>
