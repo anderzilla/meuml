@@ -27,11 +27,13 @@ class ListaContas extends Component {
         const message = res.data.message;
         if (res.data.meta.total !== 0){
           //DADOS DAS CONTAS
-          this.setState({contas: res.data.data});
-          this.setState({total:res.data.meta.total});
-          this.setState({page: res.data.meta.page});
-          this.setState({totalPages: res.data.meta.pages});
-          this.setState({limit: res.data.meta.limit});
+          this.state({
+            contas: res.data.data,
+            total:res.data.meta.total,
+            page: res.data.meta.page,
+            totalPages: res.data.meta.pages,
+            limit: res.data.meta.limit,
+          });
         }else{
           Swal.fire({html:'<p>'+message+'</p>', type: 'info', showConfirmButton: true});  
         }  
