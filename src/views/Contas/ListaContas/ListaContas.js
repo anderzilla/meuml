@@ -29,6 +29,7 @@ class ListaContas extends Component {
           //DADOS DAS CONTAS
           const contas = res.data.data;
           const total = res.data.meta.total;
+          this.state = { total};
           console.log('Quantidade de contas: '+total+' dados das contas:'+contas);
 
           /*this.state({
