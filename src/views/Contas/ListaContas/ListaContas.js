@@ -19,6 +19,74 @@ class ListaContas extends Component {
     this.fetchAccounts();
   }
 
+  sincronizar(account_id){
+    axios.get(`https://api.app2.meuml.com/accounts/` + account_id + '/sync',
+        { headers: {"Authorization" : 'Bearer '+getToken()}},
+    ).then(res => {
+      console.log(res);
+      if (res.data.status === 'success'){
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true});
+      }else{
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+      }
+    }).catch(error => {
+      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    });
+  }
+
+  excluir(account_id){
+    axios.delete(`https://api.app2.meuml.com/accounts/` + account_id,
+        { headers: {"Authorization" : 'Bearer '+getToken()}},
+    ).then(res => {
+      if (res.data.status === 'success'){
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true, onClose: () => {
+          window.location.reload();
+        }});
+      }else{
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+      }
+    }).catch(error => {
+      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    });
+  }
+
+  renomear(account_id){
+    const {value: novoNome} =  Swal.fire({
+      title: 'Renomear Conta:',
+      input: 'text',
+      showCancelButton: true,
+      inputPlaceholder: 'Preencha o novo nome'
+    })
+
+    if (novoNome) {
+    axios.put(`https://api.app2.meuml.com/accounts/` + account_id,
+        {'name' : novoNome},
+        { headers: {"Authorization" : 'Bearer '+getToken()}},
+    ).then(res => {
+      console.log(res);
+      if (res.data.status === 'success'){
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
+          onClose: () => {
+            this.props.history.push('/listacontas');
+            //window.location.reload();
+          }});
+      }else{
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
+          onClose: () => {
+            this.props.history.push('/listacontas');
+            //window.location.reload();
+          }});
+      }
+    }).catch(error => {
+      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
+        onClose: () => {
+          this.props.history.push('/listacontas');
+          //window.location.reload();
+        }});
+    });
+  }
+  }
+
   fetchAccounts() {
 
 
@@ -96,9 +164,9 @@ class ListaContas extends Component {
                             <i class="fa fa-user"></i> Usuário: <b>{c.external_data.nickname}</b>
                           </p>
                           <div className="align-content-center">
-                          <Link to={'/renomearconta/'+c.id} className="btn btn-outline-primary btn-sm" title="Renomear">Renomear</Link>
-                          <Link to={'/sincronizarConta/'+c.id} className="btn btn-outline-primary btn-sm" title="Sincronizar">Sincronizar</Link>
-                          <Link to={'/excluirconta/'+c.id} className="btn btn-outline-primary btn-sm">Excluir</Link>
+                          <Button className="btn btn-outline-primary btn-sm" onClick={() => this.renomear(c.id)}>Renomear</Button>
+                          <Button className="btn btn-outline-primary btn-sm" onClick={() => this.sincronizar(c.id)}>Sincronizar</Button>
+                          <Button className="btn btn-outline-primary btn-sm" onClick={() => this.excluir(c.id)}>Excluir</Button>
                           </div>
                         </CardBody>
                         <CardFooter>
