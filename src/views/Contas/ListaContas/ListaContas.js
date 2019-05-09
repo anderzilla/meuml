@@ -47,6 +47,8 @@ class ListaContas extends Component {
           const limit = res.data.meta.limit;
           this.setState({limit});
 
+          
+
         }else{
           Swal.fire({html:'<p>'+message+'</p>', type: 'info', showConfirmButton: true});  
         }
@@ -58,9 +60,50 @@ class ListaContas extends Component {
       
       console.log(res);
     });
+  }
 
-        
-
+  createLista = () => {
+    let lista = [];
+    for(let j = 0; j < this.state.total; j++ ){
+      lista.push(
+        <Col xs="12" sm="6" md="3">
+        <Card className="card-accent-primary">
+          <CardHeader>
+            {this.state.contas.external_data.user_type}
+            <div class="float-right">
+            <Dropdown isOpen={this.state.dropdownOpen[{j}]} toggle={() => {this.toggle({j});}} size="sm" class="sm-info">
+              <DropdownToggle caret color="primary">
+                Opções
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem><Link to="/renomearconta/{contas.external_data.id}"><i class="fa fa-edit"></i> Renomear</Link></DropdownItem>
+                <DropdownItem><Link to="/sincronizarConta/{contas.external_data.id}"><i class="fa fa-refresh"></i> Sincronizar</Link></DropdownItem>
+                <DropdownItem><Link to="/excluirconta/{contas.external_data.id}"><i class="fa fa-remove"></i> Excluir</Link></DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+            </div>
+          </CardHeader>
+          <CardBody>
+            <img src={sygnet} class="img-full70 align-content-center" alt="Loja Teste"></img>
+            <p class="text-primary h5 text-center">{this.state.contas.name}</p>
+            <p class="text-left">
+            <i class="fa fa-envelope"></i> E-mail: {this.state.contas.external_data.email}<br></br>
+            <i class="fa fa-user"></i> Usuário: {this.state.contas.external_data.nickname}
+            </p>
+          </CardBody>
+          <CardFooter>
+          <div class="text-left float-left">
+          <span class="text-success h5">{this.state.contas.seller_reputation.transactions.completed}</span> Vendas
+          </div>
+          <div class="float-right text-right">
+          <span class="text-success h5"></span> Anúncios
+          </div>
+          </CardFooter>
+        </Card>
+      </Col>  
+      )      
+    }
+    return lista;
   }
 
   toggle(i) {
@@ -73,8 +116,8 @@ class ListaContas extends Component {
   }
 
   render() {
-    /* CARREGALISTAGEM DE CONTAS ML */
-    let xcontas = this.state.contas;
+    /* CARREGALISTAGEM DE CONTAS ML 
+    let lista = []; //this.state.contas;
     for(let i=0; i< this.state.total; i++){
       xcontas.push(
         <Col xs="12" sm="6" md="3">
@@ -113,7 +156,7 @@ class ListaContas extends Component {
         </Card>
       </Col>
       )
-    }
+    }*/
 
     return (
       <div className="animated fadeIn">
@@ -123,7 +166,7 @@ class ListaContas extends Component {
           </Link>
         </h1>
         <Row>
-          {xcontas}
+          {this.createLista()}
         </Row>
 
       </div>
