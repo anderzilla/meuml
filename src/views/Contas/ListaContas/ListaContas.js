@@ -45,7 +45,7 @@ class ListaContas extends Component {
         if (total !== 0){
           //DADOS DAS CONTAS
           const contas = res.data.data;
-          this.setState({contas, page, totalPages, limit});
+          //this.setState({contas, page, totalPages, limit});
         }else{
           Swal.fire({html:'<p>'+message+'</p>', type: 'info', showConfirmButton: true});  
         }
