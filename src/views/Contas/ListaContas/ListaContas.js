@@ -28,7 +28,9 @@ class ListaContas extends Component {
         if (res.data.meta.total !== 0){
           //DADOS DAS CONTAS
           const contas = res.data.data;
-          console.log(contas);
+          const total = res.data.meta.total;
+          console.log('Quantidade de contas: '+total+' dados das contas:'+contas);
+
           /*this.state({
             contas: contas,
             total:res.data.meta.total,
@@ -49,7 +51,7 @@ class ListaContas extends Component {
 
   createLista = () => {
     let lista = [];
-    for(let j = 0; j < this.state.total; j++ ){
+    for(let j = 0; j < total; j++ ){
       lista.push(
         <Col xs="12" sm="6" md="3">
         <Card className="card-accent-primary">
