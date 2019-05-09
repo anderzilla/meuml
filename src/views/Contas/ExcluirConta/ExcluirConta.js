@@ -7,15 +7,9 @@ class ExcluirConta extends Component {
 
   constructor(props) {
     super(props);
-    const token = window.location.href.split('?')[1].split('=')[1].split('&')[0];
-    this.state = {
-      token: token,
-      message: '',
-      status: '',
-    };
-
-    axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`,
-        {"code": token,},
+    const { handle } = this.props
+    let account_id = this.props.match.params.id
+    axios.delete(`https://api.app2.meuml.com/accounts/` + account_id,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       if (res.data.status === 'success'){
