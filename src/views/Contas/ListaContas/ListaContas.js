@@ -26,8 +26,13 @@ class ListaContas extends Component {
       page: '',
       totalPages: '',
       limit: '',
-
     }
+    //Constantes para serem utilizadas na montagem da lista
+    const contas = [];
+    const total = ''; 
+    const page = ''; 
+    const totalPages = ''; 
+    const limit = '';
     
     axios.get(`https://api.app2.meuml.com/accounts`, { headers: {"Authorization" : 'Bearer '+getToken()}
     })
@@ -37,15 +42,15 @@ class ListaContas extends Component {
         if (res.data.meta.total !== 0){
           //DADOS DAS CONTAS
           const contas = res.data.data;
-          this.setState({contas});
+          //this.setState({contas});
           const total = res.data.meta.total; 
-          this.setState({total});
+          //this.setState({total});
           const page = res.data.meta.page; 
-          this.setState({page});
+          //this.setState({page});
           const totalPages = res.data.meta.pages; 
-          this.setState({totalPages});
+          //this.setState({totalPages});
           const limit = res.data.meta.limit;
-          this.setState({limit});
+          //this.setState({limit});
 
           
 
@@ -64,7 +69,7 @@ class ListaContas extends Component {
 
   createLista = () => {
     let lista = [];
-    for(let j = 0; j < this.state.total; j++ ){
+    for(let j = 0; j < total; j++ ){
       lista.push(
         <Col xs="12" sm="6" md="3">
         <Card className="card-accent-primary">
