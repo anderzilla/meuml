@@ -17,16 +17,9 @@ class ListaContas extends Component {
     this.state = {
       dropdownOpen: new Array(7).fill(false),
     }
-
     this.setState = {
       token: getToken(),
-      status: '',
-      message: '',
-      total: '',
-      page: '',
-      totalPages: '',
-      limit: '',
-    } 
+    }
     axios.get(`https://api.app2.meuml.com/accounts`, { headers: {"Authorization" : 'Bearer '+getToken()}
     })
     .then(res => {
