@@ -34,18 +34,16 @@ class ListaContas extends Component {
     .then(res => {
       if (res.data.status === 'success'){
         const message = res.data.message;
-        //PAGINAÇÃO
-        const total = res.data.meta.total;
-        const page = res.data.meta.page;
-        const totalPages = res.data.meta.pages;
-        const limit = res.data.meta.limit;
-
-        //this.setState({message,total, page, limit, totalPages});
-        
-        if (total !== 0){
+        if (res.data.meta.total !== 0){
           //DADOS DAS CONTAS
-          const contas = res.data.data;
-          //this.setState({contas, page, totalPages, limit});
+          //const contas = res.data.data;
+          this.setState({
+            contas: res.data.data, 
+            total: res.data.meta.total, 
+            page: res.data.meta.page, 
+            totalPages: res.data.meta.pages, 
+            limit: res.data.meta.limit
+          });
         }else{
           Swal.fire({html:'<p>'+message+'</p>', type: 'info', showConfirmButton: true});  
         }
@@ -73,13 +71,13 @@ class ListaContas extends Component {
 
   render() {
     /* CARREGALISTAGEM DE CONTAS ML */
-    let contas = []
-    for(let i=0; i<this.state.total; i++){
-      contas.push(
+    let xcontas = this.state.contas;
+    for(let i=0; i< this.state.total; i++){
+      xcontas.push(
         <Col xs="12" sm="6" md="3">
         <Card className="card-accent-primary">
           <CardHeader>
-            {contas.external_data.user_type}
+            {xcontas.external_data.user_type}
             <div class="float-right">
             <Dropdown isOpen={this.state.dropdownOpen[{i}]} toggle={() => {this.toggle({i});}} size="sm" class="sm-info">
               <DropdownToggle caret color="primary">
@@ -95,15 +93,15 @@ class ListaContas extends Component {
           </CardHeader>
           <CardBody>
             <img src={sygnet} class="img-full70 align-content-center" alt="Loja Teste"></img>
-            <p class="text-primary h5 text-center">{contas.name}</p>
+            <p class="text-primary h5 text-center">{xcontas.name}</p>
             <p class="text-left">
-            <i class="fa fa-envelope"></i> E-mail: {contas.email}<br></br>
-            <i class="fa fa-user"></i> Usuário: {contas.nickname}
+            <i class="fa fa-envelope"></i> E-mail: {xcontas.external_data.email}<br></br>
+            <i class="fa fa-user"></i> Usuário: {xcontas.external_data.nickname}
             </p>
           </CardBody>
           <CardFooter>
           <div class="text-left float-left">
-          <span class="text-success h5">{contas.seller_reputation.transactions.completed}</span> Vendas
+          <span class="text-success h5">{xcontas.seller_reputation.transactions.completed}</span> Vendas
           </div>
           <div class="float-right text-right">
           <span class="text-success h5"></span> Anúncios
