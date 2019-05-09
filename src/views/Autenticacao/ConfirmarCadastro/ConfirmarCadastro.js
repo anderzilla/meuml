@@ -64,7 +64,7 @@ class ConfirmarCadastro extends Component {
       });
       }
     }).catch(error => {
-      Swal.fire({html:'<p>'+error.response.data.message+'</p>', type: 'error', showConfirmButton: true,
+      Swal.fire({html:'<p>'+error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: true,
       onClose: () => {
         this.props.history.push('/login');
         window.location.reload();
