@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Card, CardBody, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, CardFooter, CardHeader, Col, Row, Button } from 'reactstrap';
+import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
@@ -9,13 +9,12 @@ import sygnet from '../../../assets/img/brand/sygnet-logo.png';
 
 
 class ListaContas extends Component {
-
+  
   state = {
-    isLoading: true,
-    contas: [],
-    total: 0
-  }
-
+      isLoading: true,
+      contas: [],
+      total: 0,
+    }
   componentDidMount() {
     this.fetchAccounts();
   }
@@ -49,6 +48,16 @@ class ListaContas extends Component {
           }
         });
   }
+
+  toggle(i) {
+    const newArray = this.state.dropdownOpen.map((element, index) => {
+      return (index === i ? !element : false);
+    });
+    this.setState({
+      dropdownOpen: newArray,
+    });
+  }
+
   render() {
 
 
@@ -64,38 +73,33 @@ class ListaContas extends Component {
         <Row>
           {!isLoading ? (
               contas.map(c=> {
+
+                //console.log(c.external_data);
+                //let str = c.external_data.replace('\'','"')
+
+                //console.log(str);
+                const externaldata = JSON.stringify(c.external_data);
+                
                 const { username, name, email } = this.state;
-                console.log(c)
+                console.log(externaldata)
                 return (
                     <Col xs="12" sm="6" md="3">
                       <Card className="card-accent-primary">
                         <CardHeader>
-                          {c.external_data.user_type}
-                          <div class="float-right">
-                            <Dropdown /*isOpen={objs.dropdownOpen[{j}]} toggle={() => {
-                              this.toggle({j});
-                            }}*/ size="sm" class="sm-info">
-                              <DropdownToggle caret color="primary">
-                                Opções
-                              </DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem><Link to="/renomearconta/{contas.external_data.id}"><i
-                                    class="fa fa-edit"></i> Renomear</Link></DropdownItem>
-                                <DropdownItem><Link to="/sincronizarConta/{contas.external_data.id}"><i
-                                    class="fa fa-refresh"></i> Sincronizar</Link></DropdownItem>
-                                <DropdownItem><Link to="/excluirconta/{contas.external_data.id}"><i
-                                    class="fa fa-remove"></i> Excluir</Link></DropdownItem>
-                              </DropdownMenu>
-                            </Dropdown>
-                          </div>
+                          {c.name}
                         </CardHeader>
                         <CardBody>
                           <img src={sygnet} class="img-full70 align-content-center" alt="Loja Teste"></img>
-                          <p class="text-primary h5 text-center">{c.name}</p>
+                          <p class="text-primary h5 text-center">{c.external_name}</p>
                           <p class="text-left">
                             <i class="fa fa-envelope"></i> E-mail: {c.external_data.email}<br></br>
-                            <i class="fa fa-user"></i> Usuário: {c.external_data.nickname}
+                            <i class="fa fa-user"></i> Usuário: <b>{c.external_data.nickname}</b>
                           </p>
+                          <div className="align-content-center">
+                          <Link to={'/renomearconta/'+c.id} className="btn btn-outline-primary btn-sm" title="Renomear">Renomear</Link>
+                          <Link to={'/sincronizarConta/'+c.id} className="btn btn-outline-primary btn-sm" title="Sincronizar">Sincronizar</Link>
+                          <Link to={'/excluirconta/'+c.id} className="btn btn-outline-primary btn-sm">Excluir</Link>
+                          </div>
                         </CardBody>
                         <CardFooter>
                           <div class="float-right text-right">
