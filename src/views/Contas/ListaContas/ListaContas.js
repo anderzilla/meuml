@@ -36,14 +36,17 @@ class ListaContas extends Component {
         const message = res.data.message;
         if (res.data.meta.total !== 0){
           //DADOS DAS CONTAS
-          //const contas = res.data.data;
-          this.setState({
-            contas: res.data.data, 
-            total: res.data.meta.total, 
-            page: res.data.meta.page, 
-            totalPages: res.data.meta.pages, 
-            limit: res.data.meta.limit
-          });
+          const contas = res.data.data;
+          this.setState({contas});
+          const total = res.data.meta.total; 
+          this.setState({total});
+          const page = res.data.meta.page; 
+          this.setState({page});
+          const totalPages = res.data.meta.pages; 
+          this.setState({totalPages});
+          const limit = res.data.meta.limit;
+          this.setState({limit});
+
         }else{
           Swal.fire({html:'<p>'+message+'</p>', type: 'info', showConfirmButton: true});  
         }
