@@ -57,19 +57,19 @@ class ListaContas extends Component {
       showCancelButton: true,
       inputPlaceholder: 'Preencha o novo nome'
     }).then((result) => {
+      
+      console.log(result.value);
 
-
-      if (result.novoNome) {
+      if (result.value) {
         axios.put(`https://api.app2.meuml.com/accounts/` + account_id,
-            {'name' : result.novoNome},
+            {'name' : result.value},
             { headers: {"Authorization" : 'Bearer '+getToken()}},
         ).then(res => {
           console.log(res);
           if (res.data.status === 'success'){
             Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
               onClose: () => {
-                this.props.history.push('/listacontas');
-                //window.location.reload();
+                window.location.reload();
               }});
           }else{
             Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
