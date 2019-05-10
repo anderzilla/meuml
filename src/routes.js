@@ -19,6 +19,7 @@ const BloquearComprador = React.lazy(() => import('./views/Bloqueios/BloquearCom
 const BloquearEmMassa = React.lazy(() => import('./views/Bloqueios/BloquearEmMassa'));
 const AdicionarItemLista = React.lazy(() => import('./views/Bloqueios/BloquearEmMassa/AdicionarItemLista'));
 const MeusBloqueios = React.lazy(() => import('./views/Bloqueios/MeusBloqueios'));
+const Categorias = React.lazy(() => import('./views/Categorias/CategoriasDataTable'));
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -43,6 +44,9 @@ const routes = [
   { path: '/bloquearemmassa', name: 'Bloquear em Massa', component: BloquearEmMassa, exact: true },
   { path: '/meusbloqueios', name: 'Meus Bloqueios', component: MeusBloqueios, exact: true },
   { path: '/adicionaritemlista', name: 'Adicionar a Lista', component: AdicionarItemLista, exact: true },
+
+
+  { path: '/categorias', name: 'Categorias - Pesos e Dimensões', component: Categorias, exact: true },
 ];
 
 export default routes;
