@@ -29,7 +29,7 @@ export default {
     },
     {
       name: 'Pesos e Dimensões',
-      url: '/dashboard',
+      url: '/categorias',
       icon: 'fa fa-balance-scale',
       
     },
