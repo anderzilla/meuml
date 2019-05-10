@@ -145,16 +145,6 @@ class ListaContas extends Component {
           }
         });
   }
-
-  toggle(i) {
-    const newArray = this.state.dropdownOpen.map((element, index) => {
-      return (index === i ? !element : false);
-    });
-    this.setState({
-      dropdownOpen: newArray,
-    });
-  }
-
   render() {
 
 
@@ -171,12 +161,6 @@ class ListaContas extends Component {
           {!isLoading ? (
               contas.map(c=> {
                 const { username, name, email } = this.state;
-                console.log(c.external_data.thumbnail.picture_url)
-                if (!c.external_data.thumbnail.picture_url){
-                  const fotoConta = sygnet;
-                }else{
-                  const fotoConta = c.external_data.thumbnail.picture_url;
-                }
                 return (
                     <Col xs="12" sm="6" md="3">
                       <Card className="card-accent-primary">
