@@ -148,7 +148,7 @@ class ListaContas extends Component {
         });
   }
   render() {
-    
+    let j = 0;
     const { isLoading, contas, error } = this.state;
 
     return (
@@ -163,11 +163,13 @@ class ListaContas extends Component {
               contas.map(c=> {
                 console.log(c.external_data);
                 const { username, name, email } = this.state;
-                if (contas.indexOf('picture_url') !== -1){
-                  this.setState({fotoConta : c.external_data.thumbnail.picture_url});
+                if (contas.indexOf("thumbnail") !== '-1'){
+                  this.state.fotoConta = c.external_data.thumbnail.picture_url;
                 }
-                
+                console.log(contas.indexOf('picture_url'));
                 console.log(this.state.fotoConta);
+                console.log(this.state.dropdownOpen);
+                j = j++;
                 return (
                     <Col xs="12" sm="6" md="3">
                       <Card className="card-accent-primary">
@@ -175,7 +177,7 @@ class ListaContas extends Component {
                           {c.name}
                           <div className="float-right">
                           <ButtonGroup>
-                            <ButtonDropdown isOpen={this.state.dropdownOpen[1]} toggle={() => { this.toggle(1); }}>
+                            <ButtonDropdown isOpen={this.state.dropdownOpen[j]} toggle={() => { this.toggle(j); }}>
                               <DropdownToggle caret color="primary" size="sm">
                                 Opções
                               </DropdownToggle>
