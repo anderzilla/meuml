@@ -111,10 +111,24 @@ class ListaContas extends Component {
               });
 
             } else {
-              Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true});
+              Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true,
+              onClose: () => {
+                this.setState({
+                  contas: res.data.data,
+                  isLoading: false,
+                });
+              }
+            });
             }
           } else {
-            Swal.fire({html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true});
+            Swal.fire({html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
+            onClose: () => {
+              this.setState({
+                contas: res.data.data,
+                isLoading: false,
+              });
+            }
+            });
           }
         });
   }
