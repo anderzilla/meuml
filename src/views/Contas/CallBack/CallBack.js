@@ -22,20 +22,20 @@ class CallBack extends Component {
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
         onClose: () => {
           this.props.history.push('/listacontas');
-          //window.location.reload();
+          window.location.redirect('/listacontas');
         }});
       }else{
        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
        onClose: () => {
         this.props.history.push('/listacontas');
-        //window.location.reload();
+        window.location.redirect('/listacontas');
        }});
       }
     }).catch(error => {
       Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
         this.props.history.push('/listacontas');
-        //window.location.reload();
+        window.location.redirect('/listacontas');
       }});
     });
 
