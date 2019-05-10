@@ -199,7 +199,7 @@ class ListaContas extends Component {
                         </CardHeader>
                         <CardBody>
                           <img src={!c.external_data.thumbnail.picture_url ? sygnet : c.external_data.thumbnail.picture_url} class="img-full70 align-content-center" alt="Loja Teste"></img>
-                          <p class="text-primary h5 text-center">{c.external_name}</p>
+                          <p class="text-primary h5 text-center nomeDuasLinhas">{c.external_name}</p>
                           <p class="text-left">
                             <i class="fa fa-envelope"></i> E-mail: {c.external_data.email}<br></br>
                             <i class="fa fa-user"></i> Usuário: <b>{c.external_data.nickname}</b>
