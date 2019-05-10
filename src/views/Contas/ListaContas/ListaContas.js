@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button } from 'reactstrap';
+import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button, ButtonDropdown, ButtonGroup, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
@@ -10,11 +10,24 @@ import sygnet from '../../../assets/img/brand/sygnet-logo.png';
 
 class ListaContas extends Component {
   
-  state = {
+  constructor(props) {
+    super(props);
+
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      dropdownOpen: new Array(2).fill(false),
+      constas: [],
       isLoading: true,
-      contas: [],
       total: 0,
-    }
+    };
+  }
+
+  toggle(i) {
+    const newArray = this.state.dropdownOpen.map((element, index) => { return (index === i ? !element : false); });
+    this.setState({
+      dropdownOpen: newArray,
+    });
+  }
   componentDidMount() {
     this.fetchAccounts();
   }
@@ -157,33 +170,41 @@ class ListaContas extends Component {
         <Row>
           {!isLoading ? (
               contas.map(c=> {
-
-                //console.log(c.external_data);
-                //let str = c.external_data.replace('\'','"')
-
-                //console.log(str);
-                const externaldata = JSON.stringify(c.external_data);
-                
                 const { username, name, email } = this.state;
-                console.log(externaldata)
+                console.log(c.external_data.thumbnail.picture_url)
+                if (!c.external_data.thumbnail.picture_url){
+                  const fotoConta = sygnet;
+                }else{
+                  const fotoConta = c.external_data.thumbnail.picture_url;
+                }
                 return (
                     <Col xs="12" sm="6" md="3">
                       <Card className="card-accent-primary">
                         <CardHeader>
                           {c.name}
+                          <div className="float-right">
+                          <ButtonGroup>
+                            <ButtonDropdown isOpen={this.state.dropdownOpen[1]} toggle={() => { this.toggle(1); }}>
+                              <DropdownToggle caret color="primary" size="sm">
+                                Opções
+                              </DropdownToggle>
+                              <DropdownMenu>
+                                <DropdownItem onClick={() => this.renomear(c.id)}>Renomear</DropdownItem>
+                                <DropdownItem onClick={() => this.sincronizar(c.id)}>Sincronizar</DropdownItem>
+                                <DropdownItem onClick={() => this.excluir(c.id)}>Excluir</DropdownItem>
+                              </DropdownMenu>
+                            </ButtonDropdown>
+                          </ButtonGroup>
+                          </div>
                         </CardHeader>
                         <CardBody>
-                          <img src={sygnet} class="img-full70 align-content-center" alt="Loja Teste"></img>
+                          <img src={!c.external_data.thumbnail.picture_url ? sygnet : c.external_data.thumbnail.picture_url} class="img-full70 align-content-center" alt="Loja Teste"></img>
                           <p class="text-primary h5 text-center">{c.external_name}</p>
                           <p class="text-left">
                             <i class="fa fa-envelope"></i> E-mail: {c.external_data.email}<br></br>
                             <i class="fa fa-user"></i> Usuário: <b>{c.external_data.nickname}</b>
                           </p>
-                          <div className="align-content-center">
-                          <Button className="btn btn-outline-primary btn-sm" onClick={() => this.renomear(c.id)}>Renomear</Button>
-                          <Button className="btn btn-outline-primary btn-sm" onClick={() => this.sincronizar(c.id)}>Sincronizar</Button>
-                          <Button className="btn btn-outline-primary btn-sm" onClick={() => this.excluir(c.id)}>Excluir</Button>
-                          </div>
+                          
                         </CardBody>
                         <CardFooter>
                           <div class="float-right text-right">
