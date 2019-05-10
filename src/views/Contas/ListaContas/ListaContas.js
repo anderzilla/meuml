@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 import axios from 'axios';
 import sygnet from '../../../assets/img/brand/sygnet-logo.png';
+import fotoPadrao from '../../../assets/img/avatars/user.svg';
 
 
 
@@ -146,7 +147,7 @@ class ListaContas extends Component {
         });
   }
   render() {
-
+    let fotoConta = '';
 
     const { isLoading, contas, error } = this.state;
 
@@ -160,7 +161,15 @@ class ListaContas extends Component {
         <Row>
           {!isLoading ? (
               contas.map(c=> {
+                console.log(c.external_data);
                 const { username, name, email } = this.state;
+                if (contas.indexOf('picture_url') === -1){
+                  fotoConta = fotoPadrao;
+                }else{
+                  fotoConta = c.external_data.thumbnail.picture_url;
+                }
+                
+                console.log(fotoConta);
                 return (
                     <Col xs="12" sm="6" md="3">
                       <Card className="card-accent-primary">
@@ -182,7 +191,7 @@ class ListaContas extends Component {
                           </div>
                         </CardHeader>
                         <CardBody>
-                          <img src={!c.external_data.thumbnail.picture_url ? sygnet : c.external_data.thumbnail.picture_url} class="img-full70 align-content-center" alt="Loja Teste"></img>
+                          <img src={fotoConta} class="img-full70 align-content-center" alt="Loja Teste"></img>
                           <p class="text-primary h5 text-center nomeDuasLinhas">{c.external_name}</p>
                           <p class="text-left">
                             <i class="fa fa-envelope"></i> E-mail: {c.external_data.email}<br></br>
