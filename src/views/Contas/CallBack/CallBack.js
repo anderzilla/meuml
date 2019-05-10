@@ -21,24 +21,21 @@ class CallBack extends Component {
       if (res.data.status === 'success'){
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
         onClose: () => {
-          window.location.href="/listacontas";
-          //this.props.history.push('/listacontas');
-          
+          this.props.history.push('/listacontas');
+          //window.location.reload();
         }});
       }else{
        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
        onClose: () => {
-        window.location.href="/listacontas";
-        //this.props.history.push('/listacontas');
-        
+        this.props.history.push('/listacontas');
+        //window.location.reload();
        }});
       }
     }).catch(error => {
       Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
-        window.location.href="/listacontas";
-        //this.props.history.push('/listacontas');
-        
+        this.props.history.push('/listacontas');
+        //window.location.reload();
       }});
     });
 
