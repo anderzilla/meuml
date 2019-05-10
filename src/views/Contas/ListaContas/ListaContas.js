@@ -200,9 +200,14 @@ class ListaContas extends Component {
                           
                         </CardBody>
                         <CardFooter>
-                          <div class="float-right text-right">
-                            <span class="text-success h5"></span> Anúncios
-                          </div>
+                        <Row>
+                          <Col md="6" sm="12">
+                          Vendas:<span class="text-success h5">{c.external_data.seller_reputation.metrics.sales.completed}</span>   
+                          </Col>
+                          <Col md="6" sm="12">
+                          Anúncios:<span class="text-success h5"></span>
+                          </Col>
+                        </Row>
                         </CardFooter>
                       </Card>
                     </Col>
