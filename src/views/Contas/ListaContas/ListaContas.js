@@ -20,6 +20,7 @@ class ListaContas extends Component {
       constas: [],
       isLoading: true,
       total: 0,
+      fotoConta: fotoPadrao,
     };
   }
 
@@ -147,8 +148,7 @@ class ListaContas extends Component {
         });
   }
   render() {
-    let fotoConta = '';
-
+    
     const { isLoading, contas, error } = this.state;
 
     return (
@@ -163,13 +163,11 @@ class ListaContas extends Component {
               contas.map(c=> {
                 console.log(c.external_data);
                 const { username, name, email } = this.state;
-                if (contas.indexOf('picture_url') === -1){
-                  fotoConta = fotoPadrao;
-                }else{
-                  fotoConta = c.external_data.thumbnail.picture_url;
+                if (contas.indexOf('picture_url') !== -1){
+                  this.setState({fotoConta : c.external_data.thumbnail.picture_url});
                 }
                 
-                console.log(fotoConta);
+                console.log(this.state.fotoConta);
                 return (
                     <Col xs="12" sm="6" md="3">
                       <Card className="card-accent-primary">
@@ -191,7 +189,7 @@ class ListaContas extends Component {
                           </div>
                         </CardHeader>
                         <CardBody>
-                          <img src={fotoConta} class="img-full70 align-content-center" alt="Loja Teste"></img>
+                          <img src={this.state.fotoConta} class="img-full70 align-content-center" alt="Loja Teste"></img>
                           <p class="text-primary h5 text-center nomeDuasLinhas">{c.external_name}</p>
                           <p class="text-left">
                             <i class="fa fa-envelope"></i> E-mail: {c.external_data.email}<br></br>
