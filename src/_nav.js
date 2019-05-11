@@ -64,7 +64,7 @@ export default {
     },
     {
       name: 'Perguntas',
-      url: '/dashboard',
+      url: '/perguntas',
       icon: 'fa fa-question-circle',
       
     },

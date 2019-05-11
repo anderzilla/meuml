@@ -164,7 +164,11 @@ class ListaContas extends Component {
                 console.log(c.external_data);
                 const { username, name, email } = this.state;
                 if (contas.indexOf("thumbnail") !== '-1'){
-                  this.state.fotoConta = c.external_data.thumbnail.picture_url;
+                  try {
+                    this.state.fotoConta = c.external_data.thumbnail.picture_url;
+                  }catch (e) {
+
+                  }
                 }
                 console.log(contas.indexOf('picture_url'));
                 console.log(this.state.fotoConta);

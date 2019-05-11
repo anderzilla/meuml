@@ -20,6 +20,7 @@ const BloquearEmMassa = React.lazy(() => import('./views/Bloqueios/BloquearEmMas
 const AdicionarItemLista = React.lazy(() => import('./views/Bloqueios/BloquearEmMassa/AdicionarItemLista'));
 const MeusBloqueios = React.lazy(() => import('./views/Bloqueios/MeusBloqueios'));
 const Categorias = React.lazy(() => import('./views/Categorias/CategoriasDataTable'));
+const Perguntas = React.lazy(() => import('./views/Perguntas/Perguntas'));
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -47,6 +48,7 @@ const routes = [
 
 
   { path: '/categorias', name: 'Categorias - Pesos e Dimensões', component: Categorias, exact: true },
+  { path: '/perguntas', name: 'Perguntas e Respostas', component: Perguntas, exact: true },
 ];
 
 export default routes;
