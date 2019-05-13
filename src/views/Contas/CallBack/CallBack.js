@@ -12,6 +12,8 @@ class CallBack extends Component {
       token: token,
       message: '',
       status: '',
+      linkLista: '',
+
     };
     
     axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, 
@@ -21,21 +23,21 @@ class CallBack extends Component {
       if (res.data.status === 'success'){
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
         onClose: () => {
-          this.props.history.push('/listacontas');
-          window.location.reload();
+          this.state.linkLista = window.location.hostname+'/listacontas';
+          window.location.href(this.state.linkLista);
         }});
       }else{
        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
        onClose: () => {
-        this.props.history.push('/listacontas');
-        window.location.reload();
+        this.state.linkLista = window.location.hostname+'/listacontas';
+          window.location.href(this.state.linkLista);
        }});
       }
     }).catch(error => {
       Swal.fire({html:'<p>'+ error +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
-        this.props.history.push('/listacontas');
-        window.location.reload();
+        this.state.linkLista = window.location.hostname+'/listacontas';
+          window.location.href(this.state.linkLista);
       }});
     });
 
