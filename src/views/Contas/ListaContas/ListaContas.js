@@ -22,6 +22,8 @@ class ListaContas extends Component {
       total: 0,
       fotoConta: fotoPadrao,
     };
+
+    this.openAuth = this.openAuth.bind(this);
   }
 
   toggle(i) {
@@ -136,16 +138,29 @@ class ListaContas extends Component {
           }
         });
   }
+
+  openAuth()
+  {
+    window.open('#/contas/adicionar', 'SomeAuthentication', 'width=972,height=660,modal=yes,alwaysRaised=yes')
+  }
+
   render() {
     let j = 0;
     const { isLoading, contas, error } = this.state;
 
+    if(window.opener || window.history.length === 1){
+      let isPopupWindow = true;
+      window.opener.location.reload();
+      window.open('', '_self', '').close();
+    }
+
+
     return (
       <div className="animated fadeIn">
         <h1>Contas
-          <Link to="/contas/adicionar"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
+          <a onClick={this.openAuth}> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
           <Button className="btn btn-primary float-right"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
-          </Link>
+          </a>
         </h1>
         <Row>
           {!isLoading ? (

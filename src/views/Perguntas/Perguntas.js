@@ -163,10 +163,62 @@ class Perguntas extends Component {
       }else{
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
       }
-    });/*.catch(error => {
+    }).catch(error => {
       Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });*/
+    });
   }
+
+  removeQuestion(question){
+
+    this.url = process.env.REACT_APP_API_URL + `/questions/` + question + '?account_id=' + this.state.account_id
+
+    axios.delete(this.url,
+        { headers: {"Authorization" : 'Bearer '+getToken()}},
+    ).then(res => {
+
+      if (res.status === 200){
+
+        Swal.fire({html:'<p>Pergunta deletada com sucesso!</p>', type: 'success', showConfirmButton: true, timer: 5});
+
+        setTimeout(this.fetchQuestions(this.state.account_id),10000);
+
+      }else{
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+      }
+    }).catch(error => {
+      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    });
+
+  }
+
+
+  blockUserFromQuestions(question, user){
+    this.url = process.env.REACT_APP_API_URL + `/questions/` + question + '/block/user'
+
+    axios.post(this.url,
+        {
+            user_id: user.toString(),
+            account_id:this.state.account_id,
+            item_id: question.toString()
+        },
+        { headers: {"Authorization" : 'Bearer '+getToken()}},
+    ).then(res => {
+
+      if (res.status === 200){
+
+        Swal.fire({html:'<p>Pergunta deletada com sucesso!</p>', type: 'success', showConfirmButton: true, timer: 5});
+
+        setTimeout(this.fetchQuestions(this.state.account_id),10000);
+
+      }else{
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+      }
+    }).catch(error => {
+      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    });
+
+  }
+
 
 
   handleChange(event) {
@@ -204,7 +256,7 @@ class Perguntas extends Component {
                             }}
                             {if(checked === c.name){
                               return (
-                                  <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name} - <i className={"fa fa-check"}></i></DropdownItem>
+                                  <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name}  ({c.count_questions})</DropdownItem>
                               )
                             }else{
                               return (
@@ -234,9 +286,29 @@ class Perguntas extends Component {
                                   {question.text}
                                 </CardBody>
                                 <CardFooter className="px-3 py-2">
-                                  <Col md={8} lg={8}>
-                                    <Input type={'textarea'} className={"col-md"} id={question.id} value={this.state.answer[question.id]} onChange={this.handleChange} />
-                                    <Button onClick={this.handleClick}>{"Responder pergunta"}</Button>
+                                  <Col md={12} lg={12}>
+
+                                    <Row>
+                                      <Input type={'textarea'} className={"col-md"} id={question.id} value={this.state.answer[question.id]} onChange={this.handleChange} />
+                                      <hr />
+                                    </Row>
+                                    <Row>
+                                      <Col md={3} lg={3}>
+                                        <Button className={"btn btn-success"} onClick={this.handleClick}>{"Responder pergunta"}</Button>
+                                      </Col>
+
+                                      <Col md={3} lg={3}>
+                                        <Button className={"btn btn-danger"} onClick={() => this.removeQuestion(question.id)}>{"Remover Pergunta"}</Button>
+                                      </Col>
+
+                                      <Col md={3} lg={3}>
+                                        <Button className={"btn btn-default"}  onClick={() => this.blockUserFromQuestions(question.id, question.from.id )}>{"Bloquear usuário para perguntar"}</Button>
+                                      </Col>
+
+                                      <Col md={3} lg={3}>
+                                        <Button className={"btn btn-default"}  onClick={this.handleClick}>{"Bloquear usuário para perguntar e comprar"}</Button>
+                                      </Col>
+                                    </Row>
                                   </Col>
                                 </CardFooter>
                               </Card>
