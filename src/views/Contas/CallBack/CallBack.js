@@ -12,42 +12,56 @@ class CallBack extends Component {
       token: token,
       message: '',
       status: '',
+      executed: false
     };
-    
-    axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, 
-    {"code": token,},
-    { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-      if (res.data.status === 'success'){
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
-        onClose: () => {
-          this.props.history.push('/listacontas');
-          window.location.reload();
-        }});
-      }else{
-       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
-       onClose: () => {
-        this.props.history.push('/listacontas');
-        window.location.reload();
-       }});
-      }
-    }).catch(error => {
-      if(error.indexof("response") !== '-1'){
-        Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
-      onClose: () => {
-        this.props.history.push('/listacontas');
-        window.location.reload();
-      }});
-      }else{
-        Swal.fire({html:'<p>'+ error+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
-      onClose: () => {
-        this.props.history.push('/listacontas');
-        window.location.reload();
-      }});
-      }
-      
-    });
+    if(this.state.executed === false) {
+      axios.post(process.env.REACT_APP_API_URL + `/accounts/from-mercado-livre`,
+          {"code": token,},
+          {headers: {"Authorization": 'Bearer ' + getToken()}},
+      ).then(res => {
+        if (res.data.status === 'success') {
+          Swal.fire({
+            html: '<p>' + res.data.message + '</p>', type: 'success', showConfirmButton: true,
+            onClose: () => {
+              this.setState(
+                  {
+                    executed: true
+                  }
+              )
+              this.props.history.push('/listacontas');
+              window.location.reload();
+            }
+          });
+        } else {
+          Swal.fire({
+            html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
+            onClose: () => {
+              this.props.history.push('/listacontas');
+              window.location.reload();
+            }
+          });
+        }
+      }).catch(error => {
+        console.log('rejected');
+        console.log(error.response);
 
+        if (error.response !== undefined) {
+          Swal.fire({
+            html: '<p>' + error.response.data.message + '</p>',
+            type: 'error',
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: 'Fechar',
+            onClose: () => {
+              this.props.history.push('/listacontas');
+              window.location.reload();
+            }
+          });
+        } else {
+          return true;
+        }
+      });
+    }
   }
 }
 

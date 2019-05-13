@@ -45,7 +45,7 @@ class Login extends Component {
     const USER_EMAIL = "@MeuML-UserEmail";
     const USER_SELLER_ID = "@MeuML-UserSellerId";
     //Realiza o login testando os dados do usuário no servidor
-    axios.post(`https://api.app2.meuml.com/auth/login`, {
+    axios.post(process.env.REACT_APP_API_URL + `/auth/login`, {
       "email":this.state.email,
       "password":this.state.password
     })
@@ -61,7 +61,7 @@ class Login extends Component {
         this.setState({user_id});
         login(this.state.token);
         //Pega os dados do usuário baseado na resposta do servidor
-        axios.get(`https://api.app2.meuml.com/user/`+this.state.user_id, {
+        axios.get(process.env.REACT_APP_API_URL + `/user/`+this.state.user_id, {
           "hash":this.state.token,
 	        "email" : this.state.email,
 	        "password" : this.state.password,

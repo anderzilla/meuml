@@ -37,7 +37,7 @@ class RecuperarSenha extends Component {
     
     this.setState({auth: 'true'});
     
-    axios.post(`https://api.app2.meuml.com/auth/resetpassword`, {
+    axios.post(process.env.REACT_APP_API_URL + `/auth/resetpassword`, {
       "email":this.state.email
     })
     .then(res => {

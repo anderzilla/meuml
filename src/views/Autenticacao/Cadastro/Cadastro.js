@@ -76,7 +76,7 @@ class Cadastro extends Component {
     }else if (this.state.termos === '' ){
       alert('Aceite os termos de uso!' + this.state.termos);
     }else{
-      axios.post(`https://api.app2.meuml.com/user`, {
+      axios.post(process.env.REACT_APP_API_URL + `/user`, {
         "email":this.state.email,
         "name":this.state.userName,
         "password":this.state.password

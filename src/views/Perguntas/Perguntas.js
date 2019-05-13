@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from "axios";
 import {getToken} from "../../auth";
+import SemContas from "../Contas/SemContas/"
 import Swal from "sweetalert2";
 import {
   Button,
@@ -36,7 +37,8 @@ class Perguntas extends Component {
       isLoading: true,
       isLoadingAccounts: true,
       total: 0,
-      answer:''
+      answer:'',
+      not_has_accounts: false
     };
 
 
@@ -86,8 +88,10 @@ class Perguntas extends Component {
 
   fetchAccounts()
   {
-    this.url = `https://api.app2.meuml.com/accounts`
-    //this.url = `http://localhost:8000/api/accounts`
+
+
+    this.url = process.env.REACT_APP_API_URL + `/accounts?extra_fields=unanswered_questions`
+
     axios.get(this.url,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
@@ -101,6 +105,8 @@ class Perguntas extends Component {
 
         if(res.data.data.length > 0){
           this.fetchQuestions(res.data.data[0].id)
+        }else{
+          this.setState({not_has_accounts: true});
         }
 
       }else{
@@ -112,7 +118,7 @@ class Perguntas extends Component {
   }
 
   fetchQuestions(account_id) {
-    this.url = `https://api.app2.meuml.com/questions?account_id=` + account_id
+    this.url = process.env.REACT_APP_API_URL + `/questions?account_id=` + account_id
     //this.url = `http://localhost:8000/api/questions`
     axios.get(this.url,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
@@ -137,7 +143,7 @@ class Perguntas extends Component {
 
   sendAnswer() {
 
-    this.url = `https://api.app2.meuml.com/questions/answer`
+    this.url = process.env.REACT_APP_API_URL + `/questions/answer`
     //this.url = `http://localhost:8000/api/questions`
     axios.post(this.url,
         {
@@ -173,78 +179,85 @@ class Perguntas extends Component {
   }
 
   render() {
+    {console.log(this.state)}
     return (
+        this.state.not_has_accounts === false ? (
+          <div className="animated fadeIn">
+            <Card>
+              <CardHeader>
+                <h4>Perguntas - ({this.state.total}) </h4>
 
-        <div className="animated fadeIn">
-          <Card>
-            <CardHeader>
-              <h4>Perguntas - ({this.state.total}) </h4>
+                <br />
+                <ButtonGroup>
 
-              <br />
-              <ButtonGroup>
-                <ButtonDropdown isOpen={this.state.dropdownOpen[1]} toggle={() => { this.toggle(1); }}>
-                  <DropdownToggle caret color="primary" size="sm">
-                    Opções
-                  </DropdownToggle>
-                  <DropdownMenu>
+                  <ButtonDropdown isOpen={this.state.dropdownOpen[1]} toggle={() => { this.toggle(1); }}>
+                    <DropdownToggle caret color="primary" size="sm">
+                      Opções
+                    </DropdownToggle>
+                    <DropdownMenu>
 
-                    {!this.state.accounts.isLoadingAccounts ? (
-                        this.state.accounts.map(c => {
+                      {!this.state.accounts.isLoadingAccounts ? (
+                          this.state.accounts.map(c => {
 
-                          {if(this.state.accounts.length === 1){
-                              var checked = this.state.accounts[0].name
-                          }}
-                          {if(checked === c.name){
-                            return (
-                                <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name} - <i className={"fa fa-check"}></i></DropdownItem>
-                            )
-                          }else{
-                            return (
-                                <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name}</DropdownItem>
-                            )
-                          }}
+                            {if(this.state.accounts.length === 1){
+                                var checked = this.state.accounts[0].name
+                            }}
+                            {if(checked === c.name){
+                              return (
+                                  <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name} - <i className={"fa fa-check"}></i></DropdownItem>
+                              )
+                            }else{
+                              return (
+                                  <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name}</DropdownItem>
+                              )
+                            }}
 
+                          })
+                      ) : (
+                          <h3>Loading...</h3>
+                      )}
+                    </DropdownMenu>
+                  </ButtonDropdown>
+                </ButtonGroup>
+              </CardHeader>
+
+              <CardBody>
+
+
+                {!this.state.isLoading ? (
+
+                    this.state.questions.length > 0 ? (
+                        this.state.questions.map(question => {
+                          return (
+                              <Card id={"question-" + question.id}>
+                                <CardBody className={"card text-black bg-default"} >
+                                  {question.text}
+                                </CardBody>
+                                <CardFooter className="px-3 py-2">
+                                  <Col md={8} lg={8}>
+                                    <Input type={'textarea'} className={"col-md"} id={question.id} value={this.state.answer[question.id]} onChange={this.handleChange} />
+                                    <Button onClick={this.handleClick}>{"Responder pergunta"}</Button>
+                                  </Col>
+                                </CardFooter>
+                              </Card>
+                          )
                         })
-                    ) : (
-                        <h3>Loading...</h3>
-                    )}
-                  </DropdownMenu>
-                </ButtonDropdown>
-              </ButtonGroup>
-            </CardHeader>
-
-            <CardBody>
-
-
-              {!this.state.isLoading ? (
-
-                  this.state.questions.length > 0 ? (
-                      this.state.questions.map(question => {
-                        return (
-                            <Card id={"question-" + question.id}>
-                              <CardBody className={"card text-black bg-default"} >
-                                {question.text}
-                              </CardBody>
-                              <CardFooter className="px-3 py-2">
-                                <Col md={8} lg={8}>
-                                  <Input type={'textarea'} className={"col-md"} id={question.id} value={this.state.answer[question.id]} onChange={this.handleChange} />
-                                  <Button onClick={this.handleClick}>{"Responder pergunta"}</Button>
-                                </Col>
-                              </CardFooter>
-                            </Card>
-                        )
-                      })
+                  ) : (
+                      <h3>Nenhuma pergunta pendente.</h3>
+                  )
                 ) : (
-                    <h3>Nenhuma pergunta pendente.</h3>
-                )
-              ) : (
-                  <h3>Carregando ...</h3>
-              )}
-            </CardBody>
+                    <h3>Carregando ...</h3>
+                )}
+              </CardBody>
 
-          </Card>
+            </Card>
 
-        </div>
+          </div>
+      ) : (
+            <SemContas
+                {...this.state}
+            />
+      )
     );
   }
 }

@@ -23,7 +23,7 @@ class CategoriasDataTable extends React.Component {
 
     fetchCategorias(limit = 50, offset = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
 
-        let url = `https://api.app2.meuml.com/categories?offset=${offset}&limit=${limit}`
+        let url = process.env.REACT_APP_API_URL + `/categories?offset=${offset}&limit=${limit}`
 
         if( this.state.filter !== ''){
             url += `&filter=`+this.state.filter
