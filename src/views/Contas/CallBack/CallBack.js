@@ -1,5 +1,6 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import {getToken} from '../../../auth';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -13,6 +14,7 @@ class CallBack extends Component {
       message: '',
       status: '',
       linkLista: '',
+      redirect: false,
 
     };
     
@@ -22,22 +24,19 @@ class CallBack extends Component {
     ).then(res => {
       if (res.data.status === 'success'){
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
-        onClose: () => {
-          this.state.linkLista = window.location.hostname+'/listacontas';
-          window.location.href(this.state.linkLista);
+        onClose: () => { 
+          return <Redirect to='/listacontas' />
         }});
       }else{
        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
        onClose: () => {
-        this.state.linkLista = window.location.hostname+'/listacontas';
-          window.location.href(this.state.linkLista);
+        return <Redirect to='/listacontas' />
        }});
       }
     }).catch(error => {
       Swal.fire({html:'<p>'+ error +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
-        this.state.linkLista = window.location.hostname+'/listacontas';
-          window.location.href(this.state.linkLista);
+        return <Redirect to='/listacontas' />
       }});
     });
 
