@@ -17,26 +17,19 @@ class CallBack extends Component {
       redirect: false,
 
     };
+
     
     axios.post(`https://api.app2.meuml.com/accounts/from-mercado-livre`, 
     {"code": token,},
     { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       if (res.data.status === 'success'){
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
-        onClose: () => { 
-          return <Redirect to='/listacontas' />
-        }});
-      }else{
-       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
-       onClose: () => {
-        return <Redirect to='/listacontas' />
-       }});
+          return ( <Redirect to='/listacontas' /> ) ;
       }
     }).catch(error => {
       Swal.fire({html:'<p>'+ error +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
-        return <Redirect to='/listacontas' />
+        return ( <Redirect to='/listacontas' /> ) ;
       }});
     });
 
