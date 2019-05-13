@@ -67,7 +67,7 @@ class RenomearConta extends Component {
 
     const { handle } = this.props
     let account_id = this.props.match.params.id
-    axios.put(`https://api.app2.meuml.com/accounts/` + account_id,
+    axios.put(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
         {'name' : this.state.name},
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {

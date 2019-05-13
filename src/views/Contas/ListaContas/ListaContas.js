@@ -35,7 +35,7 @@ class ListaContas extends Component {
   }
 
   sincronizar(account_id){
-    axios.get(`https://api.app2.meuml.com/accounts/` + account_id + '/sync',
+    axios.get(process.env.REACT_APP_API_URL + `/accounts/` + account_id + '/sync',
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       console.log(res);
@@ -50,7 +50,7 @@ class ListaContas extends Component {
   }
 
   excluir(account_id){
-    axios.delete(`https://api.app2.meuml.com/accounts/` + account_id,
+    axios.delete(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       if (res.data.status === 'success'){
@@ -76,7 +76,7 @@ class ListaContas extends Component {
       console.log(result.value);
 
       if (result.value) {
-        axios.put(`https://api.app2.meuml.com/accounts/` + account_id,
+        axios.put(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
             {'name' : result.value},
             { headers: {"Authorization" : 'Bearer '+getToken()}},
         ).then(res => {
@@ -96,7 +96,7 @@ class ListaContas extends Component {
   fetchAccounts() {
 
 
-    axios.get(`https://api.app2.meuml.com/accounts`,
+    axios.get(process.env.REACT_APP_API_URL + `/accounts`,
         {
           headers:
               {

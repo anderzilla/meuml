@@ -26,7 +26,7 @@ class Categorias extends Component {
 
   fetchCategories() {
 
-    axios.get(`https://api.app2.meuml.com/categories`,
+    axios.get(process.env.REACT_APP_API_URL + `/categories`,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       console.log(res);

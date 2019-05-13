@@ -36,7 +36,7 @@ class ConfirmarCadastro extends Component {
     
     this.setState({auth: 'true'});
     
-    axios.post(`https://api.app2.meuml.com/auth/confirm`, {
+    axios.post(process.env.REACT_APP_API_URL + `/auth/confirm`, {
       "hash":this.state.hash,
       "email":this.state.email,
     })

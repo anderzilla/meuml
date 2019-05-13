@@ -38,7 +38,7 @@ class AlterarSenha extends Component {
     
     this.setState({auth: 'true'});
     
-    axios.put(`https://api.app2.meuml.com/user/updatepassword`, {
+    axios.put(process.env.REACT_APP_API_URL + `/user/updatepassword`, {
       "hash":this.state.hash,
       "email":this.state.email,
       "password":this.state.password,
