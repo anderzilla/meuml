@@ -27,7 +27,7 @@ class CallBack extends Component {
         window.history.go(-2);
       }
     }).catch(error => {
-      Swal.fire({html:'<p>'+ error +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
+      Swal.fire({html:'<p>'+ error.response +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
         window.history.go(-2);
       }});
