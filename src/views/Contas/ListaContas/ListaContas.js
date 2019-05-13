@@ -65,7 +65,7 @@ class ListaContas extends Component {
     });
   }
 
-  renomear(account_id){
+  renomear(account_id,index){
     const {value: novoNome} =  Swal.fire({
       title: 'Renomear Conta:',
       input: 'text',
@@ -82,23 +82,12 @@ class ListaContas extends Component {
         ).then(res => {
           console.log(res);
           if (res.data.status === 'success'){
-            Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true,
-              onClose: () => {
-                window.location.reload();
-              }});
+            document.getElementById('nomeConta-'+index).innerHTML = result.value;
           }else{
-            Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,
-              onClose: () => {
-                this.props.history.push('/listacontas');
-                //window.location.reload();
-              }});
+            Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,})
           }
         }).catch(error => {
-          Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
-            onClose: () => {
-              this.props.history.push('/listacontas');
-              //window.location.reload();
-            }});
+          Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', confirmButtonText: 'Fechar'});
         });
       }
     });
@@ -160,33 +149,24 @@ class ListaContas extends Component {
         </h1>
         <Row>
           {!isLoading ? (
-              contas.map(c=> {
-                console.log(c.external_data);
-                const { username, name, email } = this.state;
-                if (contas.indexOf("thumbnail") !== '-1'){
-                  try {
-                    this.state.fotoConta = c.external_data.thumbnail.picture_url;
-                  }catch (e) {
+              contas.map((c, index)=> {
+                const { username, name, email, id } = this.state;
 
-                  }
-                }
-                console.log(contas.indexOf('picture_url'));
-                console.log(this.state.fotoConta);
-                console.log(this.state.dropdownOpen);
-                j = j++;
+console.log(contas)
+
                 return (
-                    <Col xs="12" sm="6" md="3">
+                    <Col sm="12" md="3" key={c.id}>
                       <Card className="card-accent-primary">
                         <CardHeader>
-                          {c.name}
+                          <span id={'nomeConta-'+index}>{c.name}</span>
                           <div className="float-right">
                           <ButtonGroup>
-                            <ButtonDropdown isOpen={this.state.dropdownOpen[j]} toggle={() => { this.toggle(j); }}>
+                            <ButtonDropdown isOpen={this.state.dropdownOpen[index]} toggle={() => { this.toggle(index); }}>
                               <DropdownToggle caret color="primary" size="sm">
                                 Opções
                               </DropdownToggle>
                               <DropdownMenu>
-                                <DropdownItem onClick={() => this.renomear(c.id)}>Renomear</DropdownItem>
+                                <DropdownItem onClick={() => this.renomear(c.id,index)}>Renomear</DropdownItem>
                                 <DropdownItem onClick={() => this.sincronizar(c.id)}>Sincronizar</DropdownItem>
                                 <DropdownItem onClick={() => this.excluir(c.id)}>Excluir</DropdownItem>
                               </DropdownMenu>
@@ -195,21 +175,27 @@ class ListaContas extends Component {
                           </div>
                         </CardHeader>
                         <CardBody>
-                          <img src={this.state.fotoConta} class="img-full70 align-content-center" alt="Loja Teste"></img>
-                          <p class="text-primary h5 text-center nomeDuasLinhas">{c.external_name}</p>
-                          <p class="text-left">
-                            <i class="fa fa-envelope"></i> E-mail: {c.external_data.email}<br></br>
-                            <i class="fa fa-user"></i> Usuário: <b>{c.external_data.nickname}</b>
+                          <div className="imgConta">
+                          <img src={!c.external_data.thumbnail ? this.state.fotoConta  : c.external_data.thumbnail.picture_url } title={c.external_name} className="img-full70 align-content-center" alt="Loja Teste"></img>
+                          </div>
+                          <p className="text-primary text-center nomeDuasLinhas" title={c.external_name}>{c.external_name}</p>
+                          <p className="text-left">
+                            <div className="labelCard"><i className="fa fa-envelope"></i> E-mail:</div>
+                            {c.external_data.email}<br/>
+                            <div className="labelCard"><i className="fa fa-user"></i> Usuário:</div>
+                            {c.external_data.nickname}<br/>
                           </p>
                           
                         </CardBody>
                         <CardFooter>
                         <Row>
                           <Col md="6" sm="12">
-                          Vendas:<span class="text-success h5">{c.external_data.seller_reputation.metrics.sales.completed}</span>   
+                          <h5 className="tituloVendas">Vendas</h5>
+                          <h5 className="text-success valores">{c.external_data.seller_reputation.metrics.sales.completed}</h5>
                           </Col>
                           <Col md="6" sm="12">
-                          Anúncios:<span class="text-success h5"></span>
+                          <h5 className="tituloAnuncios">Anúncios</h5>
+                          <h5 className="text-success valores">{c.count_advertisings}</h5>
                           </Col>
                         </Row>
                         </CardFooter>

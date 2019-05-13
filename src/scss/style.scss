@@ -124,9 +124,30 @@ $spinkit-spinner-color: $body-color;
   margin: 0 15%;
 }
 .nomeDuasLinhas{
-  min-height: 40px;
+  min-height: 20px;
+  max-height: 40px;
+  max-width: 400ch;
+  white-space: nowrap; 
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
-
+.imgConta{
+  min-height: 150px;
+  max-height: 150px;
+}
+.tituloVendas, .tituloAnuncios{
+  vertical-align: super;
+  font-size: smaller;
+  text-align: center;  
+}
+.valores{
+  text-align: center;
+}
+.labelCard{
+  font-size: smaller;
+  color: #999;
+}
 
 //#############################################
 .app-header .navbar-brand{
