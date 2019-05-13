@@ -32,20 +32,11 @@ class CallBack extends Component {
        }});
       }
     }).catch(error => {
-      if(error.indexof("response") !== '-1'){
-        Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
+      Swal.fire({html:'<p>'+ error +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
         this.props.history.push('/listacontas');
         window.location.reload();
       }});
-      }else{
-        Swal.fire({html:'<p>'+ error+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
-      onClose: () => {
-        this.props.history.push('/listacontas');
-        window.location.reload();
-      }});
-      }
-      
     });
 
   }
