@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import {getToken} from '../../../auth';
-import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -33,7 +32,6 @@ class CallBack extends Component {
         window.history.go(-2);
       }});
     });
-
   }
 }
 
