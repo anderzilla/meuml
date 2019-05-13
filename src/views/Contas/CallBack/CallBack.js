@@ -24,12 +24,12 @@ class CallBack extends Component {
     { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       if (res.data.status === 'success'){
-          return ( <Redirect to='/listacontas' /> ) ;
+        window.history.go(-2);
       }
     }).catch(error => {
       Swal.fire({html:'<p>'+ error +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
-        return ( <Redirect to='/listacontas' /> ) ;
+        window.history.go(-2);
       }});
     });
 
