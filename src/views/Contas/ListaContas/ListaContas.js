@@ -164,7 +164,7 @@ class ListaContas extends Component {
         </h1>
         <Row>
           {!isLoading ? (
-              contas.map((c, index)=> {
+              contas.map((c, k)=> {
                 const { username, name, email, id } = this.state;
 
 console.log(contas)
@@ -173,15 +173,15 @@ console.log(contas)
                     <Col sm="12" md="3" key={c.id}>
                       <Card className="card-accent-primary">
                         <CardHeader>
-                          <span id={'nomeConta-'+index}>{c.name}</span>
+                          <span id={'nomeConta-'+k}>{c.name}</span>
                           <div className="float-right">
                           <ButtonGroup>
-                            <ButtonDropdown isOpen={this.state.dropdownOpen[index]} toggle={() => { this.toggle(index); }}>
+                            <ButtonDropdown isOpen={this.state.dropdownOpen[k]} toggle={() => { this.toggle(k); }}>
                               <DropdownToggle caret color="primary" size="sm">
-                                Opções
+                                Opções {k}
                               </DropdownToggle>
                               <DropdownMenu>
-                                <DropdownItem onClick={() => this.renomear(c.id,index)}>Renomear</DropdownItem>
+                                <DropdownItem onClick={() => this.renomear(c.id,k)}>Renomear</DropdownItem>
                                 <DropdownItem onClick={() => this.sincronizar(c.id)}>Sincronizar</DropdownItem>
                                 <DropdownItem onClick={() => this.excluir(c.id)}>Excluir</DropdownItem>
                               </DropdownMenu>
