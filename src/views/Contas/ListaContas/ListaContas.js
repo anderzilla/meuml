@@ -10,7 +10,7 @@ class ListaContas extends Component {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.state = {
-      dropdownOpen: new Array(2).fill(false),
+      dropdownOpen: new Array(50).fill(false),
       constas: [],
       isLoading: true,
       total: 0,
