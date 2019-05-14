@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
 import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button, ButtonDropdown, ButtonGroup, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 import axios from 'axios';
-import sygnet from '../../../assets/img/brand/sygnet-logo.png';
 import fotoPadrao from '../../../assets/img/avatars/user.svg';
 
-
-
 class ListaContas extends Component {
-  
   constructor(props) {
     super(props);
-
     this.toggle = this.toggle.bind(this);
     this.state = {
       dropdownOpen: new Array(2).fill(false),
@@ -22,10 +16,9 @@ class ListaContas extends Component {
       total: 0,
       fotoConta: fotoPadrao,
     };
-
     this.openAuth = this.openAuth.bind(this);
   }
-
+  //motor do dropdown
   toggle(i) {
     const newArray = this.state.dropdownOpen.map((element, index) => { return (index === i ? !element : false); });
     this.setState({
@@ -35,7 +28,7 @@ class ListaContas extends Component {
   componentDidMount() {
     this.fetchAccounts();
   }
-
+  //Sincronizar Conta
   sincronizar(account_id){
     axios.get(process.env.REACT_APP_API_URL + `/accounts/` + account_id + '/sync',
         { headers: {"Authorization" : 'Bearer '+getToken()}},
@@ -50,7 +43,7 @@ class ListaContas extends Component {
       Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     });
   }
-
+  //Excluir conta
   excluir(account_id){
     axios.delete(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
@@ -66,7 +59,7 @@ class ListaContas extends Component {
       Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     });
   }
-
+  //Renomear conta * somente para o sistema
   renomear(account_id,index){
     const {value: novoNome} =  Swal.fire({
       title: 'Renomear Conta:',
@@ -74,9 +67,6 @@ class ListaContas extends Component {
       showCancelButton: true,
       inputPlaceholder: 'Preencha o novo nome'
     }).then((result) => {
-      
-      console.log(result.value);
-
       if (result.value) {
         axios.put(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
             {'name' : result.value},
@@ -96,26 +86,16 @@ class ListaContas extends Component {
   }
 
   fetchAccounts() {
-
-
     axios.get(process.env.REACT_APP_API_URL + `/accounts`,
-        {
-          headers:
-              {
-                "Authorization": 'Bearer ' + getToken()
-              }
-        })
+        { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
           if (res.data.status === 'success') {
             const message = res.data.message;
-
             if (res.data.meta.total !== 0) {
-
               this.setState({
                 contas: res.data.data,
                 isLoading: false,
               });
-
             } else {
               Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true,
               onClose: () => {
@@ -170,7 +150,7 @@ class ListaContas extends Component {
 console.log(contas)
 
                 return (
-                    <Col sm="12" md="3" key={c.id}>
+                    <Col xs="12" sm="4" md="3" lg="2" key={c.id}>
                       <Card className="card-accent-primary">
                         <CardHeader>
                           <span id={'nomeConta-'+k}>{c.name}</span>
@@ -178,7 +158,7 @@ console.log(contas)
                           <ButtonGroup>
                             <ButtonDropdown isOpen={this.state.dropdownOpen[k]} toggle={() => { this.toggle(k); }}>
                               <DropdownToggle caret color="primary" size="sm">
-                                Opções {k}
+                                Opções
                               </DropdownToggle>
                               <DropdownMenu>
                                 <DropdownItem onClick={() => this.renomear(c.id,k)}>Renomear</DropdownItem>
