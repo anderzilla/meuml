@@ -142,7 +142,7 @@ class ListaContas extends Component {
           <Button className="btn btn-primary float-right"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
           </a>
         </h1>
-        <Row>
+        
           {!isLoading ? (
               contas.map((c, k)=> {
                 const { username, name, email, id } = this.state;
@@ -201,7 +201,7 @@ console.log(contas)
           ) : (
               <h3>Loading...</h3>
           )}
-        </Row>
+        
 
       </div>
     );
