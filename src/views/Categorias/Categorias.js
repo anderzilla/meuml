@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from "axios";
 import {getToken} from "../../auth";
 import Swal from "sweetalert2";
-import {Button, Card, Col, CardBody, CardFooter, CardHeader, Table} from "reactstrap";
+import {Card, CardBody, CardHeader, } from "reactstrap";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
 
 

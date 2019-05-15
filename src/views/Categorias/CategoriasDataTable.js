@@ -123,6 +123,13 @@ class CategoriasTableComp extends React.Component {
 
     render() {
         return (
+            <div className="animated fadeIn">
+          <Card>
+            <CardHeader>
+              <h4>Categorias - ({this.state.total}) </h4>
+            </CardHeader>
+
+            <CardBody>
             <BootstrapTable data={ this.props.data } remote={ true } pagination={ true }
                             fetchInfo={ { dataTotalSize: this.props.totalDataSize } }
                             options={ { sizePerPage: this.props.sizePerPage,
@@ -138,6 +145,9 @@ class CategoriasTableComp extends React.Component {
                 <TableHeaderColumn dataField='weight' dataSort={ true }>Peso</TableHeaderColumn>
                 <TableHeaderColumn dataField='cubage'  dataSort={ true }>Dimensão</TableHeaderColumn>
             </BootstrapTable>
+            </CardBody>
+            </Card>
+            </div>
         );
     }
 }
