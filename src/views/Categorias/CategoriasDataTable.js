@@ -126,10 +126,7 @@ class CategoriasTableComp extends React.Component {
         return (
             
           <Card>
-            <CardHeader>
-              <h4>Categorias - ({this.state.total}) </h4>
-            </CardHeader>
-
+              
             <CardBody>
             <BootstrapTable data={ this.props.data } remote={ true } pagination={ true }
                             fetchInfo={ { dataTotalSize: this.props.totalDataSize } }
