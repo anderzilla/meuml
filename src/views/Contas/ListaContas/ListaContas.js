@@ -136,12 +136,12 @@ class ListaContas extends Component {
 
 
     return (
+      <div className="animated fadeIn">
       <nav>
         <a onClick={this.openAuth}> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
           <Button className="btn btn-primary float-right"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
           </a>
       </nav>
-      <div className="animated fadeIn">
         <Row>
           {!isLoading ? (
               contas.map((c, k)=> {
