@@ -126,7 +126,7 @@ class CategoriasTableComp extends React.Component {
         return (
             
           <Card>
-              
+
             <CardBody>
             <BootstrapTable data={ this.props.data } remote={ true } pagination={ true }
                             fetchInfo={ { dataTotalSize: this.props.totalDataSize } }
@@ -137,7 +137,7 @@ class CategoriasTableComp extends React.Component {
                                 onSizePerPageList: this.props.onSizePerPageList,
                                 onFilterChange: this.props.onFilterChange,
                                 onSortChange: this.props.onSortChange
-                            } }>
+                            } } striped hover>
                 <TableHeaderColumn dataField='external_id' isKey={ true }>ID</TableHeaderColumn>
                 <TableHeaderColumn dataField='path' filter={ { type: 'TextFilter' } }>Descrição</TableHeaderColumn>
                 <TableHeaderColumn dataField='weight' dataSort={ true }>Peso</TableHeaderColumn>
