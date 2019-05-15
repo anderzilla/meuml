@@ -123,7 +123,7 @@ class CategoriasTableComp extends React.Component {
 
     render() {
         return (
-            <div className="animated fadeIn">
+            
           <Card>
             <CardHeader>
               <h4>Categorias - ({this.state.total}) </h4>
@@ -147,7 +147,7 @@ class CategoriasTableComp extends React.Component {
             </BootstrapTable>
             </CardBody>
             </Card>
-            </div>
+           
         );
     }
 }
