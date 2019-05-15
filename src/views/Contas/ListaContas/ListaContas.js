@@ -150,7 +150,7 @@ class ListaContas extends Component {
 console.log(contas)
 
                 return (
-                    <Col xs="12" sm="4" md="3" key={c.id}>
+                    <Col xs="12" sm="4" md="3" key={c.id} className="CardConta">
                       <Card className="card-accent-primary">
                         <CardHeader>
                           <span id={'nomeConta-'+k}>{c.name}</span>
