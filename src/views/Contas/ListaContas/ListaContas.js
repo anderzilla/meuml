@@ -139,7 +139,7 @@ class ListaContas extends Component {
       
       <div className="animated fadeIn">
         <Row>
-          <a onClick={this.openAuth}> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
+          <a onClick={this.openAuth} className="botaoAdicionarConta"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
           <Button className="btn btn-primary float-left"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
           </a>
         </Row>
