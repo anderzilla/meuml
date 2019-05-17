@@ -16,7 +16,7 @@ class BloquearComprador extends Component {
   constructor(props) {
     super(props);
     //this.saveChanges = this.saveChanges.bind(this);
-    this.updateDimensions = this.updateDimensions.bind(this);
+    //this.updateDimensions = this.updateDimensions.bind(this);
 
     this.motivos = {
       value: ['Não Pagou','Cancela compras'],
