@@ -1,56 +1,15 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, CardHeader, CardBody, CardFooter, Button, Form, FormFeedback, FormGroup, Label, Input } from 'reactstrap';
+import { Row, Col, Card, CardHeader, CardBody, CardFooter, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import motivos from './data/motivos';
 import Select from 'react-select';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 import { AppSwitch } from '@coreui/react'
 import 'react-select/dist/react-select.min.css';
-import { Formik } from 'formik';
-import * as Yup from 'yup'
 import './ValidationForms.css'
 
 const options = motivos.BLOCK; //temporário para aparecer motivs no dropdown
 
-const validationSchema = function (values) {
-  return Yup.object().shape({
-    idusuario: Yup.string()
-    .min(2, `Preencha o id duusuario a ser bloqueado`)
-    .required('Id do usuário é obrigatório'),
-  })
-}
-
-const validate = (getValidationSchema) => {
-  return (values) => {
-    const validationSchema = getValidationSchema(values)
-    try {
-      validationSchema.validateSync(values, { abortEarly: false })
-      return {}
-    } catch (error) {
-      return getErrorsFromValidationError(error)
-    }
-  }
-}
-
-const getErrorsFromValidationError = (validationError) => {
-  const FIRST_ERROR = 0
-  return validationError.inner.reduce((errors, error) => {
-    return {
-      ...errors,
-      [error.path]: error.errors[FIRST_ERROR],
-    }
-  }, {})
-}
-
-const initialValues = {
-  idusuario: "",
-}
-
-const onSubmit = (values, { setSubmitting, setErrors }) => {
-  setTimeout(() => {
-    alert(JSON.stringify(values, null, 2))
-    // console.log('User has been successfully saved!', values)
-    setSubmitting(false)
-  }, 2000)
-}
 
 class BloquearComprador extends Component {
   //Adaptar para os valores de motivos de bloqueio
@@ -65,80 +24,69 @@ class BloquearComprador extends Component {
       orientation: 'vertical',
       openDirection: 'down'
     }
-  }
-
-  findFirstError (formName, hasError) {
-    const form = document.forms[formName]
-    for (let i = 0; i < form.length; i++) {
-      if (hasError(form[i].name)) {
-        form[i].focus()
-        break
-      }
+    this.state = {
+      accountId : '',
+	    bids : '',
+	    customer_id : '', //ID DO USUÁRIO LOGADO
+	    motive_description : '', 
+	    motive_id : '',
+      questions : '',
     }
   }
 
-  validateForm (errors) {
-    this.findFirstError('simpleForm', (fieldName) => {
-      return Boolean(errors[fieldName])
-    })
-  }
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
 
-  touchAll(setTouched, errors) {
-    setTouched({
-        idusuario: true,
-        accept: true
-      }
-    )
-    this.validateForm(errors)
-  }
-
-  componentDidMount() {
-    this.updateDimensions();
-    window.addEventListener('resize', this.updateDimensions);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateDimensions);
-  }
-
-  saveChanges(value) {
-    this.setState({ value });
-  }
-
-  updateDimensions() {
-    const windowWidth = window.innerWidth;
-    this.setState((motivos)=> {
-      return ({
-        windowWidth: windowWidth,
-        orientation: windowWidth < 620 ? 'vertical' : 'horizontal',
-        openDirection: windowWidth < 620 ? 'up' : 'down'
-      });
+    this.setState({
+      [name]: value
     });
+  }
+
+  handleSubmit(event) {
+
+    event.preventDefault();
+    
+    if (this.state.accountId === ''){
+      alert('Preencha o ID da conta a ser bloqueada! Nã deixe campos em branco');
+    }else if(this.state.motiveId === '' ){
+      alert('Defina o motivo do bloqueio.');
+    }else if (this.state.motiveDescription === '' ){
+      alert('Descreva o motivo do bloqueio.');
+    }else{
+      axios.post(process.env.REACT_APP_API_URL + `/blacklist`, {
+        "account_id": this.state.accountId,
+	      "bids": this.state.bids,
+	      "customer_id": "{{user_block_id}}",
+	      "motive_description": this.state.motiveDescription, 
+	      "motive_id": this.state.motiveId,
+        "questions": this.state.questions,
+      })
+      .then(res => {
+        //console.log(res.data);
+        const status = res.data.status;
+        this.setState({status});
+        if (this.state.status === 'success'){
+          const message = res.data.message;
+          this.setState({message});
+          Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+          this.props.history.push("/meusbloqueios");
+        }else{
+          const message = res.data.message;
+          this.setState({message});
+          Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
+        }
+      }).catch((error) => {  
+        this.setState({tipoErro: "Erro desconhecido, tente novamente!"});
+        Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    });
+  }
   }
 
   render() {
     return (
       <div className="animated fadeIn">
-        <h1>Bloquear Comprador!</h1>
-        <Formik
-              initialValues={initialValues}
-              validate={validate(validationSchema)}
-              onSubmit={onSubmit}
-              render={
-                ({
-                  values,
-                  errors,
-                  touched,
-                  status,
-                  dirty,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  isSubmitting,
-                  isValid,
-                  handleReset,
-                  setTouched
-                }) => (
         <Row>
           <Col xs="12" sm="12" md="12">
             <Card className="card-accent-primary">
@@ -146,24 +94,20 @@ class BloquearComprador extends Component {
                 Bloquear
               </CardHeader>
               <CardBody>
-              <Form onSubmit={handleSubmit} noValidate name='bloquearcomprador'>
+              <Form onSubmit={this.handleSubmit} name='bloquearcomprador'>
               <Row>
               <Col xs="12" sm="6" md="3">
                 <FormGroup>
-                  <Label for="idUsusario">First Name</Label>
+                  <Label for="idUsusario">ID do Usuário</Label>
                   <Input type="text"
                     name="isUsuario"
                     id="isUsuario"
                     placeholder="ID do Usuário"
                     autoComplete="given-name"
-                    valid={!errors.idusuario}
-                    invalid={touched.idusuario && !!errors.idusuario}
                     autoFocus={true}
                     required
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.idusuario} />
-                  <FormFeedback>{errors.idusuario}</FormFeedback>
+                    onChange={this.handleInputChange}
+                    value={this.state.idusuario} />
                 </FormGroup>
                 <FormGroup>
                   <Select
@@ -199,9 +143,9 @@ class BloquearComprador extends Component {
             </Card>
           </Col>
           </Row>
-          )} />
+         
       </div>
-    );
+    )
   }
 }
 
