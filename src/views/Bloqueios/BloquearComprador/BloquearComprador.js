@@ -100,36 +100,36 @@ class BloquearComprador extends Component {
                 <FormGroup>
                   <Label for="idUsusario">ID do Usuário</Label>
                   <Input type="text"
-                    name="isUsuario"
-                    id="isUsuario"
+                    name="idUsuario"
+                    id="idUsuario"
                     placeholder="ID do Usuário"
                     autoComplete="given-name"
                     autoFocus={true}
                     required
                     onChange={this.handleInputChange}
-                    value={this.state.idusuario} />
+                    value={this.state.idUsuario} />
                 </FormGroup>
                 <FormGroup>
                   <Select
-                    name="motivosbloqueio"
-                    value={this.motivos.value}
+                    name="motiveId"
+                    value={this.state.motiveId}
                     options={options}
-                    onChange={this.saveChanges}
+                    onChange={this.handleInputChange}
                     multi
                     placeholder="Selecione o motivo"
                   />
                 </FormGroup>
                 <FormGroup>
-                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="compras" value="1"  /><span class="align-middle"> Bloquear para compras</span>
+                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="bids" value="1" onChange={this.handleInputChange}  /><span class="align-middle"> Bloquear para compras</span>
                 </FormGroup>
                 <FormGroup>
-                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="perguntas" value="1" /> <span class="align-middle">Bloquear para perguntas</span>
+                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="questions" value="1" onChange={this.handleInputChange}/> <span class="align-middle">Bloquear para perguntas</span>
                 </FormGroup>
                 </Col>
                 <Col xs="12" sm="6" md="9">
                 <FormGroup row>
                   <Label htmlFor="textarea-input">Descrição do motivo</Label>
-                  <Input type="textarea" name="descricaomotivo" id="descricaomotivo" rows="9"
+                  <Input type="textarea" name="motiveDescription" onChange={this.handleInputChange} value={this.state.motiveDescription} id="descricaomotivo" rows="9"
                     placeholder="Descreva o motivo do Bloqueio..." />
                   </FormGroup>
                 </Col>
