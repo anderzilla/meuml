@@ -16,7 +16,6 @@ class BloquearComprador extends Component {
   constructor(props) {
     super(props);
     
-    this.toggle = this.toggle.bind(this);
     this.toggleFade = this.toggleFade.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
