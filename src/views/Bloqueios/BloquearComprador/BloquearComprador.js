@@ -15,8 +15,11 @@ class BloquearComprador extends Component {
   //Adaptar para os valores de motivos de bloqueio
   constructor(props) {
     super(props);
-    //this.saveChanges = this.saveChanges.bind(this);
-    //this.updateDimensions = this.updateDimensions.bind(this);
+    
+    this.toggle = this.toggle.bind(this);
+    this.toggleFade = this.toggleFade.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
     this.motivos = {
       value: ['Não Pagou','Cancela compras'],
@@ -32,6 +35,10 @@ class BloquearComprador extends Component {
 	    motive_id : '',
       questions : '',
     }
+  }
+
+  toggleFade() {
+    this.setState((prevState) => { return { fadeIn: !prevState }});
   }
 
   handleInputChange(event) {
