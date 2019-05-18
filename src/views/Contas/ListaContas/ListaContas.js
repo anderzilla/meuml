@@ -125,7 +125,6 @@ class ListaContas extends Component {
   }
 
   render() {
-    let j = 0;
     const { isLoading, contas, error } = this.state;
 
     if(window.opener || window.history.length === 1){
@@ -145,11 +144,9 @@ class ListaContas extends Component {
         </Row>
         <Row>
           {!isLoading ? (
-              contas.map((c, k)=> {
-                const { username, name, email, id } = this.state;
-
-console.log(contas)
-
+            contas.map((c, k)=> {
+              const { username, name, email, id } = this.state;
+              console.log(contas)
                 return (
                     <Col xs="12" sm="4" md="3" key={c.id} className="CardConta">
                       <Card className="card-accent-primary">
