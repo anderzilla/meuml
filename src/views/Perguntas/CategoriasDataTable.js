@@ -133,10 +133,10 @@ class CategoriasTableComp extends React.Component {
                                 onFilterChange: this.props.onFilterChange,
                                 onSortChange: this.props.onSortChange
                             } }>
-                <TableHeaderColumn dataField='external_id' isKey={ true }>ID</TableHeaderColumn>
-                <TableHeaderColumn dataField='path' filter={ { type: 'TextFilter' } }>Descrição</TableHeaderColumn>
-                <TableHeaderColumn dataField='weight' dataSort={ true }>Peso</TableHeaderColumn>
-                <TableHeaderColumn dataField='cubage'  dataSort={ true }>Dimensão</TableHeaderColumn>
+                <TableHeaderColumn columnTitle dataField='external_id' isKey={ true }>ID</TableHeaderColumn>
+                <TableHeaderColumn columnTitle dataField='path' filter={ { type: 'TextFilter' } }>Descrição</TableHeaderColumn>
+                <TableHeaderColumn columnTitle dataField='weight' dataSort={ true }>Peso</TableHeaderColumn>
+                <TableHeaderColumn columnTitle dataField='cubage'  dataSort={ true }>Dimensão</TableHeaderColumn>
             </BootstrapTable>
         );
     }

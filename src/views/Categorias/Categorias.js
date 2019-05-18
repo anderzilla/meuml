@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from "axios";
 import {getToken} from "../../auth";
 import Swal from "sweetalert2";
-import {Card, CardBody, CardHeader, } from "reactstrap";
+import {Card, CardBody, CardHeader } from "reactstrap";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
 
 
@@ -79,6 +79,7 @@ class Categorias extends Component {
                 <TableHeaderColumn dataField="path">Descrição</TableHeaderColumn>
                 <TableHeaderColumn dataField="weight" dataSort>Peso</TableHeaderColumn>
                 <TableHeaderColumn dataField="dimension" dataSort>Dimensão</TableHeaderColumn>
+
               </BootstrapTable>
             </CardBody>
 

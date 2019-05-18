@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import {Card, CardBody, CardHeader, } from "reactstrap";
+import {Card, CardBody } from "reactstrap";
 import axios from "axios";
 import {getToken} from "../../auth";
 import Swal from "sweetalert2";
 
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
 
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 class CategoriasDataTable extends React.Component {
     constructor(props) {
@@ -138,10 +139,10 @@ class CategoriasTableComp extends React.Component {
                                 onFilterChange: this.props.onFilterChange,
                                 onSortChange: this.props.onSortChange
                             } } striped hover>
-                <TableHeaderColumn dataField='external_id' isKey={ true }>ID</TableHeaderColumn>
+                <TableHeaderColumn width="110px" dataField='external_id' isKey={ true }>ID</TableHeaderColumn>
                 <TableHeaderColumn dataField='path' filter={ { type: 'TextFilter' } }>Descrição</TableHeaderColumn>
-                <TableHeaderColumn dataField='weight' dataSort={ true }>Peso</TableHeaderColumn>
-                <TableHeaderColumn dataField='cubage'  dataSort={ true }>Dimensão</TableHeaderColumn>
+                <TableHeaderColumn width="80px" dataField='weight' dataSort={ true }>Peso</TableHeaderColumn>
+                <TableHeaderColumn width="215px" dataField='cubage'  dataSort={ true }>Dimensão</TableHeaderColumn>
             </BootstrapTable>
             </CardBody>
             </Card>
