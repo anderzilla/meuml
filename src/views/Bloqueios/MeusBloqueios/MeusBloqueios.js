@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Table, Button} from 'reactstrap';
+import { Card, CardHeader, CardBody, CardFooter, Table, Button, Col, ButtonDropdown, ButtonGroup, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
@@ -11,32 +11,102 @@ class MeusBloqueios extends Component {
 
   constructor(props) {
     super(props);
-
+    this.toggle = this.toggle.bind(this);
     this.state = {
-      dropdownOpen: new Array(50).fill(false),
+      dropdownOpen: new Array(2).fill(false),
       blacklist: [],
       isLoading: true,
       data: [],
       totalDataSize: 0,
       sizePerPage: 50,
       offset: 1,
-      filter: ''
+      filter: '',
+      accounts: [],
+      isLoadingAccounts: true,
+      not_has_accounts: false,
+      backend_error: false,
+      ressync: false,
+      accountId: '',
     };
+
+  }
+
+  toggle(i) {
+    const newArray = this.state.dropdownOpen.map((element, index) => { return (index === i ? !element : false); });
+    this.setState({
+      dropdownOpen: newArray,
+    });
+  }
+
+  fetchAccounts()
+  {
+
+    this.url = process.env.REACT_APP_API_URL + `/accounts`
+
+    axios.get(this.url,
+      { headers: {"Authorization" : 'Bearer '+getToken()}},
+  ).then(res => {
+    console.log(res);
+    if (res.status === 200){
+
+      this.setState({
+        accounts: res.data.data,
+        isLoadingAccounts: false
+      });
+
+      if(res.data.data.length > 0){
+        this.fetchBlacklist(res.data.data[0].id)
+      }else{
+        this.setState({not_has_accounts: true});
+      }
+      this.setState({
+        ressync: false
+      })
+    }else{
+      Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+    }
+  }).catch(error => {
+
+    this.setState({
+      backend_error: true
+    });
+  });
   }
 
   componentDidMount() {
     this.fetchBlacklist();
+    this.fetchAccounts();
   }
 
   handlePageChange(pageNumber) {
-    console.log(`active page is ${pageNumber}`);
-    !pageNumber ? this.state = {offset : '1'} :
-    this.state = {offset : pageNumber};
+    !pageNumber ? this.state = {offset : '1'} : this.state = {offset : pageNumber};
     //this.props.history.push('/meusbloqueios?offset='+this.state.offset+'&limit=50');
   }
+  //ALTERA O BLOQUEIO DE COMPRAS
+  mudaBloqueioCompras(idBloqueio,bids,questions){
+    !bids ? bids = true : bids = false ;
+    axios.post(process.env.REACT_APP_API_URL + `/blacklist/unblock`,
+    {"block_id": idBloqueio,"bids":bids,"questions": questions},
+    {headers:{"Authorization": 'Bearer ' + getToken()}},
+    ).then(res => {
+      console.log(res.data);
+    });
+  }
+  //ALTERA O BLOQUEIO DE PERGUNTAS
+  mudaBloqueioPerguntas(idBloqueio,bids,questions){
+    !questions ? questions = true : questions = false ;
+    axios.post(process.env.REACT_APP_API_URL + `/blacklist/unblock`,
+    {"block_id": idBloqueio,"bids":bids,"questions": questions},
+    {headers:{"Authorization": 'Bearer ' + getToken() }},  
+    ).then(res => {
+      console.log(res.data);
+    });
+  }
 
-  fetchBlacklist(limit = 50, offset = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
-    axios.get(process.env.REACT_APP_API_URL + `/blacklist`,
+
+
+  fetchBlacklist(accountId,limit = 50, offset = 1, filter = '', sortOrder = 'ASC') {
+    axios.get(process.env.REACT_APP_API_URL + `/blacklist?account_id=`+accountId,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
           console.log(res.data);
@@ -86,17 +156,47 @@ class MeusBloqueios extends Component {
       <div className="animated fadeIn">
         <Card>
           <CardHeader>
-            <h5>Bloqueios - {this.state.total}</h5> 
+            <Col md="3" sm="4"><h5>Bloqueios - {this.state.total}</h5> </Col>
+            <Col md="9" sm="8">
+            <ButtonGroup>
+              <ButtonDropdown isOpen={this.state.dropdownOpen[0]} toggle={() => { this.toggle(0); }}>
+              <DropdownToggle caret color="primary" size="sm">
+                Contas
+              </DropdownToggle>
+              <DropdownMenu>
+                {!this.state.accounts.isLoadingAccounts ? (
+                  this.state.accounts.map(c => {
+                    {if(this.state.accounts.length === 1){
+                      var checked = this.state.accounts[0].name
+                    }}
+                  {if(checked === c.name){
+                    return (
+                    <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name}</DropdownItem>
+                    )
+                  }else{
+                    return (
+                      <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name} </DropdownItem>
+                    )
+                  }}
+                })
+              ) : (
+                <h3>Carregando...</h3>
+              )}
+                </DropdownMenu>
+              </ButtonDropdown>
+              </ButtonGroup>
+
+            </Col>
           </CardHeader>
           <CardBody>
           <Table responsive>
             <thead>
               <tr>
                 <th>ID do Usuario</th>
-                <th class="text-center">Compras</th>
-                <th class="text-center">Perguntas</th>
+                <th className="text-center">Compras</th>
+                <th className="text-center">Perguntas</th>
                 <th>Motivo</th>
-                <th class="text-center">Ação</th>
+                <th className="text-center">Ação</th>
               </tr>
             </thead>
             <tbody>
@@ -107,11 +207,19 @@ class MeusBloqueios extends Component {
                 return (      
                   <tr>
                     <td>{bl.customer_id}</td>
-                <td class="text-center">{bl.bids ? <i class="fa fa-check text-success"></i> : <i class="fa fa-ban text-danger"></i>}</td>
-                    <td class="text-center">{bl.questions ? <i class="fa fa-check text-success"></i> : <i class="fa fa-ban text-danger"></i>}</td>
+                    <td className="text-center">
+                      <Button onClick={() => this.mudaBloqueioCompras(bl.customer_id,bl.bids,bl.questions)}>
+                      {bl.bids ? <i className="fa fa-ban text-danger"></i> : <i className="fa fa-check text-success"></i>}
+                      </Button>
+                    </td>
+                    <td className="text-center">
+                      <Button onClick={() => this.mudaBloqueioPerguntas(bl.customer_id,bl.bids,bl.questions)}>
+                      {bl.questions ? <i className="fa fa-ban text-danger"></i> : <i className="fa fa-check text-success"></i>}
+                      </Button>
+                    </td>
                     <td>{bl.motive_description}</td>
                     <td>
-                    <Button class="btn btn-danger btn-small "><i class="fa fa-unlock"></i> Desbloquear</Button>
+                    <Button className="btn btn-danger btn-small "><i className="fa fa-unlock"></i> Desbloquear</Button>
                     </td>
                   </tr>
                 );
@@ -128,7 +236,7 @@ class MeusBloqueios extends Component {
           itemsCountPerPage={this.state.sizePerPage}
           totalItemsCount={this.state.total}
           pageRangeDisplayed={5}
-          onChange={this.handlePageChange()}
+          onChange={this.handlePageChange(this.state.offset)}
           itemClass= "btn btn-md btn-outline-info"
           activeClass = "btn btn-md btn-info"
           innerClass = "btn-group"
