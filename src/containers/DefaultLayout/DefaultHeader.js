@@ -3,12 +3,15 @@ import { DropdownMenu, DropdownToggle, Nav ,DropdownItem, Badge, Dropdown, Progr
 import PropTypes from 'prop-types';
 
 import { AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler} from '@coreui/react';
+import {Notifications} from '../../views/Notifications';
 
 import logo from '../../assets/img/brand/MeuML-logo2.png'
 import sygnet from '../../assets/img/brand/sygnet-logo.png'
 import avatar from '../../assets/img/avatars/user.svg'
 import axios from "axios";
 import {getToken} from "../../auth";
+import Notifier from "react-desktop-notification"
+
 import Swal from "sweetalert2";
 
 const propTypes = {
@@ -21,20 +24,30 @@ class DefaultHeader extends Component {
 
     constructor(props){
         super(props);
-        this.setState({
-            notif: true
-        })
 
-        this.toggle = this.toggle.bind(this);
         this.state = {
+            notif: true,
             dropdownOpen: false,
-        };
-        this.setState({
             notifications: [],
             isLoadingNotifications: true,
-        });
+        };
+
+        this.toggle = this.toggle.bind(this);
 
         this.getNotifications()
+    }
+
+    gotNewNotification(){
+
+        //Here will pop a notifier and always open in a new window when clicked.
+        Notifier.start("Title","Here is context","www.google.com","validated image url");
+
+        //Here will pop notifier and open in a specified name window "popwin1" when clicked.
+        Notifier.start("Title","Here is context","www.google.com","validated image url","popwin1");
+
+        //Here will pop notifier and focus parent window only when clicked.
+        Notifier.focus("Title","Here is context","www.google.com","validated image url");
+
     }
 
     toggle() {
@@ -52,9 +65,17 @@ class DefaultHeader extends Component {
                 if (res.data.status === 'success') {
                     const message = res.data.message;
                     this.setState({
-                        notifications: res.data.data,
+                        notifications: res.data.data.notifications,
                         isLoadingNotifications: false,
                     });
+
+                    if (res.data.data.browser !== undefined){
+                        if(res.data.data.browser.questions !== undefined){
+                            Notifier.start("Novas perguntas ",res.data.data.browser.questions.message,"/#/perguntas?view=all");
+                        }
+                    }
+
+
                 } else {
                     this.setState({
                         notifications: [],
@@ -65,6 +86,13 @@ class DefaultHeader extends Component {
             });
     }
 
+    setNotificationsAsViewed()
+    {
+        axios.put(process.env.REACT_APP_API_URL + `/notifications/viewed/all`,
+            {},
+            { headers: { "Authorization": 'Bearer ' + getToken() } });
+    }
+
     render() {
 
         // eslint-disable-next-line
@@ -72,8 +100,6 @@ class DefaultHeader extends Component {
         const { children, ...attributes } = this.props;
 
         return (
-
-
           <React.Fragment>
               <AppSidebarToggler className="d-lg-none" display="md" mobile />
             <AppNavbarBrand
@@ -85,27 +111,25 @@ class DefaultHeader extends Component {
 
             <Nav className="ml-auto" navbar>
 
-                <Dropdown nav className="d-md-down-none" isOpen={this.state.dropdownOpen}  toggle={this.toggle}>
+                <Dropdown nav className="d-md-down-none" isOpen={this.state.dropdownOpen} onClick={() => this.setNotificationsAsViewed()} toggle={this.toggle}>
                     <DropdownToggle nav>
-                        <i className="icon-bell"></i><Badge pill color="danger">2</Badge>
+                        <i className="icon-bell"></i><Badge pill color="danger">{this.state.notifications.length}</Badge>
                     </DropdownToggle>
                     <DropdownMenu right>
                         {!this.state.isLoadingNotifications ? (
-                            !this.state.notifications > 0 ? (
-                                <DropdownItem header tag="div" className="text-center"><strong>You have 5 notifications</strong></DropdownItem>
+                            this.state.notifications.length > 0 ? (
+
+                                    this.state.notifications.map((notification)=> {
+                                        return (
+                                                <DropdownItem header tag="div" className={"text-center" + !notification.viewed ? "default": "success" } ><span>1 Pergunta não respondida: <br /></span><a href={notification.resource}>{notification.resource}</a></DropdownItem>
+                                            )
+                                    })
                             ) : (
-                                <h3>Nenhuma notificação localizada ... </h3>
+                                <DropdownItem header tag="div" className="text-center"><strong>Nenhuma notificação</strong></DropdownItem>
                             )
                         ) : (
                             <h3>Carregando notificações...</h3>
                         )}
-                        <DropdownItem>
-                            <div className="text-uppercase mb-1">
-                                <small><b>Créditos</b></small>
-                            </div>
-                            <Progress className="progress-xs" color="info" value="25" />
-                            <small className="text-muted">R$ 39,00</small>
-                        </DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
               <AppHeaderDropdown>
