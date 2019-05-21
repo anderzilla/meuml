@@ -3,7 +3,6 @@ import axios from "axios";
 import {getToken} from "../../auth";
 import SemContas from "../Contas/SemContas/"
 import Page500 from "../Sistema/Page500/"
-import WidgetCard from "../Sistema/WidgetCard/"
 import Swal from "sweetalert2";
 import {
   Button,
@@ -12,16 +11,12 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Table,
   ButtonGroup,
   ButtonDropdown,
-  Dropdown,
   DropdownToggle, DropdownMenu, DropdownItem, Row,
-  Input, CardGroup, Progress
+  Input,
 } from "reactstrap";
-import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
-import fotoPadrao from "../../assets/img/avatars/user.svg";
-import {ToastContainer, toast} from 'react-toastify';
+import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 

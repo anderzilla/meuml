@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import {Button, Card, CardBody, CardFooter, Col, Container, Input, Row} from 'reactstrap';
+import {Button,Col, Container,Row} from 'reactstrap';
 
 class Page500 extends Component {
   render() {

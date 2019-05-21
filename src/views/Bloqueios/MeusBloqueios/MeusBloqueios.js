@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Table, Button, Col, ButtonDropdown, ButtonGroup, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+import { Card, CardHeader, CardBody, CardFooter, Table, Button, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 import Pagination from "react-js-pagination";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -11,72 +12,60 @@ class MeusBloqueios extends Component {
 
   constructor(props) {
     super(props);
+
     this.toggle = this.toggle.bind(this);
+
     this.state = {
-      dropdownOpen: new Array(2).fill(false),
+      dropdownOpen: new Array(6).fill(false),
       blacklist: [],
-      isLoading: true,
-      data: [],
       totalDataSize: 0,
       sizePerPage: 50,
       offset: 1,
       filter: '',
       accounts: [],
       isLoadingAccounts: true,
-      not_has_accounts: false,
-      backend_error: false,
-      ressync: false,
+      isLoading: true,
       accountId: '',
     };
-
   }
 
   toggle(i) {
-    const newArray = this.state.dropdownOpen.map((element, index) => { return (index === i ? !element : false); });
+    const newArray = this.state.dropdownOpen.map((element, index) => {
+      return (index === i ? !element : false);
+    });
     this.setState({
       dropdownOpen: newArray,
     });
   }
 
+  componentDidMount() {
+    this.fetchAccounts();
+  }
+
   fetchAccounts()
   {
-
     this.url = process.env.REACT_APP_API_URL + `/accounts`
-
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
-  ).then(res => {
-    console.log(res);
+    ).then(res => {
+    //console.log(res);
     if (res.status === 200){
-
       this.setState({
         accounts: res.data.data,
         isLoadingAccounts: false
       });
-
-      if(res.data.data.length > 0){
-        this.fetchBlacklist(res.data.data[0].id)
+      if(res.data.data.meta.total > 0){
+        this.fetchBlacklist(res.data.data[0].id);
       }else{
-        this.setState({not_has_accounts: true});
       }
-      this.setState({
-        ressync: false
-      })
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
     }
   }).catch(error => {
-
-    this.setState({
-      backend_error: true
-    });
   });
   }
 
-  componentDidMount() {
-    this.fetchBlacklist();
-    this.fetchAccounts();
-  }
+  
 
   handlePageChange(pageNumber) {
     !pageNumber ? this.state = {offset : '1'} : this.state = {offset : pageNumber};
@@ -89,7 +78,7 @@ class MeusBloqueios extends Component {
     {"block_id": idBloqueio,"bids":bids,"questions": questions},
     {headers:{"Authorization": 'Bearer ' + getToken()}},
     ).then(res => {
-      console.log(res.data);
+      //console.log(res.data);
     });
   }
   //ALTERA O BLOQUEIO DE PERGUNTAS
@@ -99,17 +88,17 @@ class MeusBloqueios extends Component {
     {"block_id": idBloqueio,"bids":bids,"questions": questions},
     {headers:{"Authorization": 'Bearer ' + getToken() }},  
     ).then(res => {
-      console.log(res.data);
+      //console.log(res.data);
     });
   }
 
 
 
-  fetchBlacklist(accountId,limit = 50, offset = 1, filter = '', sortOrder = 'ASC') {
+  fetchBlacklist(accountId) {
     axios.get(process.env.REACT_APP_API_URL + `/blacklist?account_id=`+accountId,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
-          console.log(res.data);
+          //console.log(res.data);
           if (res.data.status === 'success') {
             const message = res.data.message;
             if (res.data.meta.total !== 0) {
@@ -117,75 +106,53 @@ class MeusBloqueios extends Component {
                 blacklist: res.data.data,
                 paginacao: res.data.meta,
                 total: res.data.meta.total,
-                isLoading: false,
-                data: res.data.data,
                 totalDataSize: res.data.meta.total,
                 sizePerPage: res.data.meta.limit,
-                currentPage: res.data.meta.page
+                currentPage: res.data.meta.page,
               });
-            } else {
-              Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true,
-              onClose: () => {
-                this.setState({
-                  blacklist: res.data.data,
-                  isLoading: false,
-                });
-              }
-            });
-            }
-          } else {
-            Swal.fire({html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
-            onClose: () => {
+            }else{
               this.setState({
                 blacklist: res.data.data,
                 isLoading: false,
               });
-            }
+              Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true,
             });
+            }
           }
+        }).catch(error => {
+
+          this.setState({
+            backend_error: true
+          });
         });
   }
 
   render() {
-
-    const { isLoading, blacklist, error } = this.state;
-
-    let j=0;
-
+    //{//console.log(this.state)}
+    const { isLoading, isLoadingAccounts, blacklist, error, accounts } = this.state;
+    
     return (
       <div className="animated fadeIn">
         <Card>
           <CardHeader>
             <Col md="3" sm="4"><h5>Bloqueios - {this.state.total}</h5> </Col>
             <Col md="9" sm="8">
-            <ButtonGroup>
-              <ButtonDropdown isOpen={this.state.dropdownOpen[0]} toggle={() => { this.toggle(0); }}>
-              <DropdownToggle caret color="primary" size="sm">
-                Contas
-              </DropdownToggle>
-              <DropdownMenu>
-                {!this.state.accounts.isLoadingAccounts ? (
-                  this.state.accounts.map(c => {
-                    {if(this.state.accounts.length === 1){
-                      var checked = this.state.accounts[0].name
-                    }}
-                  {if(checked === c.name){
-                    return (
-                    <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name}</DropdownItem>
-                    )
-                  }else{
-                    return (
-                      <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name} </DropdownItem>
-                    )
-                  }}
-                })
-              ) : (
-                <h3>Carregando...</h3>
-              )}
+            {!isLoadingAccounts ? (
+              <Dropdown  isOpen={this.state.dropdownOpen[1]} toggle={() => {this.toggle(1);}}>
+                <DropdownToggle caret color="primary" size="sm">
+                  Contas
+                </DropdownToggle>
+                <DropdownMenu>
+                  {accounts.map((c, k) => {
+                    const { id, name } = this.state;
+                    return (<DropdownItem onClick={() => this.fetchBlacklist(c.id)}>{c.name}</DropdownItem>)
+                  })}
+                <DropdownItem >teste</DropdownItem>
                 </DropdownMenu>
-              </ButtonDropdown>
-              </ButtonGroup>
-
+                </Dropdown>
+                ) : (
+                  <h3>Carregando...</h3>
+                )}
             </Col>
           </CardHeader>
           <CardBody>
@@ -202,8 +169,7 @@ class MeusBloqueios extends Component {
             <tbody>
             {!isLoading ? (
             blacklist.map((bl, k)=> {
-              const { customer_id, bids, questions, motive_description } = this.state;
-              console.log(blacklist)
+              //console.log(blacklist)
                 return (      
                   <tr>
                     <td>{bl.customer_id}</td>
@@ -248,7 +214,7 @@ class MeusBloqueios extends Component {
         </Card>
 
       </div>
-    );
+    )
   }
 }
 
