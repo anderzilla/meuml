@@ -1,28 +1,12 @@
 import React, { Component } from 'react';
-import axios from "axios";
-import {getToken, login} from "../../../auth";
-import Swal from "sweetalert2";
 import {
   Button,
-  Card,
-  CardBody,
-  CardGroup,
-  Col,
-  Container,
-  Form, Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Row
 } from "reactstrap";
-import logo from "../../../assets/img/brand/MeuML-logo2.png";
 import {Link} from "react-router-dom";
 
 class SemContas extends Component {
   constructor(props) {
-
     super(props);
-
   }
 
   render() {
