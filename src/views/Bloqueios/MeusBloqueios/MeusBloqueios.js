@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Table, Button, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+import { Card, CardHeader, CardBody, CardFooter, Table, Button, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
@@ -16,7 +17,7 @@ class MeusBloqueios extends Component {
     this.toggle = this.toggle.bind(this);
 
     this.state = {
-      dropdownOpen: new Array(6).fill(false),
+      dropdownOpen: false,
       blacklist: [],
       totalDataSize: 0,
       sizePerPage: 50,
@@ -29,13 +30,10 @@ class MeusBloqueios extends Component {
     };
   }
 
-  toggle(i) {
-    const newArray = this.state.dropdownOpen.map((element, index) => {
-      return (index === i ? !element : false);
-    });
-    this.setState({
-      dropdownOpen: newArray,
-    });
+  toggle() {
+    this.setState(prevState => ({
+      dropdownOpen: !prevState.dropdownOpen
+    }));
   }
 
   componentDidMount() {
@@ -94,7 +92,7 @@ class MeusBloqueios extends Component {
 
 
 
-  fetchBlacklist(accountId) {
+  fetchBlacklist(accountId,accountName) {
     axios.get(process.env.REACT_APP_API_URL + `/blacklist?account_id=`+accountId,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
@@ -109,6 +107,7 @@ class MeusBloqueios extends Component {
                 totalDataSize: res.data.meta.total,
                 sizePerPage: res.data.meta.limit,
                 currentPage: res.data.meta.page,
+                accountName: accountName,
               });
             }else{
               this.setState({
@@ -135,61 +134,64 @@ class MeusBloqueios extends Component {
       <div className="animated fadeIn">
         <Card>
           <CardHeader>
-            <Col md="3" sm="4"><h5>Bloqueios - {this.state.total}</h5> </Col>
-            <Col md="9" sm="8">
+            <Row>
+            <Col md="3" sm="4"><h5>{!this.state.accountName ? <em>Selecione uma conta!</em> : this.state.accountName} , Bloqueios - {!this.state.total ? 0 : this.state.total}</h5> </Col>
+            <Col md="6" sm="6">
             {!isLoadingAccounts ? (
-              <Dropdown  isOpen={this.state.dropdownOpen[1]} toggle={() => {this.toggle(1);}}>
+              <Dropdown  isOpen={this.state.dropdownOpen} toggle={() => {this.toggle();}}>
                 <DropdownToggle caret color="primary" size="sm">
                   Contas
                 </DropdownToggle>
                 <DropdownMenu>
                   {accounts.map((c, k) => {
                     const { id, name } = this.state;
-                    return (<DropdownItem onClick={() => this.fetchBlacklist(c.id)}>{c.name}</DropdownItem>)
+                    return (<DropdownItem onClick={() => this.fetchBlacklist(c.id, c.name)}>{c.name}</DropdownItem>)
                   })}
-                <DropdownItem >teste</DropdownItem>
                 </DropdownMenu>
                 </Dropdown>
                 ) : (
                   <h3>Carregando...</h3>
                 )}
             </Col>
+            <Col md="3" sm="2">
+              <Link to="/bloquearcomprador" className="btn btn-primary float-right"><i className="fa fa-user-times"></i> Bloquear Comprador</Link>
+            </Col>
+            </Row>
           </CardHeader>
           <CardBody>
           <Table responsive>
             <thead>
               <tr>
-                <th>ID do Usuario</th>
-                <th className="text-center">Compras</th>
-                <th className="text-center">Perguntas</th>
-                <th>Motivo</th>
-                <th className="text-center">Ação</th>
+                <th className="tab25">ID do Usuario</th>
+                <th className="tab25 text-center">Compras</th>
+                <th className="tab25 text-center">Perguntas</th>
+                <th className="tab25">Motivo</th>
               </tr>
             </thead>
             <tbody>
             {!isLoading ? (
+            !blacklist ? (
+              <tr>
+                    <td colspan="4" className="mensagemAviso">
+                      <div role="alert" className="alert alert-primary fade show ">Escolha uma conta para gerenciar os bloqueios!</div>
+                    </td>
+              </tr>
+            ) : (
             blacklist.map((bl, k)=> {
-              //console.log(blacklist)
                 return (      
                   <tr>
                     <td>{bl.customer_id}</td>
                     <td className="text-center">
-                      <Button onClick={() => this.mudaBloqueioCompras(bl.customer_id,bl.bids,bl.questions)}>
-                      {bl.bids ? <i className="fa fa-ban text-danger"></i> : <i className="fa fa-check text-success"></i>}
-                      </Button>
+                      {bl.bids ? (<i className="fa fa-times text-danger"></i>) : ( <span></span>)}
                     </td>
                     <td className="text-center">
-                      <Button onClick={() => this.mudaBloqueioPerguntas(bl.customer_id,bl.bids,bl.questions)}>
-                      {bl.questions ? <i className="fa fa-ban text-danger"></i> : <i className="fa fa-check text-success"></i>}
-                      </Button>
+                      {bl.questions ? (<i className="fa fa-times text-danger"></i>) : ( <span></span>)}
                     </td>
                     <td>{bl.motive_description}</td>
-                    <td>
-                    <Button className="btn btn-danger btn-small "><i className="fa fa-unlock"></i> Desbloquear</Button>
-                    </td>
                   </tr>
                 );
-              })
+              } )
+            )
           ) : (
               <h3>Loading...</h3>
           )}
