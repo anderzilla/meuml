@@ -1,4 +1,6 @@
 import Dashboard from './Dashboard';
+//Anuncios
+import Anuncios from './Anuncios';
 //Contas
 import {ListaContas} from './Contas';
 //Autenticação
@@ -9,6 +11,7 @@ import {Page404, Page500} from './Sistema';
 
 export { 
     Dashboard, 
+    Anuncios,
     //Contas
     ListaContas,
     //Autenticação

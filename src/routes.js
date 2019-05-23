@@ -2,6 +2,8 @@ import React from 'react';
 import DefaultLayout from './containers/DefaultLayout';
 
 const Dashboard = React.lazy(() => import('./views/Dashboard'));
+// Anuncios
+const Anuncios = React.lazy(() => import('./views/Anuncios'));
 //Contas
 const ListaContas = React.lazy(() => import('./views/Contas/ListaContas'));
 const RenomearConta = React.lazy(() => import('./views/Contas/RenomearConta'));
@@ -19,6 +21,8 @@ const MeusBloqueios = React.lazy(() => import('./views/Bloqueios/MeusBloqueios')
 const routes = [
   { path: '/', name: 'Home', component: DefaultLayout, exact: true },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+  //Anuncios
+  { path: '/anuncios', name: 'Anuncios', component: Anuncios },
   //Contas
   { path: '/listacontas', name: 'Contas', component: ListaContas },
   { path: '/renomearconta', name: 'Renomear Conta', component: RenomearConta },

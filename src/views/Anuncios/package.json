@@ -1,0 +1,6 @@
+{
+  "name": "Anuncios",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Anuncios.js"
+}

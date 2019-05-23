@@ -17,7 +17,7 @@ export default {
     },
     {
       name: 'Anúncios',
-      url: '/dashboard',
+      url: '/anuncios',
       icon: 'fa fa-bullhorn',
       
     },
