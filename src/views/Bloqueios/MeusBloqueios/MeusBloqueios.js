@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Table, Button, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+import { Card, CardHeader, CardBody, CardFooter, Table, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -193,7 +193,7 @@ class MeusBloqueios extends Component {
               } )
             )
           ) : (
-              <h3>Loading...</h3>
+              <h3>Carregando...</h3>
           )}
                   </tbody>
                 </Table>
