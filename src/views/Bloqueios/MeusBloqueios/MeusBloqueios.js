@@ -135,8 +135,8 @@ class MeusBloqueios extends Component {
         <Card>
           <CardHeader>
             <Row>
-            <Col md="3" sm="4"><h5>{!this.state.accountName ? <em>Selecione uma conta!</em> : this.state.accountName} , Bloqueios - {!this.state.total ? 0 : this.state.total}</h5> </Col>
-            <Col md="6" sm="6">
+            <Col md="4" sm="4"><h5>{!this.state.accountName ? (<em>Selecione uma conta!</em>) :  this.state.accountName}  {!this.state.total ? '' : ': '+this.state.total+' bloqueios'}</h5> </Col>
+            <Col md="5" sm="6">
             {!isLoadingAccounts ? (
               <Dropdown  isOpen={this.state.dropdownOpen} toggle={() => {this.toggle();}}>
                 <DropdownToggle caret color="primary" size="sm">
