@@ -35,7 +35,8 @@ class BloquearComprador extends Component {
       accountId : '',
       accountName: '',
 	    bids : '',
-	    customer_id : '',
+      customer_id : '',
+      motivoBloqueio : '',
 	    motiveDescription : '', 
 	    motiveId : '',
       questions : '',
@@ -127,8 +128,8 @@ class BloquearComprador extends Component {
     this.setState({accountId: accountId, accountName: accountName});
   }
 
-  fetchMotivoSelecionado(motiveId,motiveDescription) {
-    this.setState({motiveId: motiveId, motiveDescription: motiveDescription});
+  fetchMotivoSelecionado(motiveId,motiveName,motiveDescription) {
+    this.setState({motiveId: motiveId, motiveName: motiveName, motiveDescription: motiveDescription});
   }
 
   handleSubmit(event) {
@@ -146,11 +147,11 @@ class BloquearComprador extends Component {
         "account_id": this.state.accountId,
 	      "bids": !this.state.bids ? false : true,
 	      "customer_id": this.state.customer_id,
-	      "motive_description": this.state.motiveDescription, 
+	      "motive_description": this.state.motivoBloqueio, 
 	      "motive_id": this.state.motiveId,
         "questions": !this.state.questions ? false : true,
       },
-      {headers: {"Authorization": 'Bearer ' + getToken()}},)
+      {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
       .then(res => {
         //console.log(res.data);
         const status = res.data.status;
@@ -165,9 +166,12 @@ class BloquearComprador extends Component {
           this.setState({message});
           Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
         }
-      }).catch((error) => {  
-        this.setState({tipoErro: "Erro desconhecido, tente novamente!"});
-        Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+      }).catch((error) => {
+        console.log(error);
+        !error.response ?   
+        (this.setState({tipoErro: error})) :
+        (this.setState({tipoErro: error.response.data.message}))
+        Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     });
   }
   }
@@ -179,25 +183,22 @@ class BloquearComprador extends Component {
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" sm="12" md="12">
+          <Col xs="12" sm="12" md="10" xl="8">
             <Card className="card-accent-primary">
             <Form onSubmit={this.handleSubmit} name='bloquearcomprador'>
               <CardHeader>
-                <Col md="2" sm="6">
-                Bloquear Comprador 
-                </Col>
-                
+                <h5>Bloquear Comprador </h5>
               </CardHeader>
               <CardBody>
               
               <Row>
-              <Col xs="12" sm="6" md="3">
+              <Col xs="12" sm="6" md="6">
                 <FormGroup>
                 <Label for="idConta">Conta do Mercado Livre</Label>
                   {!isLoadingAccounts ? (
                     <Dropdown id="idConta"  isOpen={this.state.dropdownOpenConta} toggle={() => {this.toggleConta();}}>
-                      <DropdownToggle caret color="primary" size="sm">
-                        Contas
+                      <DropdownToggle caret color="outline-secondary" size="sm">
+                        Selecione uma Conta
                       </DropdownToggle>
                       <DropdownMenu>
                         {accounts.map((c, k) => {
@@ -212,7 +213,7 @@ class BloquearComprador extends Component {
                       <div>{!this.state.accountId ? ('Selecione uma conta!') : ('Conta: '+this.state.accountName)}</div>
                 </FormGroup>
                 <FormGroup>
-                  <Label for="idUsusario">ID do Usuário</Label>
+                  <Label for="idUsusario">ID ou Usuário do comprador</Label>
                   <Input type="text"
                     name="customer_id"
                     id="idUsuario"
@@ -223,41 +224,52 @@ class BloquearComprador extends Component {
                     onChange={this.handleInputChange}
                     value={this.state.customer_id} />
                 </FormGroup>
-                
-                <FormGroup>
-                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="bids" value="1" onChange={this.handleInputChange}  /><span class="align-middle"> Bloquear para compras</span>
-                </FormGroup>
-                <FormGroup>
-                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="questions" value="1" onChange={this.handleInputChange}/> <span class="align-middle">Bloquear para perguntas</span>
-                </FormGroup>
-                </Col>
-                <Col xs="12" sm="6" md="9">
                 <FormGroup>
                 <Label for="idMotivo">Selecione o motivo do bloqueio</Label>
                   {!isLoadingMotivos ? (
                     <Dropdown id="idMotivo"  isOpen={this.state.dropdownOpenMotivo} toggle={() => {this.toggleMotivo();}}>
-                      <DropdownToggle caret color="primary" size="sm">
-                        Motivos
+                      <DropdownToggle caret color="outline-secondary" size="sm">
+                        Selecione um Motivo
                       </DropdownToggle>
                       <DropdownMenu>
                         {motivos.map((m, key) => {
                           const { id, name, description } = this.state;
-                          return (<DropdownItem onClick={() => this.fetchMotivoSelecionado(m.id, m.description)}>{m.name}</DropdownItem>)
+                          return (<DropdownItem onClick={() => this.fetchMotivoSelecionado(m.id, m.name, m.description)}>{m.id} - {m.name}</DropdownItem>)
                         })}
                       </DropdownMenu>
                       </Dropdown>
                       ) : (
                         <h3>Carregando...</h3>
                       )}
-                      <div>{!this.state.motiveId ? ('Selecione um motivo!') : ('Motivo: '+this.state.motiveDescription)}</div>
+                      <div>{!this.state.motiveId ? ('Selecione um motivo!') : ('Motivo: '+this.state.motiveId+' - '+this.state.motiveName+' : '+this.state.motiveDescription)}</div>
                   </FormGroup>
+                  </Col>
+                <Col xs="12" sm="6" md="6">
+                <FormGroup>
+                <Label for="motivoBloqueio">Descreva o motivo do bloqueio</Label>
+                  <Input type="textarea" 
+                    name="motivoBloqueio"
+                    id="motivoBloqueio"
+                    rows="6"
+                    onChange={this.handleInputChange}
+                    value={this.state.motivoBloqueio} /> 
+                </FormGroup>
+                
+                <FormGroup>
+                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="bids" value="1" onChange={this.handleInputChange}  />
+                <span class="textoSwitch"> Bloquear para compras</span>
+                </FormGroup>
+                <FormGroup>
+                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="questions" value="1" onChange={this.handleInputChange}/> 
+                <span class="textoSwitch">Bloquear para perguntas</span>
+                </FormGroup>
                 </Col>
                 </Row>
 
                 
               </CardBody>
               <CardFooter>
-                <Button type="submit" size="sm" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
+                <Button type="submit" size="md" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
               </CardFooter>
               </Form>
             </Card>
