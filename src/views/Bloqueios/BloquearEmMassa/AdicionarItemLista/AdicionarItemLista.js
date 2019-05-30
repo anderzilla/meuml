@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Card, CardHeader, CardBody, CardFooter, Table, Button, Form, FormGroup, Label, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
+//import BootstrapTable from 'react-bootstrap-table-next';
+//import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../../auth';
