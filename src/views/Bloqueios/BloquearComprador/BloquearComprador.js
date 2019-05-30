@@ -1,34 +1,23 @@
 import React, { Component } from 'react';
 import { Row, Col, Card, CardHeader, CardBody, CardFooter, Button, Form, FormGroup, Label, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import motivos from './data/motivos';
 import Select from 'react-select';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 import { AppSwitch } from '@coreui/react'
 import 'react-select/dist/react-select.min.css';
-import './ValidationForms.css'
-
-const options = motivos.BLOCK; //temporário para aparecer motivs no dropdown
-
 
 class BloquearComprador extends Component {
   //Adaptar para os valores de motivos de bloqueio
   constructor(props) {
     super(props);
-    
+
     this.toggleConta = this.toggleConta.bind(this);
     this.toggleMotivo = this.toggleMotivo.bind(this);
     this.toggleFade = this.toggleFade.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
-    this.motivos = {
-      value: ['Não Pagou','Cancela compras'],
-      windowWidth: window.innerWidth,
-      orientation: 'vertical',
-      openDirection: 'down'
-    }
     this.state = {
       dropdownOpenConta: false,
       dropdownOpenMotivo: false,
@@ -37,7 +26,7 @@ class BloquearComprador extends Component {
 	    bids : '',
       customer_id : '',
       motivoBloqueio : '',
-	    motiveDescription : '', 
+	    motiveDescription : '',
 	    motiveId : '',
       questions : '',
       accounts: [],
@@ -147,7 +136,7 @@ class BloquearComprador extends Component {
         "account_id": this.state.accountId,
 	      "bids": !this.state.bids ? false : true,
 	      "customer_id": this.state.customer_id,
-	      "motive_description": this.state.motivoBloqueio, 
+	      "motive_description": this.state.motivoBloqueio,
 	      "motive_id": this.state.motiveId,
         "questions": !this.state.questions ? false : true,
       },
@@ -168,7 +157,7 @@ class BloquearComprador extends Component {
         }
       }).catch((error) => {
         console.log(error);
-        !error.response ?   
+        !error.response ?
         (this.setState({tipoErro: error})) :
         (this.setState({tipoErro: error.response.data.message}))
         Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
@@ -190,7 +179,7 @@ class BloquearComprador extends Component {
                 <h5>Bloquear Comprador </h5>
               </CardHeader>
               <CardBody>
-              
+
               <Row>
               <Col xs="12" sm="6" md="6">
                 <FormGroup>
@@ -247,26 +236,26 @@ class BloquearComprador extends Component {
                 <Col xs="12" sm="6" md="6">
                 <FormGroup>
                 <Label for="motivoBloqueio">Descreva o motivo do bloqueio</Label>
-                  <Input type="textarea" 
+                  <Input type="textarea"
                     name="motivoBloqueio"
                     id="motivoBloqueio"
                     rows="6"
                     onChange={this.handleInputChange}
-                    value={this.state.motivoBloqueio} /> 
+                    value={this.state.motivoBloqueio} />
                 </FormGroup>
-                
+
                 <FormGroup>
                 <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="bids" value="1" onChange={this.handleInputChange}  />
                 <span class="textoSwitch"> Bloquear para compras</span>
                 </FormGroup>
                 <FormGroup>
-                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="questions" value="1" onChange={this.handleInputChange}/> 
+                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="questions" value="1" onChange={this.handleInputChange}/>
                 <span class="textoSwitch">Bloquear para perguntas</span>
                 </FormGroup>
                 </Col>
                 </Row>
 
-                
+
               </CardBody>
               <CardFooter>
                 <Button type="submit" size="md" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
@@ -275,7 +264,7 @@ class BloquearComprador extends Component {
             </Card>
           </Col>
           </Row>
-         
+
       </div>
     )
   }

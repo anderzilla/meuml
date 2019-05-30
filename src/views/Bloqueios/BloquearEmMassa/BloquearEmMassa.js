@@ -1,5 +1,22 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Table, Form, Label, FormGroup, Input, Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Table,
+  Form,
+  Label,
+  FormGroup,
+  Input,
+  Button,
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Col,
+  Row,
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -10,20 +27,33 @@ class BloquearEmMassa extends Component {
     super(props);
 
     this.toggleConta = this.toggleConta.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
     this.state={
       accountId : '',
       accountName: '',
+      blackListName: '',
       accounts: [],
       backlistList: [],
       isLoadingBlacklistList: true,
       isLoadingAccounts: true,
     }
-    
+
     this.nbloqueios = "2048";
     this.nlistas = "48";
     // ...
 
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
   }
 
   toggleConta() {
@@ -82,18 +112,56 @@ class BloquearEmMassa extends Component {
     }).catch(error => { console.log(error)});
   }
 
+  handleSubmit(event) {
+
+    event.preventDefault();
+    if (this.state.blackListName === ''){
+      Swal.fire({html:'<p>Preencha o nome da lista para bloqueá-la</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    }else{
+      axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, [{
+        "account_id": this.state.accountId,
+        "blacklist_name": this.state.blackListName,
+      }],
+      {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
+      .then(res => {
+        //console.log(res.data);
+        const status = res.data.status;
+        this.setState({status});
+        if (this.state.status === 'success'){
+          const message = res.data.message;
+          this.setState({message});
+          Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+        }else{
+          const message = res.data.message;
+          this.setState({message});
+          Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
+        }
+
+      }).catch((error) => {
+        console.log(error);
+        !error.response ?
+        (this.setState({tipoErro: error})) :
+        (this.setState({tipoErro: error.response.data.message}))
+        Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    });
+  }
+
+  }
+
   render() {
     const { isLoading, isLoadingAccounts, isLoadingBlacklistList, backlistList, error, accounts} = this.state;
 
     return (
       <div className="animated fadeIn">
         <Card>
-        <Form name='novaLista'>
+        <Form name='novaLista' onSubmit={this.handleSubmit}>
           <CardHeader>
-            <h5>Criar Lista</h5> 
+            <h5>Bloquear Lista</h5>
           </CardHeader>
           <CardBody>
-          <FormGroup>
+          <Row>
+            <Col md="4" xs="12">
+            <FormGroup>
                 <Label for="idConta">Conta do Mercado Livre</Label>
                   {!isLoadingAccounts ? (
                     <Dropdown id="idConta"  isOpen={this.state.dropdownOpenConta} toggle={() => {this.toggleConta();}}>
@@ -112,24 +180,35 @@ class BloquearEmMassa extends Component {
                       )}
                       <div>{!this.state.accountId ? ('Selecione uma conta!') : ('Conta: '+this.state.accountName)}</div>
                 </FormGroup>
-                <FormGroup>
-                  <Label for="idUsusario">Nome da Lista</Label>
-                  <Input type="text" name="nomeLista" id="nomeLista" placeholder="Nome da Lista" />
+            </Col>
+            <Col md="8" xs="12">
+              <FormGroup>
+                  <Label for="idUsusario">Digite o Nome de uma lista abaixo ara bloqueá-la </Label>
+                  <Input type="text"
+                    name="blackListName"
+                    id="blackListName"
+                    placeholder="Nome da lista"
+                    autoComplete="given-name"
+                    autoFocus={true}
+                    required
+                    onChange={this.handleInputChange}
+                    value={this.state.blackListName} />
                 </FormGroup>
-                <FormGroup>
-                  <Label for="idUsusario">Origem</Label>
-                  <Input type="text" name="origemLista" id="origemLista" placeholder="Origem da Lista" />
-                </FormGroup>
+            </Col>
+          </Row>
           </CardBody>
           <CardFooter>
-          <Button type="submit" size="sm" color="primary"><i className="fa fa-file-text"></i> Criar Lista</Button>
+          <Button type="submit" size="sm" color="primary"><i className="fa fa-file-text"></i> Bloquear Lista</Button>
           </CardFooter>
           </Form>
         </Card>
-        
+
         <Card>
           <CardHeader>
-            <h2>Listas - {this.state.nlistas}</h2> 
+            <Row>
+            <Col md="3" xs="3" sm="12"><h5>Listas - {this.state.nlistas}</h5> </Col>
+            <Col md="6" xs="6" sm="12"><Link to="/adicionaritemlista" className="btn btn-primary btn-sm">Criar Lista de Bloqueio</Link></Col>
+            </Row>
           </CardHeader>
           <CardBody>
           <Table responsive>
@@ -163,20 +242,14 @@ class BloquearEmMassa extends Component {
                       ) : (
                         <h3>Carregando...</h3>
                       )}
-                  
+
                   </tbody>
                 </Table>
           </CardBody>
-          <CardFooter>
-
-          </CardFooter>
-
-        </Card>
-
-      </div>
-    );
+          </Card>
+          </div>
+    )
   }
 }
-
 
 export default BloquearEmMassa;

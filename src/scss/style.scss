@@ -26,8 +26,8 @@ $spinkit-spinner-color: $body-color;
 @import '~spinkit/scss/spinkit.scss';
 
 //###########################################
-//TELA DE LOGIN 
-//CONFIGURAÇÕES PERSONALIZADAS 
+//TELA DE LOGIN
+//CONFIGURAÇÕES PERSONALIZADAS
 //ANDERSON HENRIQUE GONÇALVES 15/04/2019
 .botaoAzulBitflix {
     background: #054785;
@@ -46,62 +46,62 @@ $spinkit-spinner-color: $body-color;
     background-color: #054785;
     border-color: #366b9d;
   }
-  
+
   .btn-primary:hover {
     color: #fff;
     background-color: #366b9d;
     border-color: #6990b5;
   }
-  
+
   .btn-primary:focus, .btn-primary.focus {
     box-shadow: 0 0 0 0.2rem rgba(65, 181, 222, 0.5);
   }
-  
+
   .btn-primary.disabled, .btn-primary:disabled {
     color: #fff;
     background-color: #054785;
     border-color: #366b9d;
   }
-  
+
   .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
   .show > .btn-primary.dropdown-toggle {
     color: #fff;
     background-color: #054785;
     border-color: #366b9d;
   }
-  
+
   .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
   .show > .btn-primary.dropdown-toggle:focus {
     box-shadow: 0 0 0 0.2rem rgba(65, 181, 222, 0.5);
   }
-  
+
   .btn-outline-light {
     color: #333;
     border-color: #e4e7ea;
   }
-  
+
   .btn-outline-light:hover {
     color: #054785;
     background-color: #f0f3f5;
     border-color: #e4e7ea;
   }
-  
+
   .btn-outline-light:focus, .btn-outline-light.focus {
     box-shadow: 0 0 0 0.2rem rgba(240, 243, 245, 0.5);
   }
-  
+
   .btn-outline-light.disabled, .btn-outline-light:disabled {
     color: #333;
     background-color: transparent;
   }
-  
+
   .btn-outline-light:not(:disabled):not(.disabled):active, .btn-outline-light:not(:disabled):not(.disabled).active,
   .show > .btn-outline-light.dropdown-toggle {
     color: #333;
     background-color: #f0f3f5;
     border-color: #e4e7ea;
   }
-  
+
   .btn-outline-light:not(:disabled):not(.disabled):active:focus, .btn-outline-light:not(:disabled):not(.disabled).active:focus,
   .show > .btn-outline-light.dropdown-toggle:focus {
     box-shadow: 0 0 0 0.2rem rgba(240, 243, 245, 0.5);
@@ -120,7 +120,7 @@ $spinkit-spinner-color: $body-color;
 .logoFormCadastro{
   padding: 10px 55px;
   margin: 0 50px;
-  
+
 }
 
 //TELA DE CONTAS
@@ -134,10 +134,10 @@ $spinkit-spinner-color: $body-color;
 .nomeDuasLinhas{
   min-height: 20px;
   max-height: 40px;
-  white-space: nowrap; 
+  white-space: nowrap;
   vertical-align: middle;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 .imgConta{
   min-height: 150px;
@@ -146,7 +146,7 @@ $spinkit-spinner-color: $body-color;
 .tituloVendas, .tituloAnuncios{
   vertical-align: super;
   font-size: smaller;
-  text-align: center;  
+  text-align: center;
 }
 .valores{
   text-align: center;
@@ -201,5 +201,34 @@ $spinkit-spinner-color: $body-color;
   vertical-align: middle;
 }
 
+//################################################################
+//COMPONENTE DATATABLE PARA BLOQUEIO EM Massa
+.itsa-table {
+    .pure-table {
+        &.pure-table-striped tr:nth-child(2n-1) td.itsa-table-rowheader,
+        td.itsa-table-rowheader {
+            background-color: #E0E0E0;
+            border-top: 1px solid #CBCBCB;
+            font-weight: bold;
+        }
 
+        td.itsa-table-editable-cell {
+            padding: 0;
+        }
+        textarea {
+            padding: 0.5em 1em;
+            padding-top: calc(0.5em - 2px);
+            padding-left: calc(1em - 1px);
 
+            &[disabled] {
+                cursor: not-allowed;
+                background-color: #eaeded;
+                color: #cad2d3;
+            }
+        }
+        textarea:focus {
+            outline: thin solid #129FEA;
+            outline: 1px auto #129FEA;
+        }
+    }
+}
