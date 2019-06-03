@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Card, CardHeader, CardBody, CardFooter, Table, Button, Form, FormGroup, Label, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 //import BootstrapTable from 'react-bootstrap-table-next';
 //import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
-import { FancyGridReact, Grid } from 'fancygrid-react';
+//import { FancyGridReact, Grid } from 'fancygrid-react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../../auth';
@@ -161,7 +161,7 @@ onGridInit = (grid) => {
               )}
               <div>{!this.state.accountId ? ('Selecione uma conta!') : ('Conta: '+this.state.accountName)}</div>
         </FormGroup>
-        <Grid
+        {/*<Grid>
         selModel='rows'
         theme='gray'
         height={400}
@@ -171,7 +171,7 @@ onGridInit = (grid) => {
         events={this.getEvents()}
 			  columns={this.getColumns()}
 			  data={this.getData()}>
-        </Grid>
+      </Grid> */}
 
 
 
