@@ -2,9 +2,19 @@ import React, { Component } from 'react';
 import { Row, Col, Card, CardHeader, CardBody, CardFooter, Table, Button, Form, FormGroup, Label, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 //import BootstrapTable from 'react-bootstrap-table-next';
 //import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
+import { FancyGridReact, Grid } from 'fancygrid-react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../../auth';
+
+import 'fancygrid/client/modules/sort.min';
+import 'fancygrid/client/modules/dom.min';
+import 'fancygrid/client/modules/edit.min';
+import 'fancygrid/client/modules/grid.min';
+import 'fancygrid/client/modules/selection.min';
+import 'fancygrid/client/modules/menu.min';
+import 'fancygrid/client/modules/exporter';
+import 'fancygrid/client/modules/excel.min';
 
 class AdicionarItemLista extends Component {
 
@@ -40,6 +50,59 @@ class AdicionarItemLista extends Component {
     this.fetchAccounts();
 
   }
+
+  // FANCY GRID
+  getColumns() {
+	  return [{
+		  type: 'select'
+	    },{
+		  index: 'company',
+		  title: 'Company',
+		  type: 'string',
+		  width: 100
+		}, {
+		  index: 'name',
+		  title: 'Name',
+		  type: 'string',
+		  width: 100
+		}, {
+		  index: 'surname',
+		  title: 'Sur Name',
+		  type: 'string',
+		  width: 100
+		}, {
+		  index: 'age',
+		  title: 'Age',
+		  type: 'number',
+		  width: 100
+		}];
+	}
+
+  getData() {
+	  return [
+		  {name: 'Ted', surname: 'Smith', company: 'Electrical Systems', age: 30},
+		  {name: 'Ed', surname: 'Johnson', company: 'Energy and Oil', age: 35},
+		  {name: 'Sam', surname: 'Williams',  company: 'Airbus', age: 38},
+		  {name: 'Alexander', surname: 'Brown', company: 'Renault', age: 24},
+		  {name: 'Nicholas', surname: 'Miller', company: 'Adobe', age: 33}
+		];
+	}
+
+  getEvents() {
+  return [{
+    init: this.onGridInit
+  }];
+}
+
+onGridInit = (grid) => {
+  setTimeout(function(){
+    grid.setTitle('New Title');
+  }, 1000);
+}
+
+
+
+
 
   fetchAccounts(){
     this.url = process.env.REACT_APP_API_URL + `/accounts`
@@ -98,6 +161,17 @@ class AdicionarItemLista extends Component {
               )}
               <div>{!this.state.accountId ? ('Selecione uma conta!') : ('Conta: '+this.state.accountName)}</div>
         </FormGroup>
+        <Grid
+        selModel='rows'
+        theme='gray'
+        height={400}
+        width={500}
+        defaults={{sortable: true}}
+        trackOver={true}
+        events={this.getEvents()}
+			  columns={this.getColumns()}
+			  data={this.getData()}>
+        </Grid>
 
 
 
