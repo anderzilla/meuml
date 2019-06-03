@@ -7,6 +7,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../../auth';
 
+/*
 import 'fancygrid/client/modules/sort.min';
 import 'fancygrid/client/modules/dom.min';
 import 'fancygrid/client/modules/edit.min';
@@ -15,7 +16,7 @@ import 'fancygrid/client/modules/selection.min';
 import 'fancygrid/client/modules/menu.min';
 import 'fancygrid/client/modules/exporter';
 import 'fancygrid/client/modules/excel.min';
-
+*/
 class AdicionarItemLista extends Component {
 
   constructor(props) {
