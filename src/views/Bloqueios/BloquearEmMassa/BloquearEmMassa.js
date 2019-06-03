@@ -94,6 +94,20 @@ class BloquearEmMassa extends Component {
   });
   }
 
+  fetchDeletarLista(id)
+  {
+    this.url = process.env.REACT_APP_API_URL + `/blacklist/list/`+id
+    axios.delete(this.url,
+      { headers: {"Authorization" : 'Bearer '+getToken()}},
+    ).then(res => {
+      if (res.status === 200){
+        Swal.fire({html:'<p>Lista excluída com sucesso</p>', type: 'error', showConfirmButton: true});
+      }else{
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+      }
+    }).catch(error => { console.log(error)});
+  }
+
   fetchBlacklistList()
   {
     this.url = process.env.REACT_APP_API_URL + `/blacklist/list`
@@ -183,7 +197,7 @@ class BloquearEmMassa extends Component {
             </Col>
             <Col md="8" xs="12">
               <FormGroup>
-                  <Label for="idUsusario">Digite o Nome de uma lista abaixo ara bloqueá-la </Label>
+                  <Label for="idUsusario">Digite o Nome de uma lista abaixo para bloqueá-la </Label>
                   <Input type="text"
                     name="blackListName"
                     id="blackListName"
@@ -214,35 +228,34 @@ class BloquearEmMassa extends Component {
           <Table responsive>
                   <thead>
                   <tr>
-                    <th class="text-center">Nome da Lista</th>
-                    <th class="text-center">Bloqueios</th>
-                    <th class="text-center">Origem</th>
-                    <th class="text-center">Data</th>
-                    <th class="text-center">Ação</th>
+                    <th class="text-left">Nome da Lista</th>
+                    <th class="text-center">Compras</th>
+                    <th class="text-center">Perguntas</th>
+                    <th class="text-center">Descrição</th>
+                    <th class="text-center">Quantidade</th>
+                    <th class="text-right">Ação</th>
                   </tr>
                   </thead>
                   <tbody>
+                  {console.log(backlistList)}
                   {!isLoadingBlacklistList ? (
                   backlistList.map((l, key) => {
                           const { id, name } = this.state;
                           return (
                             <tr>
-                              <td>Golpes</td>
-                              <td class="text-center"><span class="text-danger">{l.id}</span></td>
-                              <td class="text-center">{l.name}</td>
-                              <td class="text-center"></td>
+                              <td class="text-left">{l.name}</td>
+                              <td class="text-center">{!l.bids? <i class="fa fa-unlock text-disabled"></i> : <i class="fa fa-lock text-danger"></i>}</td>
+                              <td class="text-center">{!l.questions? <i class="fa fa-unlock text-disabled"></i> : <i class="fa fa-lock text-danger"></i>}</td>
+                              <td class="text-center">{l.list_description}</td>
+                              <td class="text-center">{l.list_quantities}</td>
                               <td class="text-right">
-                              <Link to="/adicionaritemlista" class="btn btn-primary btn-small"><i class="fa fa-user-plus"></i> Adicionar</Link>
-                              <Link to="/" class="btn btn-success btn-small"><i class="fa fa-unlock"></i> Desbloquear</Link>
-                              <Link to="/" class="btn btn-warning btn-small"><i class="fa fa-refresh"></i> Sincronizar</Link>
-                              <Link to="/" class="btn btn-danger btn-small"><i class="fa fa-trash"></i> Excluir</Link>
+                                <Button onClick={()=>this.fetchDeletarLista(l.id)} class="btn btn-danger btn-small"><i class="fa fa-trash"></i></Button>
                               </td>
                             </tr>
                         )})
                       ) : (
                         <h3>Carregando...</h3>
                       )}
-
                   </tbody>
                 </Table>
           </CardBody>
