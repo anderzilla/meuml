@@ -110,7 +110,6 @@ class BloquearComprador extends Component {
   }).catch(error => {
   });
   }
-
   fetchMotivos()
   {
     this.url = process.env.REACT_APP_API_URL + `/blacklist/motives`
@@ -133,7 +132,6 @@ class BloquearComprador extends Component {
   }).catch(error => {
   });
   }
-
   handleInputChange(event) {
     const target = event.target;
     const value = target.value;
@@ -143,24 +141,19 @@ class BloquearComprador extends Component {
       [name]: value
     });
   }
-
   handleChange = selectedOption => {
     this.setState({ selectedOption });
     console.log(`Option selected:`, selectedOption);
   };
-
   fetchBlacklist(accountId,accountName) {
     this.setState({accountId: accountId, accountName: accountName});
   }
-
   fetchMotivoSelecionado(motiveId,motiveName,motiveDescription) {
     this.setState({motiveId: motiveId, motiveName: motiveName, motiveDescription: motiveDescription});
   }
-
   fetchTipoUser(tipo){
     this.setState({tipoUser: tipo, customer_id: ''});
   }
-
   handleSubmit(event) {
     this.setState({bloqueios: []});
     event.preventDefault();
@@ -209,11 +202,8 @@ class BloquearComprador extends Component {
     });
   }
   }
-
   render() {
-
     const { isLoading, isLoadingAccounts, isLoadingMotivos, error, accounts, motivos, listaContas, selectedOption } = this.state;
-
     return (
       <div className="animated fadeIn">
         <Row>
@@ -224,7 +214,6 @@ class BloquearComprador extends Component {
                 <h5>Bloquear Comprador </h5>
               </CardHeader>
               <CardBody>
-
               <Row>
               <Col xs="12" sm="6" md="6">
                 <FormGroup>
@@ -266,7 +255,6 @@ class BloquearComprador extends Component {
                     required
                     onChange={this.handleInputChange}
                     value={this.state.customer_id}
-
                     onChange={(event) => {
                       if (this.state.tipoUser === 'ID do usuário'){
                         if (isNaN(Number(event.target.value))) {
@@ -277,15 +265,13 @@ class BloquearComprador extends Component {
                       }else{
                           this.setState({ customer_id: event.target.value });
                       }
-                    }}
-
-                     />
+                    }}/>
                     </InputGroup>
                 </FormGroup>
                 <FormGroup>
                 <Label for="idMotivo">Selecione o motivo do bloqueio</Label>
                   {!isLoadingMotivos ? (
-                    <Dropdown id="idMotivo" className="dropAbaixo" isOpen={this.state.dropdownOpenMotivo} toggle={() => {this.toggleMotivo();}}>
+                    <Dropdown id="idMotivo" className="dropAbaixo2" isOpen={this.state.dropdownOpenMotivo} toggle={() => {this.toggleMotivo();}}>
                       <DropdownToggle caret color="outline-dark" size="sm">
                         {!this.state.motiveId ? ('Selecione um motivo!') : (this.state.motiveId+' - '+this.state.motiveName)}
                       </DropdownToggle>
@@ -312,7 +298,6 @@ class BloquearComprador extends Component {
                     onChange={this.handleInputChange}
                     value={this.state.motivoBloqueio} />
                 </FormGroup>
-
                 <FormGroup>
                 <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="bids" value="1" onChange={this.handleInputChange}  />
                 <span className="textoSwitch"> Bloquear para compras</span>
@@ -323,8 +308,6 @@ class BloquearComprador extends Component {
                 </FormGroup>
                 </Col>
                 </Row>
-
-
               </CardBody>
               <CardFooter>
                 <Button type="submit" size="md" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
@@ -333,10 +316,8 @@ class BloquearComprador extends Component {
             </Card>
           </Col>
           </Row>
-
       </div>
     )
   }
 }
-
 export default BloquearComprador;
