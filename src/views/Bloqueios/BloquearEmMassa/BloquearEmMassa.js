@@ -1,59 +1,43 @@
 import React, { Component } from 'react';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Table,
-  Form,
-  Label,
-  FormGroup,
-  Input,
-  Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Col,
-  Row,
-} from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Row, Col, Card, CardHeader, CardBody, CardFooter, Table, Button, Form, FormGroup, Label, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { FancyGridReact, Grid } from 'fancygrid-react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 
+
+import 'fancygrid/client/modules/sort.min';
+import 'fancygrid/client/modules/dom.min';
+import 'fancygrid/client/modules/edit.min';
+import 'fancygrid/client/modules/grid.min';
+import 'fancygrid/client/modules/selection.min';
+import 'fancygrid/client/modules/menu.min';
+import 'fancygrid/client/modules/exporter';
+import 'fancygrid/client/modules/excel.min';
+
 class BloquearEmMassa extends Component {
+
   constructor(props) {
     super(props);
 
     this.toggleConta = this.toggleConta.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleFade = this.toggleFade.bind(this);
 
-    this.state={
-      accountId : '',
-      accountName: '',
-      blackListName: '',
+    this.state = {
+      dropdownOpenConta: false,
+      account_id : '',
+      account_name : '',
       accounts: [],
-      backlistList: [],
-      isLoadingBlacklistList: true,
       isLoadingAccounts: true,
+      bigLista : '',
     }
 
-    this.nbloqueios = "2048";
-    this.nlistas = "48";
-    // ...
+
 
   }
 
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value
-    });
+  toggleFade() {
+    this.setState((prevState) => { return { fadeIn: !prevState }});
   }
 
   toggleConta() {
@@ -61,18 +45,61 @@ class BloquearEmMassa extends Component {
       dropdownOpenConta: !prevState.dropdownOpenConta
     }));
   }
-
-  fetchBlacklist(accountId,accountName) {
-    this.setState({accountId: accountId, accountName: accountName});
-  }
-
   componentDidMount() {
     this.fetchAccounts();
-    this.fetchBlacklistList();
+
   }
 
-  fetchAccounts()
-  {
+  // FANCY GRID
+  getColumns() {
+	  return [{
+		  type: 'select'
+	    },{
+		  index: 'company',
+		  title: 'Company',
+		  type: 'string',
+		  width: 100
+		}, {
+		  index: 'name',
+		  title: 'Name',
+		  type: 'string',
+		  width: 100
+		}, {
+		  index: 'surname',
+		  title: 'Sur Name',
+		  type: 'string',
+		  width: 100
+		}, {
+		  index: 'age',
+		  title: 'Age',
+		  type: 'number',
+		  width: 100
+		}];
+	}
+
+  getData() {
+	  return [
+		  {name: 'Ted', surname: 'Smith', company: 'Electrical Systems', age: 30},
+		  {name: 'Ed', surname: 'Johnson', company: 'Energy and Oil', age: 35},
+		  {name: 'Sam', surname: 'Williams',  company: 'Airbus', age: 38},
+		  {name: 'Alexander', surname: 'Brown', company: 'Renault', age: 24},
+		  {name: 'Nicholas', surname: 'Miller', company: 'Adobe', age: 33}
+		];
+	}
+
+  getEvents() {
+  return [{
+    init: this.onGridInit
+  }];
+}
+
+onGridInit = (grid) => {
+  setTimeout(function(){
+    grid.setTitle('New Title');
+  }, 1000);
+}
+
+  fetchAccounts(){
     this.url = process.env.REACT_APP_API_URL + `/accounts`
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
@@ -84,7 +111,7 @@ class BloquearEmMassa extends Component {
         isLoadingAccounts: false
       });
       if(res.data.data.meta.total > 0){
-        this.fetchBlacklist(res.data.data[0].id);
+        this.fetchAccountSelected(res.data.data[0].id,res.data.data[0].name);
       }else{
       }
     }else{
@@ -94,174 +121,78 @@ class BloquearEmMassa extends Component {
   });
   }
 
-  fetchDeletarLista(id)
-  {
-    this.url = process.env.REACT_APP_API_URL + `/blacklist/list/`+id
-    axios.delete(this.url,
-      { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-      if (res.status === 200){
-        Swal.fire({html:'<p>Lista excluída com sucesso</p>', type: 'error', showConfirmButton: true});
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-      }
-    }).catch(error => { console.log(error)});
-  }
 
-  fetchBlacklistList()
-  {
-    this.url = process.env.REACT_APP_API_URL + `/blacklist/list`
-    axios.get(this.url,
-      { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-      if (res.status === 200){
-        this.setState({
-          backlistList: res.data.data,
-          isLoadingBlacklistList: false,
-          nlistas: res.data.meta.total,
-        });
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-      }
-    }).catch(error => { console.log(error)});
-  }
-
-  handleSubmit(event) {
-
-    event.preventDefault();
-    if (this.state.blackListName === ''){
-      Swal.fire({html:'<p>Preencha o nome da lista para bloqueá-la</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    }else{
-      axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, [{
-        "account_id": this.state.accountId,
-        "blacklist_name": this.state.blackListName,
-      }],
-      {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
-      .then(res => {
-        //console.log(res.data);
-        const status = res.data.status;
-        this.setState({status});
-        if (this.state.status === 'success'){
-          const message = res.data.message;
-          this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-        }else{
-          const message = res.data.message;
-          this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
-        }
-
-      }).catch((error) => {
-        console.log(error);
-        !error.response ?
-        (this.setState({tipoErro: error})) :
-        (this.setState({tipoErro: error.response.data.message}))
-        Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
-  }
-
-  }
+    fetchAccountSelected(account_id,account_name) {
+      this.setState({accountId: account_id, accountName: account_name});
+    }
 
   render() {
-    const { isLoading, isLoadingAccounts, isLoadingBlacklistList, backlistList, error, accounts} = this.state;
+
+    const { isLoadingAccounts, error, accounts } = this.state;
 
     return (
       <div className="animated fadeIn">
         <Card>
-        <Form name='novaLista' onSubmit={this.handleSubmit}>
-          <CardHeader>
-            <h5>Bloquear Lista</h5>
-          </CardHeader>
-          <CardBody>
-          <Row>
-            <Col md="4" xs="12">
-            <FormGroup>
-                <Label for="idConta">Conta do Mercado Livre</Label>
-                  {!isLoadingAccounts ? (
-                    <Dropdown id="idConta"  isOpen={this.state.dropdownOpenConta} toggle={() => {this.toggleConta();}}>
-                      <DropdownToggle caret color="outline-secondary" size="sm">
-                        Selecione uma Conta
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        {accounts.map((c, k) => {
-                          const { id, name } = this.state;
-                          return (<DropdownItem onClick={() => this.fetchBlacklist(c.id, c.name)}>{c.name}</DropdownItem>)
-                        })}
-                      </DropdownMenu>
-                      </Dropdown>
-                      ) : (
-                        <h3>Carregando...</h3>
-                      )}
-                      <div>{!this.state.accountId ? ('Selecione uma conta!') : ('Conta: '+this.state.accountName)}</div>
-                </FormGroup>
-            </Col>
-            <Col md="8" xs="12">
-              <FormGroup>
-                  <Label for="idUsusario">Digite o Nome de uma lista abaixo para bloqueá-la </Label>
-                  <Input type="text"
-                    name="blackListName"
-                    id="blackListName"
-                    placeholder="Nome da lista"
-                    autoComplete="given-name"
-                    autoFocus={true}
-                    required
-                    onChange={this.handleInputChange}
-                    value={this.state.blackListName} />
-                </FormGroup>
-            </Col>
-          </Row>
-          </CardBody>
-          <CardFooter>
-          <Button type="submit" size="sm" color="primary"><i className="fa fa-file-text"></i> Bloquear Lista</Button>
-          </CardFooter>
-          </Form>
+        <CardHeader>
+        <h5>Bloqueio em Massa</h5>
+        </CardHeader>
+        <CardBody>
+        <FormGroup>
+        <Label for="idConta">Conta do Mercado Livre</Label>
+          {!isLoadingAccounts ? (
+            <Dropdown id="idConta"  isOpen={this.state.dropdownOpenConta} toggle={() => {this.toggleConta();}}>
+              <DropdownToggle caret color="outline-secondary" size="sm">
+                Selecione uma Conta
+              </DropdownToggle>
+              <DropdownMenu>
+                {accounts.map((c, k) => {
+                  const { id, name } = this.state;
+                  return (<DropdownItem onClick={() => this.fetchAccountSelected(c.id, c.name)}>{c.name}</DropdownItem>)
+                })}
+              </DropdownMenu>
+              </Dropdown>
+              ) : (
+                <h3>Carregando...</h3>
+              )}
+              <div>{!this.state.accountId ? ('Selecione uma conta!') : ('Conta: '+this.state.accountName)}</div>
+        </FormGroup>
+        <Grid
+		     selModel='rows'
+			   theme='gray'
+			   height={400}
+			   width={500}
+			   defaults={{sortable: true}}
+			   trackOver={true}
+			   columns={this.getColumns()}
+			   data={this.getData()}>
+        </Grid>
+        <Table responsive>
+          <thead>
+            <tr>
+              <th className="text-center">ID</th>
+              <th className="text-center">Conta</th>
+              <th className="text-center">Perguntas</th>
+              <th className="text-center">Compras</th>
+              <th className="text-center">Motivo</th>
+              <th className="text-center">Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            </tr>
+          </tbody>
+        </Table>
+        </CardBody>
+        <CardFooter></CardFooter>
         </Card>
-
-        <Card>
-          <CardHeader>
-            <Row>
-            <Col md="3" xs="3" sm="12"><h5>Listas - {this.state.nlistas}</h5> </Col>
-            <Col md="6" xs="6" sm="12"><Link to="/adicionaritemlista" className="btn btn-primary btn-sm">Criar Lista de Bloqueio</Link></Col>
-            </Row>
-          </CardHeader>
-          <CardBody>
-          <Table responsive>
-                  <thead>
-                  <tr>
-                    <th class="text-left">Nome da Lista</th>
-                    <th class="text-center">Compras</th>
-                    <th class="text-center">Perguntas</th>
-                    <th class="text-center">Descrição</th>
-                    <th class="text-center">Quantidade</th>
-                    <th class="text-right">Ação</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {console.log(backlistList)}
-                  {!isLoadingBlacklistList ? (
-                  backlistList.map((l, key) => {
-                          const { id, name } = this.state;
-                          return (
-                            <tr>
-                              <td class="text-left">{l.name}</td>
-                              <td class="text-center">{!l.bids? <i class="fa fa-unlock text-disabled"></i> : <i class="fa fa-lock text-danger"></i>}</td>
-                              <td class="text-center">{!l.questions? <i class="fa fa-unlock text-disabled"></i> : <i class="fa fa-lock text-danger"></i>}</td>
-                              <td class="text-center">{l.list_description}</td>
-                              <td class="text-center">{l.list_quantities}</td>
-                              <td class="text-right">
-                                <Button onClick={()=>this.fetchDeletarLista(l.id)} class="btn btn-danger btn-small"><i class="fa fa-trash"></i></Button>
-                              </td>
-                            </tr>
-                        )})
-                      ) : (
-                        <h3>Carregando...</h3>
-                      )}
-                  </tbody>
-                </Table>
-          </CardBody>
-          </Card>
-          </div>
-    )
+      </div>
+    );
   }
 }
 
