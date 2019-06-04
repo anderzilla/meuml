@@ -162,7 +162,6 @@ $spinkit-spinner-color: $body-color;
 .botaoAdicionarConta{
   margin-left: 15px;
   margin-bottom: 15px;
-
 }
 
 //#############################################
@@ -200,12 +199,11 @@ $spinkit-spinner-color: $body-color;
   margin-top: 8px;
   vertical-align: middle;
 }
-.multiSelect{
-  z-index: 9999;
-}
-.dropAbaixo{
-  z-index: 8888;
-}
+
+//para resolver problemas de sobreposição de dropdown
+.multiSelect{ z-index: 9999; }
+.dropAbaixo{ z-index: 8888; }
+.dropAbaixo2{ z-index: 7777; }
 
 //################################################################
 //COMPONENTE DATATABLE PARA BLOQUEIO EM Massa
@@ -217,7 +215,6 @@ $spinkit-spinner-color: $body-color;
             border-top: 1px solid #CBCBCB;
             font-weight: bold;
         }
-
         td.itsa-table-editable-cell {
             padding: 0;
         }
