@@ -55,6 +55,9 @@ class BloquearComprador extends Component {
       isLoadingMotivos: true,
       tipoUser: '',
       valueID: '',
+      accountList: [],
+      selectedOption: null,
+      bloqueios: [],
     }
   }
 
@@ -87,8 +90,14 @@ class BloquearComprador extends Component {
     ).then(res => {
     //console.log(res);
     if (res.status === 200){
+      const listaContas = [];
+      const resContas = res.data.data;
+      resContas.map((c, k) => {
+        const { id, name } = this.state;
+        listaContas.push({'value':c.id, 'label':c.name });
+      })
       this.setState({
-        accounts: res.data.data,
+        accounts: listaContas,
         isLoadingAccounts: false
       });
       if(res.data.data.meta.total > 0){
@@ -135,9 +144,10 @@ class BloquearComprador extends Component {
     });
   }
 
-  saveChangesSelect(value) {
-    this.setState({ accountsSelected: value });
-  }
+  handleChange = selectedOption => {
+    this.setState({ selectedOption });
+    console.log(`Option selected:`, selectedOption);
+  };
 
   fetchBlacklist(accountId,accountName) {
     this.setState({accountId: accountId, accountName: accountName});
@@ -152,24 +162,29 @@ class BloquearComprador extends Component {
   }
 
   handleSubmit(event) {
-
+    this.setState({bloqueios: []});
     event.preventDefault();
     //customer_id
-    if (this.state.accountId === ''){
+    if (this.state.selectedOption === ''){
       alert('Selecione uma conta para realizar o bloqueios!');
     }else if(this.state.customer_id === '' ){
       alert('Preencha o id ou usuário do comprador.');
     }else if(this.state.motiveId === '' ){
       alert('Defina o motivo do bloqueio.');
     }else{
-      axios.post(process.env.REACT_APP_API_URL + `/blacklist`, {
-        "account_id": this.state.accountId,
-	      "bids": !this.state.bids ? false : true,
-	      "customer_id": this.state.customer_id,
-	      "motive_description": this.state.motivoBloqueio,
-	      "motive_id": this.state.motiveId,
-        "questions": !this.state.questions ? false : true,
-      },
+      this.state.selectedOption.map((s, k) => {
+        const { value, name } = this.state;
+        this.state.bloqueios.push({
+          "account_id": s.value,
+  	      "bids": !this.state.bids ? false : true,
+  	      "customer_id": this.state.customer_id,
+  	      "motive_description": this.state.motivoBloqueio,
+  	      "motive_id": this.state.motiveId,
+          "questions": !this.state.questions ? false : true,
+         });
+      })
+      console.log(this.state.bloqueios);
+      axios.post(process.env.REACT_APP_API_URL + `/blacklist`, this.state.bloqueios,
       {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
       .then(res => {
         //console.log(res.data);
@@ -197,7 +212,7 @@ class BloquearComprador extends Component {
 
   render() {
 
-    const { isLoading, isLoadingAccounts, isLoadingMotivos, error, accounts, motivos } = this.state;
+    const { isLoading, isLoadingAccounts, isLoadingMotivos, error, accounts, motivos, listaContas, selectedOption } = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -214,27 +229,24 @@ class BloquearComprador extends Component {
               <Col xs="12" sm="6" md="6">
                 <FormGroup>
                 <Label for="idConta">Conta do Mercado Livre</Label>
-                  {!isLoadingAccounts ? (
-                    <Dropdown id="idConta"  isOpen={this.state.dropdownOpenConta} toggle={() => {this.toggleConta();}}>
-                      <DropdownToggle caret color="outline-dark" size="sm">
-                        {!this.state.accountId ? ('Selecione uma conta!') : this.state.accountName}
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        {accounts.map((c, k) => {
-                          const { id, name } = this.state;
-                          return (<DropdownItem onClick={() => this.fetchBlacklist(c.id, c.name)}>{c.name}</DropdownItem>)
-                        })}
-                      </DropdownMenu>
-                      </Dropdown>
-                      ) : (
-                        <h3>Carregando...</h3>
-                      )}
+                {!isLoadingAccounts ? (
+                <Select
+                  name="accountId"
+                  value={selectedOption}
+                  options={accounts}
+                  onChange={this.handleChange}
+                  multi
+                  className="multiSelect"
+                />
+                ) : (
+                  <h3>Carregando...</h3>
+                )}
                 </FormGroup>
                 <FormGroup>
                   <Label for="idUsusario">ID ou Usuário do comprador</Label>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">
-                    <ButtonDropdown  isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
+                    <ButtonDropdown className="dropAbaixo" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
                       <DropdownToggle caret color="outline-dark" size="sm">
                         {!this.state.tipoUser ? ('Selecione') : this.state.tipoUser}
                       </DropdownToggle>
@@ -254,7 +266,7 @@ class BloquearComprador extends Component {
                     required
                     onChange={this.handleInputChange}
                     value={this.state.customer_id}
-                    pattern={this.state.tipoUser === 'ID do usuário'? '"[0-9]*"' : '[a-zA-Z0-9]'}
+
                     onChange={(event) => {
                       if (this.state.tipoUser === 'ID do usuário'){
                         if (isNaN(Number(event.target.value))) {
@@ -273,7 +285,7 @@ class BloquearComprador extends Component {
                 <FormGroup>
                 <Label for="idMotivo">Selecione o motivo do bloqueio</Label>
                   {!isLoadingMotivos ? (
-                    <Dropdown id="idMotivo"  isOpen={this.state.dropdownOpenMotivo} toggle={() => {this.toggleMotivo();}}>
+                    <Dropdown id="idMotivo" className="dropAbaixo" isOpen={this.state.dropdownOpenMotivo} toggle={() => {this.toggleMotivo();}}>
                       <DropdownToggle caret color="outline-dark" size="sm">
                         {!this.state.motiveId ? ('Selecione um motivo!') : (this.state.motiveId+' - '+this.state.motiveName)}
                       </DropdownToggle>
@@ -303,11 +315,11 @@ class BloquearComprador extends Component {
 
                 <FormGroup>
                 <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="bids" value="1" onChange={this.handleInputChange}  />
-                <span class="textoSwitch"> Bloquear para compras</span>
+                <span className="textoSwitch"> Bloquear para compras</span>
                 </FormGroup>
                 <FormGroup>
                 <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="questions" value="1" onChange={this.handleInputChange}/>
-                <span class="textoSwitch">Bloquear para perguntas</span>
+                <span className="textoSwitch">Bloquear para perguntas</span>
                 </FormGroup>
                 </Col>
                 </Row>

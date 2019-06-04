@@ -200,6 +200,12 @@ $spinkit-spinner-color: $body-color;
   margin-top: 8px;
   vertical-align: middle;
 }
+.multiSelect{
+  z-index: 9999;
+}
+.dropAbaixo{
+  z-index: 8888;
+}
 
 //################################################################
 //COMPONENTE DATATABLE PARA BLOQUEIO EM Massa
