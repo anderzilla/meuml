@@ -25,6 +25,7 @@
 $spinkit-spinner-color: $body-color;
 @import '~spinkit/scss/spinkit.scss';
 
+
 //###########################################
 //TELA DE LOGIN
 //CONFIGURAÇÕES PERSONALIZADAS
@@ -202,8 +203,20 @@ $spinkit-spinner-color: $body-color;
 
 //para resolver problemas de sobreposição de dropdown
 .multiSelect{ z-index: 9999; }
-.dropAbaixo{ z-index: 8888; }
-.dropAbaixo2{ z-index: 7777; }
+.dropTipoComprador{
+  z-index: 6;
+}
+.dropAbaixo2{ z-index: 0; }
+
+
+Label {
+  font-weight: bold;
+}
+
+.dropWidth{
+  min-width: 50%;
+  text-align: left;
+}
 
 //################################################################
 //COMPONENTE DATATABLE PARA BLOQUEIO EM Massa

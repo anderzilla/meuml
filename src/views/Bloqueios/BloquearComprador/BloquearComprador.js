@@ -19,12 +19,14 @@ import {
   DropdownMenu,
   DropdownItem
 } from 'reactstrap';
-import Select from 'react-select';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 import { AppSwitch } from '@coreui/react'
+import Select from 'react-select';
 import 'react-select/dist/react-select.min.css';
+import Picky from "react-picky";
+import "react-picky/dist/picky.css";
 
 class BloquearComprador extends Component {
   //Adaptar para os valores de motivos de bloqueio
@@ -36,6 +38,7 @@ class BloquearComprador extends Component {
     this.toggleFade = this.toggleFade.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.selectMultipleOption = this.selectMultipleOption.bind(this);
 
     this.state = {
       dropdownOpenConta: false,
@@ -58,6 +61,8 @@ class BloquearComprador extends Component {
       accountList: [],
       selectedOption: null,
       bloqueios: [],
+      value: null,
+      arrayValue: [],
     }
   }
 
@@ -110,6 +115,13 @@ class BloquearComprador extends Component {
   }).catch(error => {
   });
   }
+
+  selectMultipleOption(value) {
+    console.count('onChange')
+    console.log("Val", value);
+    this.setState({ arrayValue: value });
+  }
+
   fetchMotivos()
   {
     this.url = process.env.REACT_APP_API_URL + `/blacklist/motives`
@@ -217,16 +229,27 @@ class BloquearComprador extends Component {
               <Row>
               <Col xs="12" sm="6" md="6">
                 <FormGroup>
-                <Label for="idConta">Conta do Mercado Livre</Label>
+                <Label for="idConta">Selecione as Contas:</Label>
                 {!isLoadingAccounts ? (
-                <Select
-                  name="accountId"
-                  value={selectedOption}
+
+                <Picky
+                  value={this.state.arrayValue}
                   options={accounts}
-                  onChange={this.handleChange}
-                  multi
-                  className="multiSelect"
+                  onChange={this.selectMultipleOption}
+                  open={false}
+                  valueKey="value"
+                  labelKey="label"
+                  multiple={true}
+                  includeSelectAll={true}
+                  includeFilter={true}
+                  dropdownHeight={600}
+                  placeholder="Selecione..."
+                  manySelectedPlaceholder="%s Selecionados"
+                  allSelectedPlaceholder="%s Selecionados"
+                  selectAllText="Selecionar Todos"
+                  filterPlaceholder="Filtrar por..."
                 />
+
                 ) : (
                   <h3>Carregando...</h3>
                 )}
@@ -235,20 +258,20 @@ class BloquearComprador extends Component {
                   <Label for="idUsusario">ID ou Usuário do comprador</Label>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">
-                    <ButtonDropdown className="dropAbaixo" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
-                      <DropdownToggle caret color="outline-dark" size="sm">
+                    <ButtonDropdown direction="right" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
+                      <DropdownToggle caret color="primary" size="md">
                         {!this.state.tipoUser ? ('Selecione') : this.state.tipoUser}
                       </DropdownToggle>
                       <DropdownMenu className={this.state.first ? 'show' : ''}>
-                        <DropdownItem onClick={() => this.fetchTipoUser('ID do usuário')}>ID do usuário</DropdownItem>
-                        <DropdownItem onClick={() => this.fetchTipoUser('Nome de Usuário')}>Nome de Usuário</DropdownItem>
+                        <DropdownItem onClick={() => this.fetchTipoUser('ID')}>ID</DropdownItem>
+                        <DropdownItem onClick={() => this.fetchTipoUser('Apelido')}>Apelido</DropdownItem>
                       </DropdownMenu>
                     </ButtonDropdown>
                   </InputGroupAddon>
                   <Input type="text"
                     name="customer_id"
                     id="idUsuario"
-                    placeholder={this.state.tipoUser === 'ID do usuário'? 'ID do usuário' : 'Nome de Usuário'}
+                    placeholder={this.state.tipoUser === 'ID'? 'Digite o ID do comprador' : 'Digite o Apelido do comprador'}
                     autoComplete="given-name"
                     autoFocus={true}
                     color="outline-dark"
@@ -256,7 +279,7 @@ class BloquearComprador extends Component {
                     onChange={this.handleInputChange}
                     value={this.state.customer_id}
                     onChange={(event) => {
-                      if (this.state.tipoUser === 'ID do usuário'){
+                      if (this.state.tipoUser === 'ID'){
                         if (isNaN(Number(event.target.value))) {
                           return;
                         } else {
@@ -271,8 +294,8 @@ class BloquearComprador extends Component {
                 <FormGroup>
                 <Label for="idMotivo">Selecione o motivo do bloqueio</Label>
                   {!isLoadingMotivos ? (
-                    <Dropdown id="idMotivo" className="dropAbaixo2" isOpen={this.state.dropdownOpenMotivo} toggle={() => {this.toggleMotivo();}}>
-                      <DropdownToggle caret color="outline-dark" size="sm">
+                    <Dropdown  direction="right" id="idMotivo" className="dropAbaixo2" isOpen={this.state.dropdownOpenMotivo} toggle={() => {this.toggleMotivo();}}>
+                      <DropdownToggle caret color="primary" size="md" className="dropWidth">
                         {!this.state.motiveId ? ('Selecione um motivo!') : (this.state.motiveId+' - '+this.state.motiveName)}
                       </DropdownToggle>
                       <DropdownMenu>
@@ -309,7 +332,7 @@ class BloquearComprador extends Component {
                 </Col>
                 </Row>
               </CardBody>
-              <CardFooter>
+              <CardFooter  className="text-right">
                 <Button type="submit" size="md" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
               </CardFooter>
               </Form>
