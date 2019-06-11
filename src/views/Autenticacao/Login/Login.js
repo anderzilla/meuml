@@ -148,7 +148,7 @@ class Login extends Component {
                       </InputGroup>
                       <Row>
                         <Col xs="5" className="text-right ">
-                          <Input type="submit" value="Entrar" className="px-4 btn btn-primary" />
+                          <Input type="submit" value="Entrar" className="btn btn-square btn-block btn-primary active" />
                         </Col>
                         <Col xs="7" className="text-right ">
                         <Link to="/recuperarsenha">
