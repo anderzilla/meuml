@@ -97,14 +97,19 @@ class ListaContas extends Component {
                 isLoading: false,
               });
             } else {
-              Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true,
-              onClose: () => {
-                this.setState({
-                  contas: res.data.data,
-                  isLoading: false,
-                });
-              }
-            });
+              this.setState({
+                contas: res.data.data,
+                isLoading: false,
+              });
+             // isLoading: false,
+            //   Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true,
+            //   onClose: () => {
+            //     this.setState({
+            //       contas: res.data.data,
+            //       isLoading: false,
+            //     });
+            //   }
+            // });
             }
           } else {
             Swal.fire({html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
@@ -196,9 +201,9 @@ class ListaContas extends Component {
                     </Col>
                 );
               })
-          ) : (
-              <h3>Loading...</h3>
-          )}
+          ) :          
+          (<h3>Loading...</h3>)
+          }
         
         </Row>
       </div>
