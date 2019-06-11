@@ -1,8 +1,8 @@
 import Dashboard from './Dashboard';
 //Contas
-import {ListaContas, AdicionarConta, ExcluirConta, RenomearConta, SincronizarConta} from './Contas';
+import {ListaContas} from './Contas';
 //Autenticação
-import {Login, Cadastro, RecuperarSenha, ConfirmarCadastro, AlterarSenha} from './Autenticacao';
+import {Login, Cadastro, RecuperarSenha} from './Autenticacao';
 //Sistema
 import {Page404, Page500} from './Sistema';
 
@@ -11,16 +11,10 @@ export {
     Dashboard, 
     //Contas
     ListaContas,
-    AdicionarConta,
-    ExcluirConta,
-    RenomearConta,
-    SincronizarConta,
     //Autenticação
     Login, 
     Cadastro,
-    RecuperarSenha,
-    AlterarSenha,
-    ConfirmarCadastro, 
+    RecuperarSenha, 
     //Sistema
     Page404, 
     Page500 

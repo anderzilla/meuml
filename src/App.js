@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { isAuthenticated } from "./auth";
-//import { logout } from "./logout";
+import { HashRouter, Route, Switch } from 'react-router-dom';
+// import { renderRoutes } from 'react-router-config';
 import Loadable from 'react-loadable';
 import './App.scss';
 
@@ -13,19 +12,9 @@ const DefaultLayout = Loadable({
   loading
 });
 
-const CallBack = Loadable({
-  loader: () => import('./views/Contas/CallBack'),
-  loading
-});
-
 // Autenticação
 const Login = Loadable({
   loader: () => import('./views/Autenticacao/Login'),
-  loading
-});
-
-const Logout = Loadable({
-  loader: () => import('./views/Autenticacao/Logout'),
   loading
 });
 
@@ -39,15 +28,11 @@ const RecuperarSenha = Loadable({
   loading
 });
 
-const AlterarSenha = Loadable({
-  loader: () => import('./views/Autenticacao/AlterarSenha'),
+const Sair = Loadable({
+  loader: () => import('./views/Autenticacao/Login'),
   loading
 });
 
-const ConfirmarCadastro = Loadable({
-  loader: () => import('./views/Autenticacao/ConfirmarCadastro/ConfirmarCadastro'),
-  loading
-});
 
 //Sistema
 const Page404 = Loadable({
@@ -61,36 +46,19 @@ const Page500 = Loadable({
 });
 
 
-
-const PrivateRoute = ({component : Component, ...rest}) => (
-  <Route
-    {...rest}
-    render={props => 
-      isAuthenticated() ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to={{ pathname: "/login", state: {from: props.location}}} />
-      )
-    }
-  />
-);
-
 class App extends Component {
+
   render() {
     return (
       <HashRouter>
         <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/cadastro" component={Cadastro} />
-          <Route exact path="/recuperarsenha" component={RecuperarSenha} />
-          <Route exact path="/confirmarcadastro/:email/:hash" component={ConfirmarCadastro} />
-          <Route exact path="/alterarsenha/:email/:hash" component={AlterarSenha} />
-          {/*acesso restrito */}
-          <PrivateRoute path="/" name="MeuML.com" component={DefaultLayout} />
-          <PrivateRoute path="/callback" name="MeuML.com - Callback" component={CallBack} />
-          <PrivateRoute path="/logout" name="MeuML.com" component={Logout} />
-          <Route exact path="/404" name="Page 404" component={Page404} />
-          <Route exact path="/500" name="Page 500" component={Page500} />          
+        <Route exact path="/login" name="Página de Login" component={Login} />
+        <Route exact path="/cadastro" name="Página de Cadastro" component={Cadastro} />
+        <Route exact path="/recuperarsenha" name="Recuperar Senha" component={RecuperarSenha} />
+        <Route exact path="/sair" name="Página de Login" component={Sair} />
+        <Route exact path="/404" name="Page 404" component={Page404} />
+        <Route exact path="/500" name="Page 500" component={Page500} />          
+        <Route path="/" name="Home" component={DefaultLayout} />
         </Switch>
       </HashRouter>
     );

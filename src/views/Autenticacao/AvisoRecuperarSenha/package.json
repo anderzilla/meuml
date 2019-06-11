@@ -1,6 +1,0 @@
-{
-  "name": "AvisoRecuperarSenha",
-  "version": "0.0.0",
-  "private": true,
-  "main": "./AvisoRecuperarSenha.js"
-}

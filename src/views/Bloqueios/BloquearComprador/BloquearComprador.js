@@ -1,346 +1,208 @@
 import React, { Component } from 'react';
-import {
-  Row,
-  Col,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  ButtonDropdown,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from 'reactstrap';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import {getToken} from '../../../auth';
-import { AppSwitch } from '@coreui/react'
+import { Row, Col, Card, CardHeader, CardBody, CardFooter, Button, Form, FormFeedback, FormGroup, Label, Input } from 'reactstrap';
+import motivos from './data/motivos';
 import Select from 'react-select';
+import { AppSwitch } from '@coreui/react'
 import 'react-select/dist/react-select.min.css';
-import Picky from "react-picky";
-import "react-picky/dist/picky.css";
+import { Formik } from 'formik';
+import * as Yup from 'yup'
+import './ValidationForms.css'
+
+const options = motivos.BLOCK; //temporário para aparecer motivs no dropdown
+
+const validationSchema = function (values) {
+  return Yup.object().shape({
+    idusuario: Yup.string()
+    .min(2, `Preencha o id duusuario a ser bloqueado`)
+    .required('Id do usuário é obrigatório'),
+  })
+}
+
+const validate = (getValidationSchema) => {
+  return (values) => {
+    const validationSchema = getValidationSchema(values)
+    try {
+      validationSchema.validateSync(values, { abortEarly: false })
+      return {}
+    } catch (error) {
+      return getErrorsFromValidationError(error)
+    }
+  }
+}
+
+const getErrorsFromValidationError = (validationError) => {
+  const FIRST_ERROR = 0
+  return validationError.inner.reduce((errors, error) => {
+    return {
+      ...errors,
+      [error.path]: error.errors[FIRST_ERROR],
+    }
+  }, {})
+}
+
+const initialValues = {
+  idusuario: "",
+}
+
+const onSubmit = (values, { setSubmitting, setErrors }) => {
+  setTimeout(() => {
+    alert(JSON.stringify(values, null, 2))
+    // console.log('User has been successfully saved!', values)
+    setSubmitting(false)
+  }, 2000)
+}
 
 class BloquearComprador extends Component {
   //Adaptar para os valores de motivos de bloqueio
   constructor(props) {
     super(props);
+    this.saveChanges = this.saveChanges.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
 
-    this.toggleConta = this.toggleConta.bind(this);
-    this.toggleMotivo = this.toggleMotivo.bind(this);
-    this.toggleFade = this.toggleFade.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.selectMultipleOption = this.selectMultipleOption.bind(this);
-
-    this.state = {
-      dropdownOpenConta: false,
-      dropdownOpenMotivo: false,
-      accountId : '',
-      accountName: '',
-      accountsSelected: '',
-	    bids : '',
-      customer_id : '',
-      motivoBloqueio : '',
-	    motiveDescription : '',
-	    motiveId : '',
-      questions : '',
-      accounts: [],
-      motivos: [],
-      isLoadingAccounts: true,
-      isLoadingMotivos: true,
-      tipoUser: '',
-      valueID: '',
-      accountList: [],
-      selectedOption: null,
-      bloqueios: [],
-      value: null,
-      arrayValue: [],
+    this.motivos = {
+      value: ['Não Pagou','Cancela compras'],
+      windowWidth: window.innerWidth,
+      orientation: 'vertical',
+      openDirection: 'down'
     }
   }
 
-  toggleFade() {
-    this.setState((prevState) => { return { fadeIn: !prevState }});
+  findFirstError (formName, hasError) {
+    const form = document.forms[formName]
+    for (let i = 0; i < form.length; i++) {
+      if (hasError(form[i].name)) {
+        form[i].focus()
+        break
+      }
+    }
   }
 
-  toggleConta() {
-    this.setState(prevState => ({
-      dropdownOpenConta: !prevState.dropdownOpenConta
-    }));
+  validateForm (errors) {
+    this.findFirstError('simpleForm', (fieldName) => {
+      return Boolean(errors[fieldName])
+    })
   }
 
-  toggleMotivo() {
-    this.setState(prevState => ({
-      dropdownOpenMotivo: !prevState.dropdownOpenMotivo
-    }));
+  touchAll(setTouched, errors) {
+    setTouched({
+        idusuario: true,
+        accept: true
+      }
+    )
+    this.validateForm(errors)
   }
 
   componentDidMount() {
-    this.fetchAccounts();
-    this.fetchMotivos();
+    this.updateDimensions();
+    window.addEventListener('resize', this.updateDimensions);
   }
 
-  fetchAccounts()
-  {
-    this.url = process.env.REACT_APP_API_URL + `/accounts`
-    axios.get(this.url,
-      { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-    //console.log(res);
-    if (res.status === 200){
-      const listaContas = [];
-      const resContas = res.data.data;
-      resContas.map((c, k) => {
-        const { id, name } = this.state;
-        listaContas.push({'value':c.id, 'label':c.name });
-      })
-      this.setState({
-        accounts: listaContas,
-        isLoadingAccounts: false
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateDimensions);
+  }
+
+  saveChanges(value) {
+    this.setState({ value });
+  }
+
+  updateDimensions() {
+    const windowWidth = window.innerWidth;
+    this.setState((motivos)=> {
+      return ({
+        windowWidth: windowWidth,
+        orientation: windowWidth < 620 ? 'vertical' : 'horizontal',
+        openDirection: windowWidth < 620 ? 'up' : 'down'
       });
-      if(res.data.data.meta.total > 0){
-        this.fetchBlacklist(res.data.data[0].id);
-      }else{
-      }
-    }else{
-      Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-    }
-  }).catch(error => {
-  });
-  }
-
-  selectMultipleOption(value) {
-    console.count('onChange')
-    console.log("Val", value);
-    this.setState({ arrayValue: value });
-  }
-
-  fetchMotivos()
-  {
-    this.url = process.env.REACT_APP_API_URL + `/blacklist/motives`
-    axios.get(this.url,
-      { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-    //console.log(res);
-    if (res.status === 200){
-      this.setState({
-        motivos: res.data.data,
-        isLoadingMotivos: false
-      });
-      if(res.data.data.meta.total > 0){
-        this.fetchMotivoSelecionado(res.data.data[0].id);
-      }else{
-      }
-    }else{
-      Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-    }
-  }).catch(error => {
-  });
-  }
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value
     });
   }
-  handleChange = selectedOption => {
-    this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
-  };
-  fetchBlacklist(accountId,accountName) {
-    this.setState({accountId: accountId, accountName: accountName});
-  }
-  fetchMotivoSelecionado(motiveId,motiveName,motiveDescription) {
-    this.setState({motiveId: motiveId, motiveName: motiveName, motiveDescription: motiveDescription});
-  }
-  fetchTipoUser(tipo){
-    this.setState({tipoUser: tipo, customer_id: ''});
-  }
-  handleSubmit(event) {
-    this.setState({bloqueios: []});
-    event.preventDefault();
-    //customer_id
-    if (this.state.selectedOption === ''){
-      alert('Selecione uma conta para realizar o bloqueios!');
-    }else if(this.state.customer_id === '' ){
-      alert('Preencha o id ou usuário do comprador.');
-    }else if(this.state.motiveId === '' ){
-      alert('Defina o motivo do bloqueio.');
-    }else{
-      this.state.selectedOption.map((s, k) => {
-        const { value, name } = this.state;
-        this.state.bloqueios.push({
-          "account_id": s.value,
-  	      "bids": !this.state.bids ? false : true,
-  	      "customer_id": this.state.customer_id,
-  	      "motive_description": this.state.motivoBloqueio,
-  	      "motive_id": this.state.motiveId,
-          "questions": !this.state.questions ? false : true,
-         });
-      })
-      console.log(this.state.bloqueios);
-      axios.post(process.env.REACT_APP_API_URL + `/blacklist`, this.state.bloqueios,
-      {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
-      .then(res => {
-        //console.log(res.data);
-        const status = res.data.status;
-        this.setState({status});
-        if (this.state.status === 'success'){
-          const message = res.data.message;
-          this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-          this.props.history.push("/meusbloqueios");
-        }else{
-          const message = res.data.message;
-          this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
-        }
-      }).catch((error) => {
-        console.log(error);
-        !error.response ?
-        (this.setState({tipoErro: error})) :
-        (this.setState({tipoErro: error.response.data.message}))
-        Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
-  }
-  }
+
   render() {
-    const { isLoading, isLoadingAccounts, isLoadingMotivos, error, accounts, motivos, listaContas, selectedOption } = this.state;
     return (
       <div className="animated fadeIn">
+        <h1>Bloquear Comprador!</h1>
+        <Formik
+              initialValues={initialValues}
+              validate={validate(validationSchema)}
+              onSubmit={onSubmit}
+              render={
+                ({
+                  values,
+                  errors,
+                  touched,
+                  status,
+                  dirty,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  isSubmitting,
+                  isValid,
+                  handleReset,
+                  setTouched
+                }) => (
         <Row>
-          <Col xs="12" sm="12" md="10" xl="8">
+          <Col xs="12" sm="12" md="12">
             <Card className="card-accent-primary">
-            <Form onSubmit={this.handleSubmit} name='bloquearcomprador'>
               <CardHeader>
-                <h5>Bloquear Comprador </h5>
+                Bloquear
               </CardHeader>
               <CardBody>
+              <Form onSubmit={handleSubmit} noValidate name='bloquearcomprador'>
               <Row>
-              <Col xs="12" sm="6" md="6">
+              <Col xs="12" sm="6" md="3">
                 <FormGroup>
-                <Label for="idConta">Selecione as Contas:</Label>
-                {!isLoadingAccounts ? (
-
-                <Picky
-                  value={this.state.arrayValue}
-                  options={accounts}
-                  onChange={this.selectMultipleOption}
-                  open={false}
-                  valueKey="value"
-                  labelKey="label"
-                  multiple={true}
-                  includeSelectAll={true}
-                  includeFilter={true}
-                  dropdownHeight={600}
-                  placeholder="Selecione..."
-                  manySelectedPlaceholder="%s Selecionados"
-                  allSelectedPlaceholder="%s Selecionados"
-                  selectAllText="Selecionar Todos"
-                  filterPlaceholder="Filtrar por..."
-                />
-
-                ) : (
-                  <h3>Carregando...</h3>
-                )}
-                </FormGroup>
-                <FormGroup>
-                  <Label for="idUsusario">ID ou Usuário do comprador</Label>
-                  <InputGroup>
-                    <InputGroupAddon addonType="prepend">
-                    <ButtonDropdown direction="right" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
-                      <DropdownToggle caret color="primary" size="md">
-                        {!this.state.tipoUser ? ('Selecione') : this.state.tipoUser}
-                      </DropdownToggle>
-                      <DropdownMenu className={this.state.first ? 'show' : ''}>
-                        <DropdownItem onClick={() => this.fetchTipoUser('ID')}>ID</DropdownItem>
-                        <DropdownItem onClick={() => this.fetchTipoUser('Apelido')}>Apelido</DropdownItem>
-                      </DropdownMenu>
-                    </ButtonDropdown>
-                  </InputGroupAddon>
+                  <Label for="idUsusario">First Name</Label>
                   <Input type="text"
-                    name="customer_id"
-                    id="idUsuario"
-                    placeholder={this.state.tipoUser === 'ID'? 'Digite o ID do comprador' : 'Digite o Apelido do comprador'}
+                    name="isUsuario"
+                    id="isUsuario"
+                    placeholder="ID do Usuário"
                     autoComplete="given-name"
+                    valid={!errors.idusuario}
+                    invalid={touched.idusuario && !!errors.idusuario}
                     autoFocus={true}
-                    color="outline-dark"
                     required
-                    onChange={this.handleInputChange}
-                    value={this.state.customer_id}
-                    onChange={(event) => {
-                      if (this.state.tipoUser === 'ID'){
-                        if (isNaN(Number(event.target.value))) {
-                          return;
-                        } else {
-                          this.setState({ customer_id: event.target.value });
-                        }
-                      }else{
-                          this.setState({ customer_id: event.target.value });
-                      }
-                    }}/>
-                    </InputGroup>
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.idusuario} />
+                  <FormFeedback>{errors.idusuario}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
-                <Label for="idMotivo">Selecione o motivo do bloqueio</Label>
-                  {!isLoadingMotivos ? (
-                    <Dropdown  direction="right" id="idMotivo" className="dropAbaixo2" isOpen={this.state.dropdownOpenMotivo} toggle={() => {this.toggleMotivo();}}>
-                      <DropdownToggle caret color="primary" size="md" className="dropWidth">
-                        {!this.state.motiveId ? ('Selecione um motivo!') : (this.state.motiveId+' - '+this.state.motiveName)}
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        {motivos.map((m, key) => {
-                          const { id, name, description } = this.state;
-                          return (<DropdownItem onClick={() => this.fetchMotivoSelecionado(m.id, m.name, m.description)}>{m.id} - {m.name}</DropdownItem>)
-                        })}
-                      </DropdownMenu>
-                      </Dropdown>
-                      ) : (
-                        <h3>Carregando...</h3>
-                      )}
-                  </FormGroup>
-                  </Col>
-                <Col xs="12" sm="6" md="6">
-                <FormGroup>
-                <Label for="motivoBloqueio">Descreva o motivo do bloqueio <em>(opcional)</em></Label>
-                  <Input type="textarea"
-                    name="motivoBloqueio"
-                    id="motivoBloqueio"
-                    rows="3"
-                    color="outline-dark"
-                    onChange={this.handleInputChange}
-                    value={this.state.motivoBloqueio} />
+                  <Select
+                    name="motivosbloqueio"
+                    value={this.motivos.value}
+                    options={options}
+                    onChange={this.saveChanges}
+                    multi
+                    placeholder="Selecione o motivo"
+                  />
                 </FormGroup>
                 <FormGroup>
-                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="bids" value="1" onChange={this.handleInputChange}  />
-                <span className="textoSwitch"> Bloquear para compras</span>
+                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="compras" value="1"  /><span class="align-middle"> Bloquear para compras</span>
                 </FormGroup>
                 <FormGroup>
-                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="questions" value="1" onChange={this.handleInputChange}/>
-                <span className="textoSwitch">Bloquear para perguntas</span>
+                <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="perguntas" value="1" /> <span class="align-middle">Bloquear para perguntas</span>
                 </FormGroup>
                 </Col>
+                <Col xs="12" sm="6" md="9">
+                <FormGroup row>
+                  <Label htmlFor="textarea-input">Descrição do motivo</Label>
+                  <Input type="textarea" name="descricaomotivo" id="descricaomotivo" rows="9"
+                    placeholder="Descreva o motivo do Bloqueio..." />
+                  </FormGroup>
+                </Col>
                 </Row>
+
+                </Form>
               </CardBody>
-              <CardFooter  className="text-right">
-                <Button type="submit" size="md" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
+              <CardFooter>
+                <Button type="submit" size="sm" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
               </CardFooter>
-              </Form>
             </Card>
           </Col>
           </Row>
+          )} />
       </div>
-    )
+    );
   }
 }
+
 export default BloquearComprador;

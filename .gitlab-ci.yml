@@ -6,16 +6,15 @@ homologacao:
   stage: homologacao
   tags:
     - front-homologacao
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo -e "$ALCATRA_PRIVATE_KEY" > ~/.ssh/id_rsa_bitflix_homologacao
+    - chmod 600 ~/.ssh/id_rsa
   environment:
     name: homologacao
   script:
-    - cd /home/bitflix/homolog/front-end
-    - git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end homolog
-    - git checkout homolog
-    - whoami
-    - npm i
-    - CI=false npm run build
-    - pm2 restart homologacao-react-panel
+    - cd /home/bitflix/front-end && git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end homolog && git checkout homolog
+    - ./script/run-homolog.sh
   only:
     - homolog
     - merge-request
@@ -32,13 +31,8 @@ producao:
   environment:
     name: producao
   script:
-    - cd /home/bitflix/producao/front-end 
-    - git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end master 
-    - git checkout master
-    - whoami
-    - npm i
-    - CI=false npm run build
-    - pm2 restart producao-react-panel
+    - cd /home/bitflix/producao/front-end && git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end master && git checkout master
+    - npm run build && npm run start
   only:
     - master
     - merge-request
