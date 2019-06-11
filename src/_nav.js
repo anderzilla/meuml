@@ -15,18 +15,18 @@ export default {
       icon: 'fa fa-address-book',
 
     },
-    {
-      name: 'Anúncios',
-      url: '/dashboard',
-      icon: 'fa fa-bullhorn',
+    // {
+    //   name: 'Anúncios',
+    //   url: '/dashboard',
+    //   icon: 'fa fa-bullhorn',
 
-    },
-    {
-      name: 'Vendas',
-      url: '/dashboard',
-      icon: 'fa fa-shopping-cart',
+    // },
+    // {
+    //   name: 'Vendas',
+    //   url: '/dashboard',
+    //   icon: 'fa fa-shopping-cart',
 
-    },
+    // },
     {
       name: 'Pesos e Dimensões',
       url: '/categorias',
@@ -66,18 +66,18 @@ export default {
       ]
 
     },
-    {
-      name: 'Processos',
-      url: '/dashboard',
-      icon: 'fa fa-file-powerpoint-o',
+    // {
+    //   name: 'Processos',
+    //   url: '/dashboard',
+    //   icon: 'fa fa-file-powerpoint-o',
 
-    },
-    {
-      name: 'Perguntas',
-      url: '/perguntas',
-      icon: 'fa fa-question-circle',
+    // },
+    // {
+    //   name: 'Perguntas',
+    //   url: '/perguntas',
+    //   icon: 'fa fa-question-circle',
 
-    },
+    // },
     {
       name: 'Sair',
       url: '/logout',
