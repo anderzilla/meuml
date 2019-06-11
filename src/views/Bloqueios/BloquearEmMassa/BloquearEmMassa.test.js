@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import BloquearEmMassa from './BloquearEmMassa';
+import AdicionarItemLista from './AdicionarItemLista';
 import { shallow } from 'enzyme'
 
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-ReactDOM.render(<BloquearEmMassa />, div);
+  ReactDOM.render(<AdicionarItemLista />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
 
 it('renders without crashing', () => {
-  shallow(<BloquearEmMassa />);
+  shallow(<AdicionarItemLista />);
 });

@@ -1,7 +1,0 @@
-apps:
-  - script: ./scripts/run-homolog.sh
-    name: 'homologacao-react-panel'
-    watch: true
-  - script   : ./scripts/run-prod.sh
-    name     : 'producao-react-panel'
-    watch: true

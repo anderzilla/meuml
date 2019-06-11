@@ -1,2 +1,2 @@
-
-pm2 start "../process.yml" --interpreter=bash
+pm2 ps
+pm2 restart homologacao-react-panel

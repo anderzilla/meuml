@@ -13,25 +13,25 @@ export default {
       name: 'Contas',
       url: '/listacontas',
       icon: 'fa fa-address-book',
-      
+
     },
     {
       name: 'Anúncios',
       url: '/dashboard',
       icon: 'fa fa-bullhorn',
-      
+
     },
     {
       name: 'Vendas',
       url: '/dashboard',
       icon: 'fa fa-shopping-cart',
-      
+
     },
     {
       name: 'Pesos e Dimensões',
-      url: '/dashboard',
+      url: '/categorias',
       icon: 'fa fa-balance-scale',
-      
+
     },
     {
       name: 'Bloqueios',
@@ -53,63 +53,34 @@ export default {
           url: '/bloquearemmassa',
           icon: 'fa fa-users',
         },
+        {
+          name: 'Bloquear Lista',
+          url: '/bloquearlista',
+          icon: 'fa fa-times-rectangle',
+        },
+        {
+          name: 'Listas de Bloqueios',
+          url: '/minhaslistasdebloqueios',
+          icon: 'fa fa-address-card-o',
+        },
       ]
-      
+
     },
     {
       name: 'Processos',
       url: '/dashboard',
       icon: 'fa fa-file-powerpoint-o',
-      
+
     },
     {
       name: 'Perguntas',
-      url: '/dashboard',
+      url: '/perguntas',
       icon: 'fa fa-question-circle',
-      
-    },
-    {
-      name: 'Autenticação',
-      url: '/dashboard',
-      icon: 'fa fa-cog',
-      children: [
-        {
-          name: 'Login',
-          url: '/login',
-          icon: 'icon-user',
-        },
-        {
-          name: 'Cadastro',
-          url: '/cadastro',
-          icon: 'icon-user-follow',
-        },
-        {
-          name: 'Recuperar Senha',
-          url: '/recuperarsenha',
-          icon: 'icon-wrench',
-        },
-      ]
-    },
-    {
-      name: 'Sistema',
-      url: '',
-      icon: 'fa fa-cog',
-      children: [
-        {
-          name: 'Error 404',
-          url: '/404',
-          icon: 'icon-ban',
-        },
-        {
-          name: 'Error 500',
-          url: '/500',
-          icon: 'icon-ban',
-        }
-      ]
+
     },
     {
       name: 'Sair',
-      url: '/sair',
+      url: '/logout',
       icon: 'fa fa-sign-out',
     },
   ]
