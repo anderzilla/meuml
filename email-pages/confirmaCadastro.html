@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
+<title>MeuML.com - Confirmar Cadastro</title>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<style type="text/css">
+    body{
+        background-color: #e4e5e6;
+        padding: 5% 20%;
+    }
+    .container{
+        background-color: #ffffff;
+        border: 1px #ccc solid;
+        width: 100%;
+        min-height: 600px ;
+    }
+    .logo{
+        margin: 5px 10%;
+        width: 80%;
+    }
+    .conteudo{
+        padding: 15px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .alert{
+        text-align: left;
+        margin: 30px 5px;
+    }
+    .footer{
+        border-top: #ccc solid 1px;
+        padding: 50px;
+        text-align: center
+    }
+</style>
+</head>
+<body>
+    <div class="container ">
+        <div class="header">
+        <!-- Header -->
+            <div class="row">
+                <div class="col-md-12">
+                    <img src="./img/MeuML-logo2.png" class="logo"/>
+                </div>
+            </div>
+        </div>
+        <div class="conteudo">
+        <!-- Content -->
+            <h1>Confirmar Cadastro</h1>
+            <div class="alert alert-success">
+                Você se cadastrou no MeuML.com, para poder acessar sua conta é necessário confirmar seu cadastro clicando no botão abaixo.<br/>
+                Ao confirmar seu cadastro você poderá realizar o acesso ao sistema com as informações de email e senha que informou no seu cadastro.
+            </div>
+            <a href="https://api.app2.meuml.com/confirmarcadastro/{email}/{hash}" class="btn btn-success">Alterar Senha</a>
+        </div>
+        <div class="footer">
+        <!-- footer -->
+        <a href="http://www.meuml.com" > www.meuml.com </a> - suporte@meuml.com - (41)3333-4444
+
+        </div>
+    </div>
+    
+    <!-- JS Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
