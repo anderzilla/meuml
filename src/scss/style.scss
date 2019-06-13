@@ -218,6 +218,45 @@ Label {
   text-align: left;
 }
 
+// Resolve o problema dos indicadores de ordenação do Bootstrap Table
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-top: 4px solid \9;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
+
+.dropup .caret, .navbar-fixed-bottom .dropdown .caret {
+  border-top: 0;
+  border-bottom: 4px dashed;
+  border-bottom: 4px solid \9;
+  content: "";
+}
+
+.table {
+  margin-bottom: 0px !important;
+  
+}
+
+.filtro{
+  margin-bottom: 10px;
+}
+
+
+.labelAtualiza{
+  position: absolute;
+  margin-top: 10px;
+}
+
+// Resolve o problema dos indicadores de ordenação do Bootstrap Table
+
+
+
 //################################################################
 //COMPONENTE DATATABLE PARA BLOQUEIO EM Massa
 .itsa-table {
