@@ -59,7 +59,7 @@ export default {
           icon: 'fa fa-times-rectangle',
         },
         {
-          name: 'Listas de Bloqueios',
+          name: 'Minhas Listas',
           url: '/minhaslistasdebloqueios',
           icon: 'fa fa-address-card-o',
         },
