@@ -105,9 +105,21 @@ class BloquearComprador extends Component {
         accounts: listaContas,
         isLoadingAccounts: false
       });
-      if(res.data.data.meta.total > 0){
+      if(res.data.meta.total > 0){
         this.fetchBlacklist(res.data.data[0].id);
       }else{
+        Swal.fire({
+          title: '',
+          text: "Você precisa ter ao menos 1 conta!",
+          type: 'info',
+          showCancelButton: false,
+          confirmButtonColor: '#366B9D',
+          confirmButtonText: 'OK',
+          confirmButtonClass: 'btn btn-success',
+          buttonsStyling: true
+        }).then(function () {
+          window.location.href = "#/listacontas";
+        })
       }
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
