@@ -45,7 +45,7 @@ class Login extends Component {
     const USER_EMAIL = "@MeuML-UserEmail";
     const USER_SELLER_ID = "@MeuML-UserSellerId";
     //Realiza o login testando os dados do usuário no servidor
-y      "email":this.state.email,
+      "email":this.state.email,
       "password":this.state.password
     })
     .then(res => {
