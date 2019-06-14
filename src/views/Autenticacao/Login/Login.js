@@ -45,8 +45,7 @@ class Login extends Component {
     const USER_EMAIL = "@MeuML-UserEmail";
     const USER_SELLER_ID = "@MeuML-UserSellerId";
     //Realiza o login testando os dados do usuário no servidor
-    axios.post(process.env.REACT_APP_API_URL + `/auth/login`, {
-      "email":this.state.email,
+y      "email":this.state.email,
       "password":this.state.password
     })
     .then(res => {
