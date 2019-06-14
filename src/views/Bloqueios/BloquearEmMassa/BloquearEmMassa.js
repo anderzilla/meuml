@@ -26,6 +26,7 @@ class BloquearEmMassa extends Component {
       offset: 1,
       filter: '',
       accounts: [],
+      accountList: '',
       isLoadingAccounts: true,
       isLoadingLista: true,
       lista: '',
@@ -34,6 +35,7 @@ class BloquearEmMassa extends Component {
       bids: '',
       questions: '',
       changes: '',
+      bloqueios: [],
       dataTest: [],
       collapse: false,
       accordion: [false, false, false],
@@ -80,18 +82,6 @@ class BloquearEmMassa extends Component {
       if(res.data.data.meta.total > 0){
         this.fetchBlacklist(res.data.data[0].id);
       }else{
-        Swal.fire({
-          title: '',
-          text: "Você precisa ter ao menos 1 conta!",
-          type: 'info',
-          showCancelButton: false,
-          confirmButtonColor: '#366B9D',
-          confirmButtonText: 'OK',
-          confirmButtonClass: 'btn btn-success',
-          buttonsStyling: true
-        }).then(function () {
-          window.location.href = "#/listacontas";
-        })
       }
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
@@ -104,6 +94,20 @@ class BloquearEmMassa extends Component {
     console.count('onChange')
     console.log("Val", value);
     this.setState({ arrayValue: value });
+
+    const values = this.state;
+    this.state.values = value;
+    this.state.accountId = [];
+    this.state.accountList = '';
+    const valuesToRender = this.state.values.filter(val => val.value)
+    const numRows = valuesToRender.length
+    console.log(numRows);
+    const {accountId, accountName} = this.state;
+    for (var i = 0; i < numRows; i++) {
+      this.state.accountId.push(value[i].value);
+      //this.state.accountList = !this.state.accountList? this.state.accountList = value[i].value : this.state.accountList+','+value[i].value ;
+    }
+    //this.state.accountId = [this.state.accountList];
   }
 
   fetchMotivos()
@@ -155,7 +159,7 @@ class BloquearEmMassa extends Component {
 //Captura a lista de forma assincrona para transformar em JSON
 
   async listagem(lista, closure){
-    var lista =  await lista.split("\n").map(function(id) {return ({"customer_id":id, "motive_id": "", "motive_description": ""})}) ;
+    var lista =  await lista.split("\n").map(function(id) {return ({customer_id:id, motive_id: "", motive_description: ""})}) ;
     closure(lista, this);
   }
 
@@ -174,19 +178,19 @@ class BloquearEmMassa extends Component {
         obj.setState({listagem: lista});
         obj.mount()
     });
-    console.log(JSON.stringify(this.state.listagem)); 
+    console.log(this.state.listagem); 
     console.log('nome da lista:'+this.state.nomeLista);
     console.log('descricao da lista:'+this.state.descricaoLista);
-    console.log('contas para bloqueio:'+this.state.arrayValue);
+    console.log('contas para bloqueio:'+this.state.accountId);
     console.log('bids:'+this.state.bids);
     console.log('questions:'+this.state.questions);
     console.log('escolha:'+this.state.custom);
 
   }
 
-  handleSubmit(event) {
+
+  concluirOperacao() {
     this.setState({bloqueios: []});
-    event.preventDefault();
     //customer_id
     if (this.state.listagem === ''){
       alert('Preencha o campo Lista antes de Salvar!');
@@ -211,7 +215,7 @@ class BloquearEmMassa extends Component {
         }).then(res => {
           axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, {
             "list_name":this.state.nomeLista,
-            "customers":this.state.listagemJSON
+            "customers":JSON.parse(this.state.listagemJSON)
           }).then(res => {
             const status_customer = res.data.status;
             this.setState({status_customer});
@@ -279,16 +283,21 @@ class BloquearEmMassa extends Component {
         axios.post(process.env.REACT_APP_API_URL + `/blacklist/list`, {
           "list_name":this.state.nomeLista,
           "list_description":this.state.descricaoLista
-        }).then(res => {
+        },
+        {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
+        ).then(res => {
+          alert('lista criada'+ this.state.nomeLista);
           axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, {
             "list_name":this.state.nomeLista,
-            "customers":this.state.listagemJSON
-          }).then(res => {
-            console.log(this.state.bloqueios);
+            "customers":this.state.listagem
+          },
+          {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
+          ).then(res => {
+            console.log('dados para bloqueio:'+this.state.bloqueios);
             axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, 
               {
                 "blacklist_name":this.state.nomeLista, 
-                "accounts":this.state.arrayValue, 
+                "accounts":this.state.accountId, 
                 "bids": !this.state.bids ? false : true,
                 "questions": !this.state.questions ? false : true
               },
@@ -300,8 +309,8 @@ class BloquearEmMassa extends Component {
               if (this.state.status === 'success'){
                 const message = res.data.message;
                 this.setState({message});
-                Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-                this.props.history.push("/meusbloqueios");
+                Swal.fire({html:'<p><b>'+this.state.message+'</b><br>'+res.data.data.status+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+                //this.props.history.push("/meusbloqueios");
               }else{
                 const message = res.data.message;
                 this.setState({message});
@@ -316,7 +325,11 @@ class BloquearEmMassa extends Component {
             });
 
           }).catch((error) => {
-            Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+            console.log(error);
+              !error.response ?
+              (this.setState({tipoErro: error})) :
+              (this.setState({tipoErro: error.response.data.message}))
+              Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
           });
         });
       }else{
@@ -332,7 +345,6 @@ class BloquearEmMassa extends Component {
     return (
       <div className="animated fadeIn">
         <Card>
-        <Form onSubmit={this.handleSubmit} name='BloqueioEmMassa'>
         <CardHeader>
         <h5>Bloqueio em Massa</h5>
         </CardHeader>
@@ -522,9 +534,9 @@ class BloquearEmMassa extends Component {
         )}
         </CardBody>
         <CardFooter>
-          <Button color="primary" type="submit" disabled={this.state.salvar} >Concluir</Button>
+          <Button color="primary" onClick={() => this.concluirOperacao()} disabled={this.state.salvar} >Concluir</Button>
         </CardFooter>
-        </Form>
+        
         </Card>
       </div>
     );
