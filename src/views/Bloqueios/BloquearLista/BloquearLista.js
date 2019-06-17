@@ -210,7 +210,7 @@ class BloquearLista extends Component {
               allSelectedPlaceholder="%s Selecionados"
               selectAllText="Selecionar Todos"
               filterPlaceholder="Filtrar por..."
-              className="multiSelect"
+              
             />
             ) : (
               <h3>Carregando...</h3>

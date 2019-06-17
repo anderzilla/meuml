@@ -157,7 +157,12 @@ class BloquearEmMassa extends Component {
 //Captura a lista de forma assincrona para transformar em JSON
 
   async listagem(lista, closure){
-    var lista =  await lista.split("\n").map(function(id) {return ({customer_id:id, motive_id: "", motive_description: ""})}) ;
+    if (this.state.custom[1] === true){
+      var lista =  await lista.split("\n").map(function(id) {return ({customer_id:id, motive_id: "", motive_description: ""})}) ;
+    }else{
+      var lista =  await lista.split("\n").map(function(id) {return ({customer_id:id, motive_id: "", motive_description: ""})}) ;
+    }
+    
     closure(lista, this);
   }
 
@@ -195,17 +200,17 @@ class BloquearEmMassa extends Component {
     }else{
       if (this.state.custom[0] === true){
       //APENAS SALVAR A LISTA
-        axios.post(process.env.REACT_APP_API_URL + `/blacklist/list`, {
-          "list_name":this.state.nomeLista,
-          "list_description":this.state.descricaoLista
-        }).then(res => {
-          axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, {
-            "list_name":this.state.nomeLista,
-            "customers":JSON.parse(this.state.listagemJSON)
-          }).then(res => {
+        axios.post(process.env.REACT_APP_API_URL + `/blacklist/list`, 
+        {"list_name":this.state.nomeLista,"list_description":this.state.descricaoLista},
+        {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},
+        ).then(res => {
+          axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, 
+          {"list_name":this.state.nomeLista,"customers":JSON.parse(this.state.listagemJSON)},
+          {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},
+          ).then(res => {
             const status_customer = res.data.status;
             this.setState({status_customer});
-            Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status_customer, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+            Swal.fire({html:'<p>'+res.data.message+'</p>', type: this.state.status_customer, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
           }).catch((error) => {     
             !error.response ?
             (this.setState({tipoErro: error})) :
@@ -217,16 +222,17 @@ class BloquearEmMassa extends Component {
       }else if(this.state.custom[1] === true){
       //APENAS BLOQUEAR A LISTA  
         //BLOQUEANDO OS IDS
-        this.state.listagemJSON.map((cid, x) => {
-          const { customer_id } = this.state;
-          this.state.arrayValue.map((s, k) => {
-            const { value, name } = this.state;
-            this.state.bloqueios.push({
+        console.log(this.state.listagemJSON);
+        this.state.arrayValue.map((s, k) => {
+          const { value, name } = this.state;
+          this.state.listagem.map((cid, x) => {
+            const { customer_id } = this.state;
+              this.state.bloqueios.push({
               "account_id": s.value,
               "bids": !this.state.bids ? false : true,
               "customer_id": cid.customer_id,
               "motive_description": this.state.motivoBloqueio,
-              "motive_id": this.state.motiveId,
+              "motive_id": '9',
               "questions": !this.state.questions ? false : true,
              });
           })
