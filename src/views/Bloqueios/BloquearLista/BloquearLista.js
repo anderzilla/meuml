@@ -129,13 +129,14 @@ class BloquearLista extends Component {
     //Prepara o array para ser manipulado
     const values = this.state;
     this.state.values = value;
-    //Conta quantos resultados foram selecionados
+    this.state.accountId = [];
+
     const valuesToRender = this.state.values.filter(val => val.value)
     const numRows = valuesToRender.length
-    //Monta a variável com as contas que receberão a lsta de blqueios (123,124,125,...)
+    
     const {accountId, accountName} = this.state;
     for (var i = 0; i < numRows; i++) {
-    this.state.accountId = !this.state.accountId? this.state.accountId = value[i].value : this.state.accountId+','+value[i].value;
+      this.state.accountId.push(value[i].value); 
     }
   }
 
@@ -147,7 +148,7 @@ class BloquearLista extends Component {
     }else{
       axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, {
         "blacklist_name":this.state.blackListName, 
-        "accounts":this.state.arrayValue, 
+        "accounts":this.state.accountId, 
         "bids": !this.state.bids ? false : true,
         "questions": !this.state.questions ? false : true
       },

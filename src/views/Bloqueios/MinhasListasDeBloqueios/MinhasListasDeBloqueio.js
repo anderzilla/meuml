@@ -182,8 +182,7 @@ class MinhasListasDeBloqueio extends Component {
                     <th class="text-center">Compras</th>
                     <th class="text-center">Perguntas</th>
                     <th class="text-center">Descrição</th>
-                    <th class="text-center">Quantidade</th>
-                    <th class="text-right">Ação</th>
+                    <th class="text-right"></th>
                   </tr>
                   </thead>
                   <tbody>
@@ -197,7 +196,6 @@ class MinhasListasDeBloqueio extends Component {
                               <td class="text-center">{!l.bids? <i class="fa fa-unlock text-disabled"></i> : <i class="fa fa-lock text-danger"></i>}</td>
                               <td class="text-center">{!l.questions? <i class="fa fa-unlock text-disabled"></i> : <i class="fa fa-lock text-danger"></i>}</td>
                               <td class="text-center">{l.list_description}</td>
-                              <td class="text-center">{l.list_quantities}</td>
                               <td class="text-right">
                                 <Button onClick={()=>this.fetchDeletarLista(l.id)} class="btn btn-danger btn-small"><i class="fa fa-trash"></i></Button>
                               </td>

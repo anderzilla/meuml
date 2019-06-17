@@ -98,16 +98,14 @@ class BloquearEmMassa extends Component {
     const values = this.state;
     this.state.values = value;
     this.state.accountId = [];
-    this.state.accountList = '';
+
     const valuesToRender = this.state.values.filter(val => val.value)
     const numRows = valuesToRender.length
     
     const {accountId, accountName} = this.state;
     for (var i = 0; i < numRows; i++) {
-      this.state.accountId.push(value[i].value);
-      //this.state.accountList = !this.state.accountList? this.state.accountList = value[i].value : this.state.accountList+','+value[i].value ;
+      this.state.accountId.push(value[i].value); 
     }
-    //this.state.accountId = [this.state.accountList];
   }
 
   fetchMotivos()
@@ -180,7 +178,6 @@ class BloquearEmMassa extends Component {
 
   concluirOperacao() {
     this.setState({bloqueios: []});
-    //customer_id
     if (this.state.listagem === ''){
       Swal.fire({html:'<p>Preencha o campo Lista antes de Salvar!</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else if(this.state.nomeLista === '' && this.state.custom[0] === true ){
@@ -209,14 +206,7 @@ class BloquearEmMassa extends Component {
             const status_customer = res.data.status;
             this.setState({status_customer});
             Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status_customer, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-            //ZERA OS DADOS DO FORMULÁRIO APÓS SALVAR A LISTA
-            /*this.setState({
-              listagemJSON: '',
-              nomeLista: '',
-              descricaoLista: '',
-            });*/
-          }).catch((error) => {
-            
+          }).catch((error) => {     
             !error.response ?
             (this.setState({tipoErro: error})) :
             (this.setState({tipoErro: error.response.data.message}))
@@ -298,7 +288,6 @@ class BloquearEmMassa extends Component {
                 const message = res.data.message;
                 this.setState({message});
                 Swal.fire({html:'<p><b>'+this.state.message+'</b><br>'+res.data.data.status+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-                //this.props.history.push("/meusbloqueios");
               }else{
                 const message = res.data.message;
                 this.setState({message});
