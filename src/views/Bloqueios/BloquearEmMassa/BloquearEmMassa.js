@@ -67,7 +67,7 @@ class BloquearEmMassa extends Component {
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-    //console.log(res);
+    
     if (res.status === 200){
       const listaContas = [];
       const resContas = res.data.data;
@@ -101,7 +101,7 @@ class BloquearEmMassa extends Component {
     this.state.accountList = '';
     const valuesToRender = this.state.values.filter(val => val.value)
     const numRows = valuesToRender.length
-    console.log(numRows);
+    
     const {accountId, accountName} = this.state;
     for (var i = 0; i < numRows; i++) {
       this.state.accountId.push(value[i].value);
@@ -116,7 +116,7 @@ class BloquearEmMassa extends Component {
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-    //console.log(res);
+    
     if (res.status === 200){
       this.setState({
         motivos: res.data.data,
@@ -146,7 +146,7 @@ class BloquearEmMassa extends Component {
   toggleCustom(tab) {
     //monta a lista em JSON
     this.montarTabela(this.state.lista);
-    console.log(JSON.stringify(this.state.listagem));
+    
     const prevState = this.state.custom;
     const state = prevState.map((x, index) => tab === index ? !x : false);
 
@@ -164,28 +164,17 @@ class BloquearEmMassa extends Component {
   }
 
   mount(){
-
     this.setState({
       listagemJSON:JSON.stringify(this.state.listagem),
       isLoadingLista: false
-    });
-        
+    });       
   }
 
-  montarTabela(lista) {
-    
+  montarTabela(lista) {    
     this.listagem(lista, function(lista, obj){
         obj.setState({listagem: lista});
         obj.mount()
     });
-    console.log(this.state.listagem); 
-    console.log('nome da lista:'+this.state.nomeLista);
-    console.log('descricao da lista:'+this.state.descricaoLista);
-    console.log('contas para bloqueio:'+this.state.accountId);
-    console.log('bids:'+this.state.bids);
-    console.log('questions:'+this.state.questions);
-    console.log('escolha:'+this.state.custom);
-
   }
 
 
@@ -193,19 +182,19 @@ class BloquearEmMassa extends Component {
     this.setState({bloqueios: []});
     //customer_id
     if (this.state.listagem === ''){
-      alert('Preencha o campo Lista antes de Salvar!');
+      Swal.fire({html:'<p>Preencha o campo Lista antes de Salvar!</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else if(this.state.nomeLista === '' && this.state.custom[0] === true ){
-      alert('Preencha o nome da Lista antes de Salvar.');
+      Swal.fire({html:'<p>Preencha o campo Lista antes de Salvar!</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else if(this.state.nomeLista === '' && this.state.custom[2] === true ){
-      alert('Preencha o nome da Lista antes de Salvar.');
+      Swal.fire({html:'<p>Preencha o nome da Lista antes de Salvar.</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else if(this.state.arrayValue === '' && this.state.custom[1] === true ){
-      alert('Escolha uma conta para qual a lista  será bloqueada.');
+      Swal.fire({html:'<p>Escolha uma conta para qual a lista  será bloqueada.</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else if(this.state.arrayValue === '' && this.state.custom[2] === true ){
-      alert('Escolha uma conta para qual a lista  será bloqueada.');
+      Swal.fire({html:'<p>PEscolha uma conta para qual a lista  será bloqueada.</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else if(this.state.questions === '' && this.state.bids === '' && this.state.custom[1] === true ){
-      alert('Escolha uma opção de bloqueio antes de salvar.');
+      Swal.fire({html:'<p>Escolha uma opção de bloqueio antes de salvar.</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else if(this.state.questions === '' && this.state.bids === '' && this.state.custom[2] === true ){
-      alert('Escolha uma opção de bloqueio antes de salvar.');
+      Swal.fire({html:'<p>Escolha uma opção de bloqueio antes de salvar.</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else{
       if (this.state.custom[0] === true){
       //APENAS SALVAR A LISTA
@@ -227,7 +216,7 @@ class BloquearEmMassa extends Component {
               descricaoLista: '',
             });*/
           }).catch((error) => {
-            console.log(error);
+            
             !error.response ?
             (this.setState({tipoErro: error})) :
             (this.setState({tipoErro: error.response.data.message}))
@@ -252,11 +241,11 @@ class BloquearEmMassa extends Component {
              });
           })
         })
-        console.log(this.state.bloqueios);
+        
         axios.post(process.env.REACT_APP_API_URL + `/blacklist`, this.state.bloqueios,
         {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
         .then(res => {
-          //console.log(res.data);
+          
           const status = res.data.status;
           this.setState({status});
           if (this.state.status === 'success'){
@@ -270,7 +259,7 @@ class BloquearEmMassa extends Component {
             Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
           }
         }).catch((error) => {
-          console.log(error);
+          
           !error.response ?
           (this.setState({tipoErro: error})) :
           (this.setState({tipoErro: error.response.data.message}))
@@ -286,14 +275,13 @@ class BloquearEmMassa extends Component {
         },
         {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
         ).then(res => {
-          alert('lista criada'+ this.state.nomeLista);
           axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, {
             "list_name":this.state.nomeLista,
             "customers":this.state.listagem
           },
           {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
           ).then(res => {
-            console.log('dados para bloqueio:'+this.state.bloqueios);
+           
             axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, 
               {
                 "blacklist_name":this.state.nomeLista, 
@@ -303,7 +291,7 @@ class BloquearEmMassa extends Component {
               },
             {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
             .then(res => {
-              //console.log(res.data);
+             
               const status = res.data.status;
               this.setState({status});
               if (this.state.status === 'success'){
@@ -317,7 +305,7 @@ class BloquearEmMassa extends Component {
                 Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
               }
             }).catch((error) => {
-              console.log(error);
+            
               !error.response ?
               (this.setState({tipoErro: error})) :
               (this.setState({tipoErro: error.response.data.message}))
@@ -325,7 +313,7 @@ class BloquearEmMassa extends Component {
             });
 
           }).catch((error) => {
-            console.log(error);
+          
               !error.response ?
               (this.setState({tipoErro: error})) :
               (this.setState({tipoErro: error.response.data.message}))
@@ -333,7 +321,7 @@ class BloquearEmMassa extends Component {
           });
         });
       }else{
-        alert('teste');
+        
       }
   }
 }
