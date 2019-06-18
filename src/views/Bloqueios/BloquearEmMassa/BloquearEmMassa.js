@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 import { AppSwitch } from '@coreui/react'
 import 'react-select/dist/react-select.min.css';
-import Picky from "react-picky";
+import Picky, {components}  from "react-picky";
 import "react-picky/dist/picky.css";
 
 import {parse} from 'react-json-parser';

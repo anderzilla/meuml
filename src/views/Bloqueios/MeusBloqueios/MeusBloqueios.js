@@ -31,9 +31,9 @@ class MeusBloqueios extends Component {
       accounts: [],
       isLoadingAccounts: true,
       isLoading: true,
-      accountId: null,
       value: null,
       arrayValue: [],
+      grid: [],
     };
   }
 
@@ -47,62 +47,42 @@ class MeusBloqueios extends Component {
     this.fetchAccounts();
   }
 
-  fetchAccounts() {
-
-
+  fetchAccounts()
+  {
     this.url = process.env.REACT_APP_API_URL + `/accounts`
     axios.get(this.url,
-      { headers: { "Authorization": 'Bearer ' + getToken() } },
+      { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-      console.log('contas>>>', res);
-      if (res.status === 200) {
-        this.setState({
-          accounts: res.data.data,
-          isLoadingAccounts: false
-        });
-        if (res.data.meta.total > 0) {
-          this.fetchBlacklist(res.data.data[0].id);
-        } else {
-        
-          Swal.fire({
-            title: '',
-            text: "Você precisa ter ao menos 1 conta!",
-            type: 'info',
-            showCancelButton: false,
-            confirmButtonColor: '#366B9D',
-            confirmButtonText: 'OK',
-            confirmButtonClass: 'btn btn-success',
-            buttonsStyling: true
-          }).then(function () {
-            window.location.href = "#/listacontas";
-          })
-
-        }
-      } else {
-        Swal.fire({ html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true });
+    if (res.status === 200){
+      const listaContas = [];
+      const resContas = res.data.data;
+      resContas.map((c, k) => {
+        const { id, name } = this.state;
+        listaContas.push({'value':c.id, 'label':c.name });
+      })
+      this.setState({
+        accounts: listaContas,
+        isLoadingAccounts: false
+      });
+      if(res.data.data.meta.total > 0){
+        this.fetchBlacklist(res.data.data[0].id);
+      }else{
       }
-    }).catch(error => {
-    });
+    }else{
+      Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+    }
+  }).catch(error => {
+  });
   }
 
   selectMultipleOption(value) {
     console.count('onChange')
     console.log("Val", value);
     this.setState({ arrayValue: value });
-
-    const values = this.state;
-    this.state.values = value;
-
-    const valuesToRender = this.state.values.filter(val => val.value)
-    const numRows = valuesToRender.length
-    console.log(numRows);
-    const {accountId, accountName} = this.state;
-    for (var i = 0; i < numRows; i++) {
-    this.state.accountId = !this.state.accountId? this.state.accountId = value[i].value : this.state.accountId+','+value[i].value;
-    }
-    console.log(this.state.accountId);
-    this.fetchBlacklist(this.state.accountId);
+    this.fetchBlacklist(value);
   }
+
+
 
   handlePageChange(pageNumber) {
     !pageNumber ? this.state = { offset: '1' } : this.state = { offset: pageNumber };
@@ -110,7 +90,25 @@ class MeusBloqueios extends Component {
   }
 
   fetchBlacklist(accountId) {
-    axios.get(process.env.REACT_APP_API_URL + `/blacklist?account_id=`+accountId,
+    if( accountId == ''){
+      this.state.rota = '/blacklist';
+    }else{
+    this.setState({
+      bloqueios: null,
+      contas: [],
+    });
+    this.state.contas =[accountId];
+    console.log(JSON.stringify(this.state.contas));
+    this.state.contas.map((x, k) => {
+      const { value, name } = this.state;
+      !this.state.bloqueios? this.state.bloqueios = x.value : this.state.bloqueios = this.state.bloqueios+','+x.value;
+      
+    })
+    
+    this.state.rota = '/blacklist?account_id='+this.state.bloqueios;
+    }
+    
+    axios.get(process.env.REACT_APP_API_URL + this.state.rota,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
           //console.log(res.data);
@@ -144,7 +142,7 @@ class MeusBloqueios extends Component {
 
   render() {
     //{//console.log(this.state)}
-    const { isLoading, isLoadingAccounts, blacklist, error, accounts } = this.state;
+    const { isLoading, isLoadingAccounts, blacklist, error, accounts, selectedOption, } = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -153,26 +151,23 @@ class MeusBloqueios extends Component {
             <Row>
             <Col md="8" sm="6" xs="8">
             {!isLoadingAccounts ? (
-
             <Picky
-              value={this.state.arrayValue}
-              options={accounts}
-              onChange={this.selectMultipleOption}
-              open={false}
-              valueKey="value"
-              labelKey="label"
-              multiple={true}
-              includeSelectAll={true}
-              includeFilter={true}
-              dropdownHeight={600}
-              placeholder="Selecione uma conta"
-              manySelectedPlaceholder="%s Selecionados"
-              allSelectedPlaceholder="%s Selecionados"
-              selectAllText="Selecionar Todos"
-              filterPlaceholder="Filtrar por..."
-
-            />
-
+            value={this.state.arrayValue}
+            options={accounts}
+            onChange={this.selectMultipleOption}
+            open={false}
+            valueKey="value"
+            labelKey="label"
+            multiple={true}
+            includeSelectAll={true}
+            includeFilter={true}
+            dropdownHeight={600}
+            placeholder="Selecione..."
+            manySelectedPlaceholder="%s Selecionados"
+            allSelectedPlaceholder="%s Selecionados"
+            selectAllText="Selecionar Todos"
+            filterPlaceholder="Filtrar por..."
+          />
             ) : (
               <h3>Carregando...</h3>
             )}
