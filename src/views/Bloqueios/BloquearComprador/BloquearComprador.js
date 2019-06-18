@@ -189,7 +189,7 @@ class BloquearComprador extends Component {
     }else if(this.state.motiveId === '' ){
       alert('Defina o motivo do bloqueio.');
     }else{
-      this.state.selectedOption.map((s, k) => {
+      this.state.arrayValue.map((s, k) => {
         const { value, name } = this.state;
         this.state.bloqueios.push({
           "account_id": s.value,
