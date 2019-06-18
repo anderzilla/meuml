@@ -60,21 +60,7 @@ class Login extends Component {
         const user_id = res.data.user_id;
         this.setState({user_id});
         login(this.state.token);
-        //Pega os dados do usuário baseado na resposta do servidor
-        axios.get(process.env.REACT_APP_API_URL + `/user/`+this.state.user_id, {
-          "hash":this.state.token,
-	        "email" : this.state.email,
-	        "password" : this.state.password,
-	        "password2" : this.state.password
-        }).then(resp =>{
-          localStorage.setItem(USER_ID, resp.data.id);
-          localStorage.setItem(USER_NAME, resp.data.name);
-          localStorage.setItem(USER_EMAIL, resp.data.email);
-          localStorage.setItem(USER_SELLER_ID, resp.data.seller_id);
-        })
-        .catch(error => {
-          Swal.fire({html:'<p>Não foi possivel carregar os dados do Usuário! <br/> '+error+'</p>', type: 'error', showConfirmButton: true,});
-      });
+        
         //Redireciona para a tela inicial do sistema DASHBOARD
         this.props.history.push("/");
       }else{
