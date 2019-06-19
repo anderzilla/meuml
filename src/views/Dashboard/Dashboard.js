@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
+import Iframe from 'react-iframe'
 
 class Dashboard extends Component {
   render() {
     return (
       <div className="animated fadeIn">
-        Hello world!
-      </div>
+      
+      <Iframe url="http://meuml.com/v2inicio"
+        width="90%"
+        height="92%"
+        id="myId"
+        allowFullScreen
+        frameBorder="0"
+        display="initial"
+        scrolling="no"
+        className="iframeHome"
+        /> 
+        
+      
+        </div>
     );
   }
 }
