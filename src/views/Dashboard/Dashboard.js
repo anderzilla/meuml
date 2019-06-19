@@ -6,7 +6,7 @@ class Dashboard extends Component {
     return (
       <div className="animated fadeIn">
       
-      <Iframe url="http://meuml.com/v2inicio"
+      <Iframe url="https://meuml.com/v2inicio"
         width="90%"
         height="92%"
         id="myId"
