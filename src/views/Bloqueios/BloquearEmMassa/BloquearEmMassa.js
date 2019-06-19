@@ -327,7 +327,9 @@ class BloquearEmMassa extends Component {
     
     return (
       <div className="animated fadeIn">
-        <Card>
+        <Row>
+        <Col xs="12" sm="12" md="10" xl="8">
+        <Card className="card-accent-primary">
         <CardHeader>
         <h5>Bloqueio em Massa</h5>
         </CardHeader>
@@ -337,6 +339,7 @@ class BloquearEmMassa extends Component {
           <Input type="textarea" 
           name="lista" 
           id="lista"
+          rows="8"
           onChange={this.handleInputChange}
           value={this.state.lista}
           placeholder="Insira a lista aqui"
@@ -516,11 +519,13 @@ class BloquearEmMassa extends Component {
           <div></div>
         )}
         </CardBody>
-        <CardFooter>
+        <CardFooter  className="text-right">
           <Button color="primary" onClick={() => this.concluirOperacao()} disabled={this.state.salvar} >Concluir</Button>
         </CardFooter>
         
         </Card>
+        </Col>
+        </Row>
       </div>
     );
   }

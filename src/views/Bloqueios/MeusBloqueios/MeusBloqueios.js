@@ -229,6 +229,7 @@ class MeusBloqueios extends Component {
           activeClass = "btn btn-md btn-info"
           innerClass = "btn-group"
           activeLinkClass = "text-white"
+          
         />
 
           </CardFooter>
