@@ -74,17 +74,9 @@ class Login extends Component {
       });
       }
     }).catch(error => {
-        if (error.response.data.errors.email !== '' || error.response.data.errors.email !== 'undefined'){
-          this.setState({tipoErro: error.response.data.errors.email});
-            
-        }else if(error.response.data.errors.password !== '' || error.response.data.errors.password !== 'undefined'){
-          this.setState({tipoErro: error.response.data.errors.password});
-            
-        }else{
-          this.setState({tipoErro: "Erro desconhecido, Tente novamente!"});
-            
-        }
-        Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+        !error.response.data.errors.email? this.setState({tipoErro: ''}) : this.setState({tipoErro: error.response.data.errors.email});
+        !error.response.data.errors.password? this.setState({erroPass: ''}) : this.setState({erroPass: error.response.data.errors.password});
+        Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro+ this.state.erroPass +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
   });
   }
 
