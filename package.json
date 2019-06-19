@@ -63,6 +63,7 @@
     "react-dom": "^16.8.4",
     "react-google-maps": "^9.4.5",
     "react-grid-layout": "^0.16.6",
+    "react-iframe": "^1.8.0",
     "react-js-pagination": "^3.0.2",
     "react-json-parser": "^0.2.1",
     "react-ladda": "6.0.0",
