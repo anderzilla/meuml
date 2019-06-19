@@ -309,3 +309,37 @@ Label {
 .tbcol-5{
   width: 5%;
 }
+
+//##############################################################3
+//Iframe Home
+.iframeHome{
+  margin:0px;
+  position:absolute;
+  top:50px;
+  left:10%;
+  right:50px;
+  bottom:-50px;
+}
+.app-footer{
+  z-index: 9999;
+  position: fixed;
+  height: 50px;
+  left:0px;
+  right:0px;
+  bottom:0px;
+}
+.breadcrumb{
+  z-index: 8;
+  position: relative;
+  height: 50px;
+  left:0px;
+  right:0px;
+  top:0px;
+}
+.app-header{
+  z-index: 9999;
+}
+.main .container-fluid {
+  padding: 0 30px;
+  padding-bottom: 50px;
+}
