@@ -26,7 +26,7 @@ const Perguntas = React.lazy(() => import('./views/Perguntas/Perguntas'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/', name: 'Home', component: DefaultLayout, exact: true },
+  { path: '/', name: 'Início', component: DefaultLayout, exact: true },
   { path: '/dashboard', name: 'MeuML', component: Dashboard },
   //Autenticação
   { path: '/alterarsenha', name: 'Alterar Senha', component: AlterarSenha, exact: true},
@@ -44,7 +44,7 @@ const routes = [
   { path: '/bloquearemmassa', name: 'Bloquear em Massa', component: BloquearEmMassa, exact: true },
   { path: '/meusbloqueios', name: 'Meus Bloqueios', component: MeusBloqueios, exact: true },
   { path: '/bloquearlista', name: 'Bloquear Lista', component: BloquearLista, exact: true },
-  { path: '/minhaslistasdebloqueios', name: 'Minhas Listas de Bloqueios', component: MinhasListasDeBloqueios, exact: true },
+  { path: '/minhaslistasdebloqueios', name: 'Minhas Listas', component: MinhasListasDeBloqueios, exact: true },
   //Categorias
   { path: '/categorias', name: 'Categorias - Pesos e Dimensões', component: Categorias, exact: true },
   //Perguntas
