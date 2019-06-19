@@ -33,7 +33,7 @@ class MeusBloqueios extends Component {
       isLoading: true,
       value: null,
       arrayValue: [],
-      grid: [],
+      contas: '',
     };
   }
 
@@ -66,8 +66,8 @@ class MeusBloqueios extends Component {
       });
       if(res.data.data.meta.total > 0){
         this.fetchBlacklist(res.data.data[0].id);
-      }else{
       }
+
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
     }
@@ -75,11 +75,27 @@ class MeusBloqueios extends Component {
   });
   }
 
-  selectMultipleOption(value) {
+  selectMultipleOption(selectedValue) {
     console.count('onChange')
-    console.log("Val", value);
-    this.setState({ arrayValue: value });
-    this.fetchBlacklist(value);
+    console.log("Val", selectedValue.value);
+    this.setState({ arrayValue: selectedValue });
+    
+    this.state.contas = '';
+    !selectedValue.value?
+    selectedValue.map((x, k) => {
+        if (this.state.contas === ''){
+          this.state.contas = x.value;
+          console.log(x.value);
+        }else{
+          this.state.contas = this.state.contas+','+x.value;
+          console.log(x.value);
+        }
+      }) 
+    :
+      this.state.contas = JSON.stringify(selectedValue.value);
+    ; 
+
+    this.fetchBlacklist(this.state.contas);
   }
 
 
@@ -90,24 +106,7 @@ class MeusBloqueios extends Component {
   }
 
   fetchBlacklist(accountId) {
-    if( accountId == ''){
-      this.state.rota = '/blacklist';
-    }else{
-    this.setState({
-      bloqueios: null,
-      contas: [],
-    });
-    this.state.contas =[accountId];
-    console.log(JSON.stringify(this.state.contas));
-    this.state.contas.map((x, k) => {
-      const { value, name } = this.state;
-      !this.state.bloqueios? this.state.bloqueios = x.value : this.state.bloqueios = this.state.bloqueios+','+x.value;
-      
-    })
-    
-    this.state.rota = '/blacklist?account_id='+this.state.bloqueios;
-    }
-    
+    this.state.rota = '/blacklist?account_id='+accountId;
     axios.get(process.env.REACT_APP_API_URL + this.state.rota,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
@@ -181,10 +180,11 @@ class MeusBloqueios extends Component {
           <Table responsive>
             <thead>
               <tr>
-                <th className="tab25">ID do Usuario</th>
-                <th className="tab25 text-center">Compras</th>
-                <th className="tab25 text-center">Perguntas</th>
-                <th className="tab25">Motivo</th>
+                <th className="tbcol-5">ID do Usuario</th>
+                <th className="tbcol-5 text-center">Compras</th>
+                <th className="tbcol-5 text-center">Perguntas</th>
+                <th className="tbcol-25">Motivo</th>
+                <th className="tbcol-50">Descrição</th>
               </tr>
             </thead>
             <tbody>
@@ -206,6 +206,7 @@ class MeusBloqueios extends Component {
                     <td className="text-center">
                       {bl.questions ? (<i className="fa fa-times text-danger"></i>) : ( <span></span>)}
                     </td>
+                    <td>{bl.motive_id}</td>
                     <td>{bl.motive_description}</td>
                   </tr>
                 );
