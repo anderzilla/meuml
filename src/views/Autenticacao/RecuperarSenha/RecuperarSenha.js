@@ -63,14 +63,18 @@ class RecuperarSenha extends Component {
         }
       });
       }
-    }).catch(error => {
-      Swal.fire({html:'<p>Indisponibilidade Temporária<br /> '+ error+'</p>', type: 'error', showConfirmButton: true,
+    }).catch((error) => {
+          
+      !error.response ?
+      (this.setState({tipoErro: error})) :
+      (this.setState({tipoErro: error.response.data.errors.email}))
+      Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
       onClose: () => {
         this.props.history.push('/login');
         window.location.reload();
       }
     });
-  });
+    });
   }
 
   toggleShow = show => {
