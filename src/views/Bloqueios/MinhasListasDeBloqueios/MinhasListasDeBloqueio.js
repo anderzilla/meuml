@@ -167,7 +167,7 @@ class MinhasListasDeBloqueio extends Component {
 
     return (
       <div className="animated fadeIn">
-        <Card>
+        <Card className="card-accent-primary">
           <CardHeader>
             <Row>
             <Col md="3" xs="3" sm="12"><h5>Listas - {this.state.nlistas}</h5> </Col>

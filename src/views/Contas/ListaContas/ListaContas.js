@@ -140,18 +140,14 @@ class ListaContas extends Component {
   render() {
     const { isLoading, contas, error } = this.state;
 
-    if(window.opener || window.history.length === 1){
-      let isPopupWindow = true;
-      window.opener.location.reload();
-      window.open('', '_self', '').close();
-    }
+    
 
 
     return (
       
       <div className="animated fadeIn">
         <Row>
-          <a onClick={this.openAuth} className="botaoAdicionarConta"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
+          <a href="#/contas/adicionar" className="botaoAdicionarConta"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
           <Button className="btn btn-primary float-left"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
           </a>
         </Row>
