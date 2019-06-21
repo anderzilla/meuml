@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Table, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, BrowserRouter, Route } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { getToken } from '../../../auth';
@@ -26,6 +26,7 @@ class MeusBloqueios extends Component {
       blacklist: [],
       totalDataSize: 0,
       sizePerPage: 50,
+      activePage: 1,
       offset: 1,
       filter: '',
       accounts: [],
@@ -95,18 +96,19 @@ class MeusBloqueios extends Component {
       this.state.contas = JSON.stringify(selectedValue.value);
     ; 
 
-    this.fetchBlacklist(this.state.contas);
+    this.fetchBlacklist(this.state.contas, 1);
   }
 
 
 
   handlePageChange(pageNumber) {
-    !pageNumber ? this.state = { offset: '1' } : this.state = { offset: pageNumber };
-    //this.props.history.push('/meusbloqueios?offset='+this.state.offset+'&limit=50');
+    
+    this.fetchBlacklist(this.state.contas, pageNumber);
   }
 
-  fetchBlacklist(accountId) {
-    this.state.rota = '/blacklist?account_id='+accountId;
+  fetchBlacklist(accountId,offset) {
+    console.log('teste'+this.props.match.params.offset);
+    this.state.rota = '/blacklist?account_id='+accountId+'&offset='+this.state.activePage+'&limit=50';
     axios.get(process.env.REACT_APP_API_URL + this.state.rota,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
@@ -117,7 +119,7 @@ class MeusBloqueios extends Component {
               this.setState({
                 blacklist: res.data.data,
                 paginacao: res.data.meta,
-                total: res.data.meta.total,
+                total: !res.data.meta.total? '0' : res.data.meta.total,
                 totalDataSize: res.data.meta.total,
                 sizePerPage: res.data.meta.limit,
                 currentPage: res.data.meta.page,
@@ -126,6 +128,7 @@ class MeusBloqueios extends Component {
               this.setState({
                 blacklist: res.data.data,
                 isLoading: false,
+                total: 0,
               });
               Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true,
             });
@@ -140,7 +143,7 @@ class MeusBloqueios extends Component {
   }
 
   render() {
-    //{//console.log(this.state)}
+    console.log(this.state)
     const { isLoading, isLoadingAccounts, blacklist, error, accounts, selectedOption, } = this.state;
 
     return (
@@ -172,7 +175,7 @@ class MeusBloqueios extends Component {
             )}
             </Col>
             <Col md="4" sm="2">
-              <Link to="/bloquearcomprador" className="btn btn-primary float-right"><i className="fa fa-user-times"></i> Bloquear Comprador</Link>
+              <h5 className="text-right text-primary">registros encontrados: {!this.state.total? '0' : this.state.total} </h5>
             </Col>
             </Row>
           </CardHeader>
@@ -220,11 +223,11 @@ class MeusBloqueios extends Component {
           </CardBody>
           <CardFooter className=" align-content-center ">
           <Pagination
-          activePage={this.state.offset}
+          activePage={this.state.activePage}
           itemsCountPerPage={this.state.sizePerPage}
           totalItemsCount={this.state.total}
           pageRangeDisplayed={5}
-          onChange={this.handlePageChange(this.state.offset)}
+          onChange={() => this.handlePageChange(this.state.activePage)}
           itemClass= "btn btn-md btn-outline-info"
           activeClass = "btn btn-md btn-info"
           innerClass = "btn-group"
