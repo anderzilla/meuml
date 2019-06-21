@@ -67,7 +67,8 @@ class AlterarSenha extends Component {
         }
       });
       }
-    }).catch(error => {
+    })
+    .catch(error => {
       Swal.fire({html:'<p>Indisponibilidade Temporária</p>', type: 'error', showConfirmButton: true,
       onClose: () => {
         this.props.history.push('/login');
