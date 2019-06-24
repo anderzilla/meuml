@@ -1,21 +1,16 @@
-import React from 'react';
-import {
-    Card,
-    CardBody,
-    Input
-} from "reactstrap";
+import React, { Component } from 'react';
+import { Card, CardBody, CardHeader, Input } from "reactstrap";
 import axios from "axios";
 import { getToken } from "../../auth";
 import Swal from "sweetalert2";
 
-import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
-import ReactLoading from 'react-loading';
-import Moment from 'moment';
+import { BootstrapTable, TableHeaderColumn, SearchField } from "react-bootstrap-table";
+import { debug } from 'util';
+
 
 class CategoriasDataTable extends React.Component {
     constructor(props) {
         super(props);
-
 
         this.state = {
             data: [],
@@ -23,9 +18,7 @@ class CategoriasDataTable extends React.Component {
             sizePerPage: 50,
             currentPage: 1,
             filter: '',
-            filtro: '',
-            first: '',
-            lastUpdate:''
+            filtro: ''
         };
 
         this.fetchCategorias();
@@ -33,7 +26,7 @@ class CategoriasDataTable extends React.Component {
 
     fetchCategorias(limit = 50, offset = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
 
-        let url = process.env.REACT_APP_API_URL + `/categories?offset=${(offset * limit) - 50}&limit=${limit}`
+        let url = process.env.REACT_APP_API_URL + `/categories?offset=${offset}&limit=${limit}`
 
         if (this.state.filter !== '') {
             url += `&filter=` + this.state.filter
@@ -62,8 +55,7 @@ class CategoriasDataTable extends React.Component {
                     data: res.data.data,
                     totalDataSize: res.data.meta.total,
                     sizePerPage: res.data.meta.limit,
-                    currentPage: res.data.meta.page,
-                    lastUpdate:res.data.meta.last_update
+                    currentPage: res.data.meta.page
                 });
 
             } else {
@@ -88,7 +80,7 @@ class CategoriasDataTable extends React.Component {
     }
 
 
-    onFilterChange() {
+    onFilterChange(filterObj) {
         var filter = this.state.filtro;
 
         if (filter !== undefined) {
@@ -103,6 +95,7 @@ class CategoriasDataTable extends React.Component {
     }
 
     onPageChange(page, sizePerPage) {
+        const currentIndex = (page - 1) * sizePerPage;
         this.page = page;
         this.sizePerPage = sizePerPage;
         this.fetchCategorias(sizePerPage, page)
@@ -125,8 +118,6 @@ class CategoriasDataTable extends React.Component {
         });
     }
 
-
-
     render() {
         return (
             <CategoriasTableComp
@@ -137,9 +128,6 @@ class CategoriasDataTable extends React.Component {
                 onHandleChange={this.handleChange.bind(this)}
                 {...this.state}
             />
-
-
-
         );
     }
 
@@ -147,12 +135,16 @@ class CategoriasDataTable extends React.Component {
 }
 
 class CategoriasTableComp extends React.Component {
+    constructor(props) {
+        super(props);
 
+    }
 
-    customFilter = () => {
+    customFilter = (props) => {
         return (
             <div className='input-group filtro'>
                 <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" placeholder={'Pesquisar por descrição...'} onChange={this.props.onHandleChange} />
+
                 <span className='it-group-btn'>
                     <button
                         className='btn btn-primary'
@@ -161,6 +153,7 @@ class CategoriasTableComp extends React.Component {
                         Buscar
                     </button>
                 </span>
+
             </div>
         );
     }
@@ -171,39 +164,35 @@ class CategoriasTableComp extends React.Component {
 
             <Card>
                 {/* <CardHeader>
-F
+
                 </CardHeader> */}
-                <div>
 
-               
-                    <CardBody>
-                        <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.props.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
-                        <BootstrapTable data={this.props.data} remote={true} pagination={true} search={true} searchPlaceholder={'Filtrar por descrição...'}
-                            fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
+                <CardBody>
+                <h6 className={"labelAtualiza"}> Atualizado em 13/06/2019</h6>
+                    <BootstrapTable data={this.props.data} remote={true} pagination={true} search={true} searchPlaceholder={'Filtrar por descrição...'}
+                        fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
+                        options={{
+                            defaultSortName: 'name',
+                            defaultSortOrder: 'desc',
+                            sizePerPage: this.props.sizePerPage,
+                            onPageChange: this.props.onPageChange,
+                            sizePerPageList: [50],
+                            page: this.props.currentPage,
+                            onSizePerPageList: this.props.onSizePerPageList,
+                            onSortChange: this.props.onSortChange,
+                            searchField: this.createCustomSearchField,
+                            searchPanel: this.customFilter,
+                            noDataText: 'Nenhum dado foi encontrado...'
 
-                            options={{
-                                defaultSortName: 'name',
-                                defaultSortOrder: 'desc',
-                                sizePerPage: this.props.sizePerPage,
-                                onPageChange: this.props.onPageChange,
-                                sizePerPageList: [50],
-                                page: this.props.currentPage,
-                                onSizePerPageList: this.props.onSizePerPageList,
-                                onSortChange: this.props.onSortChange,
-                                searchField: this.createCustomSearchField,
-                                searchPanel: this.customFilter,
-                                noDataText:   <ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100}  className='spinnerStyle'/>
+                        }} striped hover>
 
-                            }} striped hover>
+                        <TableHeaderColumn width='110' dataField='external_id' isKey={true} dataSort={true}>ID </TableHeaderColumn>
+                        <TableHeaderColumn width='220' dataField='path' dataSort={true}>Descrição</TableHeaderColumn>
+                        <TableHeaderColumn width='50' dataField='weight' dataSort={true}>Peso</TableHeaderColumn>
+                        <TableHeaderColumn width='150' dataField='cubage' dataSort={true}>Dimensão</TableHeaderColumn>
 
-                            <TableHeaderColumn width='120' dataField='external_id' isKey={true} dataSort={true}>ID </TableHeaderColumn>
-                            <TableHeaderColumn width='320' dataField='path' dataSort={true}>Descrição</TableHeaderColumn>
-                            <TableHeaderColumn width='120' dataField='weight' dataSort={true}>Peso</TableHeaderColumn>
-                            <TableHeaderColumn width='120' dataField='cubage' dataSort={true}>Dimensão</TableHeaderColumn>
-
-                        </BootstrapTable>
-                    </CardBody>
-                </div>
+                    </BootstrapTable>
+                </CardBody>
             </Card>
         );
     }
