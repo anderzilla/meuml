@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Table, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { Link, BrowserRouter, Route } from 'react-router-dom';
+import { Card, CardHeader, CardBody, CardFooter, Table, Row, Col, Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { getToken } from '../../../auth';
@@ -20,6 +20,7 @@ class MeusBloqueios extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
 
     this.state = {
       dropdownOpen: false,
@@ -33,8 +34,10 @@ class MeusBloqueios extends Component {
       isLoadingAccounts: true,
       isLoading: true,
       value: null,
-      arrayValue: [],
+      arrayValue: '',
       contas: '',
+      multiContas: '',
+      
     };
   }
 
@@ -76,29 +79,30 @@ class MeusBloqueios extends Component {
   });
   }
 
-  selectMultipleOption(selectedValue) {
+  selectMultipleOption(selectedAccount) {
     console.count('onChange')
-    console.log("Val", selectedValue.value);
-    this.setState({ arrayValue: selectedValue });
-    
+    console.log("Val", selectedAccount);
+    const select = selectedAccount;
+    this.setState({ arrayValue: select});
     this.state.contas = '';
-    !selectedValue.value?
-    selectedValue.map((x, k) => {
-        if (this.state.contas === ''){
+    !select.value?
+    select.map((x, k) => {
+        if (this.state.contas === '' || this.state.contas === 'undefined'){
           this.state.contas = x.value;
-          console.log(x.value);
         }else{
           this.state.contas = this.state.contas+','+x.value;
-          console.log(x.value);
         }
       }) 
     :
-      this.state.contas = JSON.stringify(selectedValue.value);
-    ; 
-
-    this.fetchBlacklist(this.state.contas, 1);
+      this.state.contas=[JSON.stringify(select.value)];
+      
+    ;
+    if (this.state.contas !== '') {
+      this.fetchBlacklist(this.state.contas);
+    }else{
+      this.setState({blacklist: ''});
+    }
   }
-
 
 
   handlePageChange(pageNumber) {
@@ -106,9 +110,21 @@ class MeusBloqueios extends Component {
     this.fetchBlacklist(this.state.contas, pageNumber);
   }
 
-  fetchBlacklist(accountId,offset) {
-    console.log('teste'+this.props.match.params.offset);
-    this.state.rota = '/blacklist?account_id='+accountId+'&offset='+this.state.activePage+'&limit=50';
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  fetchBlacklist(accountId) {
+    if (accountId === ''){
+      this.setState({blacklist: ''}); 
+    }else{
+      this.state.rota = '/blacklist?account_id='+accountId;
     axios.get(process.env.REACT_APP_API_URL + this.state.rota,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
@@ -140,11 +156,13 @@ class MeusBloqueios extends Component {
           backend_error: true
         });
       });
+    }
+    
   }
 
   render() {
-    console.log(this.state)
-    const { isLoading, isLoadingAccounts, blacklist, error, accounts, selectedOption, } = this.state;
+    //{//console.log(this.state)}
+    const { isLoading, isLoadingAccounts, blacklist, error, accounts, selectedOption, contas, arrayValue, contasMarcadas } = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -152,6 +170,7 @@ class MeusBloqueios extends Component {
           <CardHeader>
             <Row>
             <Col md="8" sm="6" xs="8">
+              {this.state.contas}
             {!isLoadingAccounts ? (
             <Picky
             value={this.state.arrayValue}
@@ -161,6 +180,7 @@ class MeusBloqueios extends Component {
             valueKey="value"
             labelKey="label"
             multiple={true}
+            name="multiContas"
             includeSelectAll={true}
             includeFilter={true}
             dropdownHeight={600}
