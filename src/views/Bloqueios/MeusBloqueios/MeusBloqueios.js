@@ -90,8 +90,6 @@ class MeusBloqueios extends Component {
 }
 
   selectMultipleOption(selectedAccount) {
-    console.count('onChange')
-    console.log("Val", selectedAccount);
     const select = selectedAccount;
     this.setState({ arrayValue: select});
     this.state.contas = []; 
@@ -143,7 +141,7 @@ class MeusBloqueios extends Component {
     axios.get(process.env.REACT_APP_API_URL + this.state.rota,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
-          //console.log(res.data);
+
           if (res.data.status === 'success') {
             const message = res.data.message;
             if (res.data.meta.total !== 0) {
@@ -178,7 +176,7 @@ class MeusBloqueios extends Component {
   }
 
   render() {
-    //{//console.log(this.state)}
+
     const { isLoading, isLoadingAccounts, blacklist, error, accounts, selectedOption, contas, arrayValue, contasMarcadas, offset } = this.state;
 
     return (
@@ -187,7 +185,6 @@ class MeusBloqueios extends Component {
           <CardHeader>
             <Row>
             <Col md="8" sm="6" xs="8">
-              {this.state.contas}
             {!isLoadingAccounts ? (
             <Picky
             value={this.state.arrayValue}
@@ -267,10 +264,8 @@ class MeusBloqueios extends Component {
           itemClass= "btn btn-md btn-outline-info"
           activeClass = "btn btn-md btn-info"
           innerClass = "btn-group"
-          activeLinkClass = "text-white"
-          
+          activeLinkClass = "text-white" 
         />
-
           </CardFooter>
 
         </Card>
