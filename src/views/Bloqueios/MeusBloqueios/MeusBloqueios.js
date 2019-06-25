@@ -21,21 +21,23 @@ class MeusBloqueios extends Component {
     this.toggle = this.toggle.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
 
     this.state = {
       dropdownOpen: false,
-      blacklist: [],
+      
       totalDataSize: 0,
       sizePerPage: 50,
       activePage: 1,
-      offset: 1,
       filter: '',
+      paginate:'',
       accounts: [],
       isLoadingAccounts: true,
       isLoading: true,
       value: null,
-      arrayValue: '',
-      contas: '',
+      arrayValue: [],
+      contas: [],
+      total: '',
       multiContas: '',
       
     };
@@ -79,35 +81,43 @@ class MeusBloqueios extends Component {
   });
   }
 
+  isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
   selectMultipleOption(selectedAccount) {
     console.count('onChange')
     console.log("Val", selectedAccount);
     const select = selectedAccount;
     this.setState({ arrayValue: select});
-    this.state.contas = '';
-    !select.value?
-    select.map((x, k) => {
-        if (this.state.contas === '' || this.state.contas === 'undefined'){
-          this.state.contas = x.value;
-        }else{
-          this.state.contas = this.state.contas+','+x.value;
-        }
+    this.state.contas = []; 
+    select.map((x, k) => {  
+      this.state.contas.push(x.value);
       }) 
-    :
-      this.state.contas=[JSON.stringify(select.value)];
-      
-    ;
-    if (this.state.contas !== '') {
-      this.fetchBlacklist(this.state.contas);
+    if (this.isEmpty(select)) {
+      this.setState({
+        blacklist: [],
+        paginacao: '',
+        total: '',
+        totalDataSize: '',
+        sizePerPage: '',
+        currentPage: '',
+        nPagina: '',
+      });
     }else{
-      this.setState({blacklist: ''});
+      this.fetchBlacklist(this.state.contas);
     }
   }
 
 
   handlePageChange(pageNumber) {
-    
+    !pageNumber ? this.setState({activePage:'1'}) : this.setState({activePage: pageNumber});
     this.fetchBlacklist(this.state.contas, pageNumber);
+    //this.props.history.push('/meusbloqueios?offset='+this.state.offset+'&limit=50');
   }
 
   handleInputChange(event) {
@@ -120,11 +130,16 @@ class MeusBloqueios extends Component {
     });
   }
 
-  fetchBlacklist(accountId) {
-    if (accountId === ''){
-      this.setState({blacklist: ''}); 
-    }else{
-      this.state.rota = '/blacklist?account_id='+accountId;
+  fetchBlacklist(accountId, pageNumber) {
+    if (accountId === []){
+      this.setState({blacklist: []}); 
+    }else{ 
+      if (pageNumber === '' || !pageNumber){
+        this.state.paginate = 1;
+      }else{
+        this.state.paginate = ((pageNumber * this.state.sizePerPage) - this.state.sizePerPage);
+      }
+      this.state.rota = '/blacklist?account_id='+accountId+'&offset='+this.state.paginate+'&limit=50';
     axios.get(process.env.REACT_APP_API_URL + this.state.rota,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
@@ -139,6 +154,8 @@ class MeusBloqueios extends Component {
                 totalDataSize: res.data.meta.total,
                 sizePerPage: res.data.meta.limit,
                 currentPage: res.data.meta.page,
+                nPagina: res.data.meta.pages,
+                isLoading: false,
               });
             }else{
               this.setState({
@@ -162,7 +179,7 @@ class MeusBloqueios extends Component {
 
   render() {
     //{//console.log(this.state)}
-    const { isLoading, isLoadingAccounts, blacklist, error, accounts, selectedOption, contas, arrayValue, contasMarcadas } = this.state;
+    const { isLoading, isLoadingAccounts, blacklist, error, accounts, selectedOption, contas, arrayValue, contasMarcadas, offset } = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -194,9 +211,6 @@ class MeusBloqueios extends Component {
               <h3>Carregando...</h3>
             )}
             </Col>
-            <Col md="4" sm="2">
-              <h5 className="text-right text-primary">registros encontrados: {!this.state.total? '0' : this.state.total} </h5>
-            </Col>
             </Row>
           </CardHeader>
           <CardBody>
@@ -211,14 +225,15 @@ class MeusBloqueios extends Component {
               </tr>
             </thead>
             <tbody>
-            {!isLoading ? (
-            !blacklist ? (
+            {
+            (this.state.total ==='') ? (
               <tr>
                     <td colspan="4" className="mensagemAviso">
                       <div role="alert" className="alert alert-primary fade show ">Escolha uma conta para gerenciar os bloqueios!</div>
                     </td>
               </tr>
             ) : (
+            !isLoading ? (
             blacklist.map((bl, k)=> {
                 return (
                   <tr>
@@ -234,10 +249,11 @@ class MeusBloqueios extends Component {
                   </tr>
                 );
               } )
+              ) : (
+                <tr><td>Carregando...</td></tr>
             )
-          ) : (
-              <h3>Carregando...</h3>
-          )}
+            )
+          }
                   </tbody>
                 </Table>
           </CardBody>
@@ -247,7 +263,7 @@ class MeusBloqueios extends Component {
           itemsCountPerPage={this.state.sizePerPage}
           totalItemsCount={this.state.total}
           pageRangeDisplayed={5}
-          onChange={() => this.handlePageChange(this.state.activePage)}
+          onChange={this.handlePageChange}
           itemClass= "btn btn-md btn-outline-info"
           activeClass = "btn btn-md btn-info"
           innerClass = "btn-group"
