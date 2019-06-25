@@ -12,9 +12,11 @@ class CallBack extends Component {
       token: token,
       message: '',
       status: '',
-      executed: false
+      executed: false,
+      doIt: 0
     };
-    if(this.state.executed === false) {
+
+    if(this.state.executed === false && this.state.doIt < 1) {
       axios.post(process.env.REACT_APP_API_URL + `/accounts/from-mercado-livre`,
           {"code": token,},
           {headers: {"Authorization": 'Bearer ' + getToken()}},
@@ -25,7 +27,8 @@ class CallBack extends Component {
             onClose: () => {
               this.setState(
                   {
-                    executed: true
+                    executed: true,
+                    doIt: 2
                   }
               )
               this.props.history.push('/listacontas');
