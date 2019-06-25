@@ -29,16 +29,18 @@ class CallBack extends Component {
                 {"code": token,},
                 {headers: {"Authorization": 'Bearer ' + getToken()}},
             ).then(res => {
+
+              this.setState(
+                  {
+                    executed: true,
+                    doIt: 2
+                  }
+              )
+
               if (res.data.status === 'success') {
                 Swal.fire({
                   html: '<p>' + res.data.message + '</p>', type: 'success', showConfirmButton: true,
                   onClose: () => {
-                    this.setState(
-                        {
-                          executed: true,
-                          doIt: 2
-                        }
-                    )
                     this.props.history.push('/listacontas');
                     window.location.reload();
                   }
