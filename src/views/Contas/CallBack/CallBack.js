@@ -20,10 +20,9 @@ class CallBack extends Component {
   }
   render(){
     const token = this.state.token;
-    const executeds = this.state.executed;
 
     return (
-        !executeds ? (
+        !this.state.executed ? (
 
             axios.post(process.env.REACT_APP_API_URL + `/accounts/from-mercado-livre`,
                 {"code": token,},
@@ -81,8 +80,6 @@ class CallBack extends Component {
             console.log('None')
         )
     )
-
-    const executed = this.state.executed;
   }
 }
 
