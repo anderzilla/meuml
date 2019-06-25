@@ -155,7 +155,6 @@ class ListaContas extends Component {
           {!isLoading ? (
             contas.map((c, k)=> {
               const { username, name, email, id } = this.state;
-              console.log(contas)
                 return (
                     <Col xs="12" sm="4" md="3" key={c.id} className="CardConta">
                       <Card className="card-accent-primary">
@@ -180,13 +179,13 @@ class ListaContas extends Component {
                           <div className="imgConta">
                           <img src={!c.external_data.thumbnail ? this.state.fotoConta  : c.external_data.thumbnail.picture_url } title={c.external_name} className="img-full70 align-content-center" alt="Loja Teste"></img>
                           </div>
-                          <p className="text-primary text-center nomeDuasLinhas" title={c.external_name}>{c.external_name}</p>
-                          <p className="text-left">
-                            <div className="labelCard"><i className="fa fa-envelope"></i> E-mail:</div>
+                          <div className="text-primary text-center nomeDuasLinhas" title={c.external_name}>{c.external_name}</div>
+                          <div className="text-left">
+                            <p className="labelCard"><i className="fa fa-envelope"></i> E-mail:</p>
                             {c.external_data.email}<br/>
-                            <div className="labelCard"><i className="fa fa-user"></i> Usuário:</div>
+                            <p className="labelCard"><i className="fa fa-user"></i> Usuário:</p>
                             {c.external_data.nickname}<br/>
-                          </p>
+                          </div>
                           
                         </CardBody>
                         <CardFooter>

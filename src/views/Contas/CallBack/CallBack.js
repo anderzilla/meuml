@@ -1,7 +1,9 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import {getToken} from '../../../auth';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Picky from "react-picky";
+import {FormGroup} from "reactstrap";
 
 class CallBack extends Component {
 
@@ -15,56 +17,70 @@ class CallBack extends Component {
       executed: false,
       doIt: 0
     };
+  }
+  render(){
+    const token = this.state.token;
+    const executeds = this.state.executed;
 
-    if(this.state.executed === false && this.state.doIt < 1) {
-      axios.post(process.env.REACT_APP_API_URL + `/accounts/from-mercado-livre`,
-          {"code": token,},
-          {headers: {"Authorization": 'Bearer ' + getToken()}},
-      ).then(res => {
-        if (res.data.status === 'success') {
-          Swal.fire({
-            html: '<p>' + res.data.message + '</p>', type: 'success', showConfirmButton: true,
-            onClose: () => {
-              this.setState(
-                  {
-                    executed: true,
-                    doIt: 2
+    return (
+        !executeds ? (
+
+            axios.post(process.env.REACT_APP_API_URL + `/accounts/from-mercado-livre`,
+                {"code": token,},
+                {headers: {"Authorization": 'Bearer ' + getToken()}},
+            ).then(res => {
+              if (res.data.status === 'success') {
+                Swal.fire({
+                  html: '<p>' + res.data.message + '</p>', type: 'success', showConfirmButton: true,
+                  onClose: () => {
+                    this.setState(
+                        {
+                          executed: true,
+                          doIt: 2
+                        }
+                    )
+                    this.props.history.push('/listacontas');
+                    window.location.reload();
                   }
-              )
-              this.props.history.push('/listacontas');
-              window.location.reload();
-            }
-          });
-        } else {
-          Swal.fire({
-            html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
-            onClose: () => {
-              this.props.history.push('/listacontas');
-              window.location.reload();
-            }
-          });
-        }
-      }).catch(error => {
-        console.log('rejected');
-        console.log(error.response);
+                });
+              } else {
+                Swal.fire({
+                  html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
+                  onClose: () => {
+                    this.props.history.push('/listacontas');
+                    window.location.reload();
+                  }
+                });
+              }
+            }).catch(error => {
+              console.log('rejected');
+              console.log(error.response);
 
-        if (error.response !== undefined) {
-          Swal.fire({
-            html: '<p>' + error.response.data.message + '</p>',
-            type: 'error',
-            showConfirmButton: false,
-            showCancelButton: true,
-            cancelButtonText: 'Fechar',
-            onClose: () => {
-              this.props.history.push('/listacontas');
-              window.location.reload();
-            }
-          });
-        } else {
-          return true;
-        }
-      });
-    }
+
+              if (error.response !== undefined) {
+                Swal.fire({
+                  html: '<p>' + error.response.data.message + '</p>',
+                  type: 'error',
+                  showConfirmButton: false,
+                  showCancelButton: true,
+                  cancelButtonText: 'Fechar',
+                  onClose: () => {
+                    this.props.history.push('/listacontas');
+                    window.location.reload();
+                  }
+                });
+              } else {
+                this.props.history.push('/listacontas');
+                window.location.reload();
+              }
+            })
+
+        ) : (
+            console.log('None')
+        )
+    )
+
+    const executed = this.state.executed;
   }
 }
 

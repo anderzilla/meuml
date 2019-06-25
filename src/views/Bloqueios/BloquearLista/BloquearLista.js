@@ -214,9 +214,9 @@ class BloquearLista extends Component {
               filterPlaceholder="Filtrar por..."
               
             />
-            ) : (
-              <h3>Carregando...</h3>
-            )}
+              ) : (
+                <h3>Carregando...</h3>
+              )}
             </FormGroup>
             </Col>
             <Col md="8" xs="12">
