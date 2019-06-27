@@ -39,14 +39,14 @@ class CallBack extends Component {
                 Swal.fire({
                   html: '<p>' + res.data.message + '</p>', type: 'success', showConfirmButton: true,
                   onClose: () => {
-                    this.props.history.push('./#/listacontas');
+                    this.props.history.goBack;
                   }
                 });
               } else {
                 Swal.fire({
                   html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
                   onClose: () => {
-                    this.props.history.push('./#/listacontas');
+                    this.props.history.goBack;
                   }
                 });
               }
@@ -63,7 +63,7 @@ class CallBack extends Component {
                   showCancelButton: true,
                   cancelButtonText: 'Fechar',
                   onClose: () => {
-                    this.props.history.push('./#/listacontas');
+                    this.props.history.goBack;
                   }
                 });
               } else {
