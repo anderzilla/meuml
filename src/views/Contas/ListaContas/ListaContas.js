@@ -50,7 +50,7 @@ class ListaContas extends Component {
     ).then(res => {
       if (res.data.status === 'success'){
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true, onClose: () => {
-          window.location.reload();
+          this.fetchAccounts();
         }});
       }else{
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});

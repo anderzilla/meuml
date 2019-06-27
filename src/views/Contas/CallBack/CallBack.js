@@ -41,7 +41,6 @@ class CallBack extends Component {
                   html: '<p>' + res.data.message + '</p>', type: 'success', showConfirmButton: true,
                   onClose: () => {
                     this.props.history.push('/listacontas');
-                    window.location.reload();
                   }
                 });
               } else {
@@ -49,7 +48,6 @@ class CallBack extends Component {
                   html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
                   onClose: () => {
                     this.props.history.push('/listacontas');
-                    window.location.reload();
                   }
                 });
               }
@@ -67,12 +65,10 @@ class CallBack extends Component {
                   cancelButtonText: 'Fechar',
                   onClose: () => {
                     this.props.history.push('/listacontas');
-                    window.location.reload();
                   }
                 });
               } else {
                 this.props.history.push('/listacontas');
-                window.location.reload();
               }
             })
 
