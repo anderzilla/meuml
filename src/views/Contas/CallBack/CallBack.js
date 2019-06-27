@@ -31,21 +31,21 @@ class CallBack extends Component {
                 executed: true,
                 doIt: 2
               })
-              window.history.back(2);
+              window.location.href("/listacontas");
             }).catch((error) => {     
               !error.response ?
               (this.setState({tipoErro: error})) :
               (this.setState({tipoErro: error.response.data.message}))
               Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
               onClose: () => {
-                window.history.back(2);
+                window.location.href("/listacontas");
               }
             });
             
             })
 
         ) : (
-            console.log('None')
+          window.location.href("/listacontas")
         )
     )
   }
