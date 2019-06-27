@@ -31,14 +31,45 @@ class CallBack extends Component {
                 executed: true,
                 doIt: 2
               })
-              window.location.href("/listacontas");
+              if (res.data.status === 'success') {
+                Swal.fire({
+                  html: '<p>' + res.data.message + '</p>', type: 'success', showConfirmButton: true,
+                  onClose: () => {
+                    this.props.history.push('/listacontas');
+                    window.location.reload();
+                  }
+                });
+              } else {
+                Swal.fire({
+                  html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
+                  onClose: () => {
+                    this.props.history.push('/listacontas');
+                    window.location.reload();
+                  }
+                });
+              }
             }).catch((error) => {     
               !error.response ?
               (this.setState({tipoErro: error})) :
               (this.setState({tipoErro: error.response.data.message}))
               Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
               onClose: () => {
-                window.location.href("/listacontas");
+                if (error.response !== undefined) {
+                  Swal.fire({
+                    html: '<p>' + error.response.data.message + '</p>',
+                    type: 'error',
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    cancelButtonText: 'Fechar',
+                    onClose: () => {
+                      this.props.history.push('/listacontas');
+                      window.location.reload();
+                    }
+                  });
+                } else {
+                  this.props.history.push('/listacontas');
+                  window.location.reload();
+                }
               }
             });
             
