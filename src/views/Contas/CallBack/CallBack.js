@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Redirect } from 'react-router'
 import {getToken} from '../../../auth';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -39,14 +39,14 @@ class CallBack extends Component {
                 Swal.fire({
                   html: '<p>' + res.data.message + '</p>', type: 'success', showConfirmButton: true,
                   onClose: () => {
-                    this.props.history.goBack;
+                    this.props.history.push('./listacontas');
                   }
                 });
               } else {
                 Swal.fire({
                   html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
                   onClose: () => {
-                    this.props.history.goBack;
+                    this.props.history.push('./listacontas');
                   }
                 });
               }
@@ -63,11 +63,11 @@ class CallBack extends Component {
                   showCancelButton: true,
                   cancelButtonText: 'Fechar',
                   onClose: () => {
-                    this.props.history.goBack;
+                    this.props.history.push('./listacontas');
                   }
                 });
               } else {
-                this.props.history.push('./#/listacontas');
+               this.props.history.push('./listacontas');
               }
             })
 
