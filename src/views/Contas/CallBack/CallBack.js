@@ -37,17 +37,13 @@ class CallBack extends Component {
 
               if (res.data.status === 'success') {
                 Swal.fire({
-                  html: '<p>' + res.data.message + '</p>', type: 'success', showConfirmButton: true,
-                  onClose: () => {
-                    this.props.history.push('./listacontas');
-                  }
+                  html: '<p>' + res.data.message + '</p>' + '<p><Link to="/listacontas"></p>', type: 'success', showConfirmButton: false,
+                  
                 });
               } else {
                 Swal.fire({
-                  html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
-                  onClose: () => {
-                    this.props.history.push('./listacontas');
-                  }
+                  html: '<p>' + res.data.message + '</p>' + '<p><Link to="/listacontas"></p>', type: 'error', showConfirmButton: false,
+                  
                 });
               }
             }).catch(error => {
@@ -57,17 +53,14 @@ class CallBack extends Component {
 
               if (error.response !== undefined) {
                 Swal.fire({
-                  html: '<p>' + error.response.data.message + '</p>',
+                  html: '<p>' + error.response.data.message + '</p>' + '<p><Link to="/listacontas"></p>',
                   type: 'error',
                   showConfirmButton: false,
-                  showCancelButton: true,
-                  cancelButtonText: 'Fechar',
-                  onClose: () => {
-                    this.props.history.push('./listacontas');
-                  }
+                  showCancelButton: false,
                 });
               } else {
-               this.props.history.push('./listacontas');
+              // this.props.history.push('./listacontas');
+               window.location.reload();
               }
             })
 
