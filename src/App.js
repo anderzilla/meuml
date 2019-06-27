@@ -18,6 +18,11 @@ const CallBack = Loadable({
   loading
 });
 
+const ListaContas = Loadable({
+  loader: () => import('./views/Contas/ListaContas'),
+  loading
+});
+
 // Autenticação
 const Login = Loadable({
   loader: () => import('./views/Autenticacao/Login'),
@@ -88,6 +93,7 @@ class App extends Component {
           {/*acesso restrito */}
           <PrivateRoute path="/" name="MeuML.com" component={DefaultLayout} />
           <PrivateRoute path="/callback" name="MeuML.com - Callback" component={CallBack} />
+          <PrivateRoute path="/listacontas" name="MeuML.com - ListaContas" component={ListaContas} />
           <PrivateRoute path="/logout" name="MeuML.com" component={Logout} />
           <Route exact path="/404" name="Page 404" component={Page404} />
           <Route exact path="/500" name="Page 500" component={Page500} />          
