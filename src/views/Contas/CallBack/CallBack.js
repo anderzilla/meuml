@@ -27,41 +27,21 @@ class CallBack extends Component {
                 {"code": token,},
                 {headers: {"Authorization": 'Bearer ' + getToken()}},
             ).then(res => {
-
-              this.setState(
-                  {
-                    executed: true,
-                    doIt: 2
-                  }
-              )
-
-              if (res.data.status === 'success') {
-                Swal.fire({
-                  html: '<p>' + res.data.message + '</p>' + '<p><Link to="/listacontas"></p>', type: 'success', showConfirmButton: false,
-                  
-                });
-              } else {
-                Swal.fire({
-                  html: '<p>' + res.data.message + '</p>' + '<p><Link to="/listacontas"></p>', type: 'error', showConfirmButton: false,
-                  
-                });
+              this.setState({
+                executed: true,
+                doIt: 2
+              })
+              window.location.reload();
+            }).catch((error) => {     
+              !error.response ?
+              (this.setState({tipoErro: error})) :
+              (this.setState({tipoErro: error.response.data.message}))
+              Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
+              onClose: () => {
+                window.location.reload();
               }
-            }).catch(error => {
-              console.log('rejected');
-              console.log(error.response);
-
-
-              if (error.response !== undefined) {
-                Swal.fire({
-                  html: '<p>' + error.response.data.message + '</p>' + '<p><Link to="/listacontas"></p>',
-                  type: 'error',
-                  showConfirmButton: false,
-                  showCancelButton: false,
-                });
-              } else {
-              // this.props.history.push('./listacontas');
-               window.location.reload();
-              }
+            });
+            
             })
 
         ) : (
