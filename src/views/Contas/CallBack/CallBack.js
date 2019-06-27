@@ -31,14 +31,14 @@ class CallBack extends Component {
                 executed: true,
                 doIt: 2
               })
-              window.history.back();
+              window.history.back(2);
             }).catch((error) => {     
               !error.response ?
               (this.setState({tipoErro: error})) :
               (this.setState({tipoErro: error.response.data.message}))
               Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
               onClose: () => {
-                window.history.back();
+                window.history.back(2);
               }
             });
             
