@@ -39,7 +39,7 @@ class MeusBloqueios extends Component {
       contas: [],
       total: '',
       multiContas: '',
-      
+      ct: '',
     };
   }
 
@@ -175,10 +175,16 @@ class MeusBloqueios extends Component {
     
   }
 
+  pagaNomeConta(contaId){
+    const ct = this.state.accounts.find(x => x.value === contaId).label;
+    console.log(ct);
+    return ct
+  }
+
   render() {
 
     const { isLoading, isLoadingAccounts, blacklist, error, accounts, selectedOption, contas, arrayValue, contasMarcadas, offset } = this.state;
-
+    console.log(blacklist)  
     return (
       <div className="animated fadeIn">
         <Card>
@@ -208,6 +214,9 @@ class MeusBloqueios extends Component {
               <h3>Carregando...</h3>
             )}
             </Col>
+            <Col md="4" sm="6" xs="4">
+              {(this.state.total > 0)? <div className="alert alert-primary fade show">Registros Encontrados:<b> {this.state.total} </b></div> : <span></span>}
+            </Col>
             </Row>
           </CardHeader>
           <CardBody>
@@ -217,12 +226,14 @@ class MeusBloqueios extends Component {
                 <th className="tbcol-5">ID do Usuario</th>
                 <th className="tbcol-5 text-center">Compras</th>
                 <th className="tbcol-5 text-center">Perguntas</th>
+                <th className="tbcol-5 text-center">Conta</th>
                 <th className="tbcol-25">Motivo</th>
                 <th className="tbcol-50">Descrição</th>
               </tr>
             </thead>
             <tbody>
             {
+            
             (this.state.total ==='') ? (
               <tr>
                     <td colspan="4" className="mensagemAviso">
@@ -240,6 +251,9 @@ class MeusBloqueios extends Component {
                     </td>
                     <td className="text-center">
                       {bl.questions ? (<i className="fa fa-times text-danger"></i>) : ( <span></span>)}
+                    </td>
+                    <td className="text-center">
+                      {this.pagaNomeConta(bl.account_id)}
                     </td>
                     <td>{bl.motive_id}</td>
                     <td>{bl.motive_description}</td>
