@@ -90,13 +90,14 @@ class App extends Component {
           <Route exact path="/recuperarsenha" component={RecuperarSenha} />
           <Route exact path="/confirmarcadastro/:email/:hash" component={ConfirmarCadastro} />
           <Route exact path="/alterarsenha/:email/:hash" component={AlterarSenha} />
+          <Route exact path="/404" name="Page 404" component={Page404} />
+          <Route exact path="/500" name="Page 500" component={Page500} /> 
           {/*acesso restrito */}
           <PrivateRoute path="/" name="MeuML.com" component={DefaultLayout} />
           <PrivateRoute path="/callback" name="MeuML.com - Callback" component={CallBack} />
           <PrivateRoute path="/listacontas" name="MeuML.com - ListaContas" component={ListaContas} />
           <PrivateRoute path="/logout" name="MeuML.com" component={Logout} />
-          <Route exact path="/404" name="Page 404" component={Page404} />
-          <Route exact path="/500" name="Page 500" component={Page500} />          
+                   
         </Switch>
       </HashRouter>
     );

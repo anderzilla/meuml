@@ -180,6 +180,10 @@ $spinkit-spinner-color: $body-color;
   padding:10px;
 }
 
+.tab10{
+  width : 10%;
+}
+
 .tab15{
   width : 15%;
 }
@@ -303,16 +307,24 @@ Label {
   width: 50%;
 }
 
-.tbcol-30{
-  width: 30%;
-}
-
 .tbcol-40{
   width: 40%;
 }
 
+.tbcol-30{
+  width: 30%;
+}
+
+.tbcol-20{
+  width: 20%;
+}
+
 .tbcol-15{
   width: 15%;
+}
+
+.tbcol-10{
+  width: 10%;
 }
 
 .tbcol-5{

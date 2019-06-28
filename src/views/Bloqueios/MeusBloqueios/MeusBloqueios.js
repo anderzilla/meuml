@@ -39,7 +39,7 @@ class MeusBloqueios extends Component {
       contas: [],
       total: '',
       multiContas: '',
-      ct: '',
+      motivos: [],
     };
   }
 
@@ -51,6 +51,7 @@ class MeusBloqueios extends Component {
 
   componentDidMount() {
     this.fetchAccounts();
+    this.fetchMotivos();
   }
 
   fetchAccounts()
@@ -128,6 +129,28 @@ class MeusBloqueios extends Component {
     });
   }
 
+  fetchMotivos()
+  {
+    this.url = process.env.REACT_APP_API_URL + `/blacklist/motives`
+    axios.get(this.url,
+      { headers: {"Authorization" : 'Bearer '+getToken()}},
+    ).then(res => {
+    console.log('motivos:'+res);
+    if (res.status === 200){
+      const listaMotivos = [];
+      const resMotivos = res.data.data;
+      resMotivos.map((m, k) => {
+        const { id, name } = this.state;
+        listaMotivos.push({'id':m.id, 'name':m.name });
+      })
+
+      this.setState({
+        motivos: listaMotivos,
+      });
+    }else{ Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true}); }
+  });
+  }
+
   fetchBlacklist(accountId, pageNumber) {
     if (accountId === []){
       this.setState({blacklist: []}); 
@@ -141,7 +164,6 @@ class MeusBloqueios extends Component {
     axios.get(process.env.REACT_APP_API_URL + this.state.rota,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
-
           if (res.data.status === 'success') {
             const message = res.data.message;
             if (res.data.meta.total !== 0) {
@@ -177,8 +199,12 @@ class MeusBloqueios extends Component {
 
   pagaNomeConta(contaId){
     const ct = this.state.accounts.find(x => x.value === contaId).label;
-    console.log(ct);
-    return ct
+    return ct;
+    }
+
+  pagaMotivo(motivoId){
+    const mt = this.state.motivos.find(z => z.id === motivoId).name;
+    return mt;
   }
 
   render() {
@@ -215,7 +241,7 @@ class MeusBloqueios extends Component {
             )}
             </Col>
             <Col md="4" sm="6" xs="4">
-              {(this.state.total > 0)? <div className="alert alert-primary fade show">Registros Encontrados:<b> {this.state.total} </b></div> : <span></span>}
+              {(this.state.total > 0)? <div className="alert alert-primary fade show">Registros Encontrados:<b> {(this.state.total -1)} </b></div> : <span></span>}
             </Col>
             </Row>
           </CardHeader>
@@ -226,8 +252,8 @@ class MeusBloqueios extends Component {
                 <th className="tbcol-5">ID do Usuario</th>
                 <th className="tbcol-5 text-center">Compras</th>
                 <th className="tbcol-5 text-center">Perguntas</th>
-                <th className="tbcol-5 text-center">Conta</th>
-                <th className="tbcol-25">Motivo</th>
+                <th className="tbcol-10 text-center">Conta</th>
+                <th className="tbcol-20">Motivo</th>
                 <th className="tbcol-50">Descrição</th>
               </tr>
             </thead>
@@ -255,7 +281,7 @@ class MeusBloqueios extends Component {
                     <td className="text-center">
                       {this.pagaNomeConta(bl.account_id)}
                     </td>
-                    <td>{bl.motive_id}</td>
+                    <td>{bl.motive_id? (this.pagaMotivo(bl.motive_id)) : '-' }</td>
                     <td>{bl.motive_description}</td>
                   </tr>
                 );
@@ -272,7 +298,7 @@ class MeusBloqueios extends Component {
           <Pagination
           activePage={this.state.activePage}
           itemsCountPerPage={this.state.sizePerPage}
-          totalItemsCount={this.state.total}
+          totalItemsCount={(this.state.total -1)}
           pageRangeDisplayed={5}
           onChange={this.handlePageChange}
           itemClass= "btn btn-md btn-outline-info"

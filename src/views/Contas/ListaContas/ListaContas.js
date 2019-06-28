@@ -101,35 +101,20 @@ class ListaContas extends Component {
                 contas: res.data.data,
                 isLoading: false,
               });
-             // isLoading: false,
-            //   Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true,
-            //   onClose: () => {
-            //     this.setState({
-            //       contas: res.data.data,
-            //       isLoading: false,
-            //     });
-            //   }
-            // });
             }
           } else {
-            Swal.fire({html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
-            onClose: () => {
-              this.setState({
-                contas: res.data.data,
-                isLoading: false,
-              });
-            }
+            Swal.fire({
+              html: '<p>' + res.data.message + '</p>', 
+              type: 'error', showConfirmButton: true,
+              onClose: () => { this.setState({ contas: res.data.data, isLoading: false, }); }
             });
           }
         }).catch((error) => {
-          
           !error.response ?
           (this.setState({tipoErro: error})) :
           (this.setState({tipoErro: error.response.data.message}))
           Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
         });
-        
-        ;
   }
 
   openAuth()
@@ -140,14 +125,11 @@ class ListaContas extends Component {
   render() {
     const { isLoading, contas, error } = this.state;
 
-    
-
-
     return (
       
       <div className="animated fadeIn">
         <Row>
-          <a href="#/contas/adicionar" className="botaoAdicionarConta"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
+          <a href="#/contas/adicionar" className="botaoAdicionarConta">
           <Button className="btn btn-primary float-left"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
           </a>
         </Row>
