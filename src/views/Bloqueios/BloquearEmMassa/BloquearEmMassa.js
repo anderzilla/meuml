@@ -405,6 +405,7 @@ class BloquearEmMassa extends Component {
                 <Picky
                   value={this.state.arrayValue}
                   options={accounts}
+                  className="multiSelBlockUserList"
                   onChange={this.selectMultipleOption}
                   open={false}
                   valueKey="value"
@@ -468,6 +469,7 @@ class BloquearEmMassa extends Component {
                 value={this.state.arrayValue}
                 options={accounts}
                 onChange={this.selectMultipleOption}
+                className="multiSelBlockList"
                 open={false}
                 valueKey="value"
                 labelKey="label"

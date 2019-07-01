@@ -247,6 +247,7 @@ class BloquearComprador extends Component {
                 <Picky
                   value={this.state.arrayValue}
                   options={accounts}
+                  className="multiSelBlockUser"
                   onChange={this.selectMultipleOption}
                   open={false}
                   valueKey="value"
