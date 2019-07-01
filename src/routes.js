@@ -1,7 +1,7 @@
 import React from 'react';
 import DefaultLayout from './containers/DefaultLayout';
 
-const Dashboard = React.lazy(() => import('./views/Dashboard'));
+const Inicio = React.lazy(() => import('./views/Inicio/Inicio'));
 const AlterarSenha = React.lazy(() => import('./views/Autenticacao/AlterarSenha'));
 const ConfirmarCadastro = React.lazy(() => import('./views/Autenticacao/ConfirmarCadastro'));
 const Login = React.lazy(() => import('./views/Autenticacao/Login'));
@@ -27,7 +27,7 @@ const Perguntas = React.lazy(() => import('./views/Perguntas/Perguntas'));
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', name: 'Início', component: DefaultLayout, exact: true },
-  { path: '/dashboard', name: 'MeuML', component: Dashboard },
+  { path: '/inicio', name: 'MeuML', component: Inicio },
   //Autenticação
   { path: '/alterarsenha', name: 'Alterar Senha', component: AlterarSenha, exact: true},
   { path: '/confirmarcadastro', name: 'Confirmar Cadastro', component: ConfirmarCadastro, exact: true},

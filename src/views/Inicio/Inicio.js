@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Iframe from 'react-iframe'
 
-class Dashboard extends Component {
+class Inicio extends Component {
   render() {
     return (
       <div className="animated fadeIn">
@@ -23,4 +23,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+export default Inicio;

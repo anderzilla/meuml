@@ -2,8 +2,8 @@ export default {
   items: [
     {
       name: 'Início',
-      url: '/dashboard',
-      icon: 'icon-speedometer',
+      url: '/inicio',
+      icon: 'fa fa-home',
       badge: {
         variant: 'info',
         text: '',
