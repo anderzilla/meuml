@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router'
 import {getToken} from '../../../auth';
 import axios from 'axios';
-import Swal from 'sweetalert2';
+import ReactLoading from 'react-loading';
 
 class CallBack extends Component {
 
@@ -21,8 +20,9 @@ class CallBack extends Component {
     const token = this.state.token;
 
     return (
-        !this.state.executed ? (
-
+      <div className="animated fadeIn">
+        <ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100}  className='spinnerStyle'/>
+      {!this.state.executed ? (
             axios.post(process.env.REACT_APP_API_URL + `/accounts/from-mercado-livre`,
                 {"code": token,},
                 {headers: {"Authorization": 'Bearer ' + getToken()}},
@@ -32,52 +32,29 @@ class CallBack extends Component {
                 doIt: 2
               })
               if (res.data.status === 'success') {
-                Swal.fire({
-                  html: '<p>' + res.data.message + '</p>', type: 'success', showConfirmButton: true,
-                  onClose: () => {
-                    this.props.history.push('/listacontas');
-                    window.location.reload();
-                  }
-                });
+                this.props.history.push('/listacontas');
+                window.location.reload();
               } else {
-                Swal.fire({
-                  html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
-                  onClose: () => {
-                    this.props.history.push('/listacontas');
-                    window.location.reload();
-                  }
-                });
+                this.props.history.push('/listacontas');
+                window.location.reload();
               }
             }).catch((error) => {     
               !error.response ?
               (this.setState({tipoErro: error})) :
               (this.setState({tipoErro: error.response.data.message}))
-              Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar',
-              onClose: () => {
                 if (error.response !== undefined) {
-                  Swal.fire({
-                    html: '<p>' + error.response.data.message + '</p>',
-                    type: 'error',
-                    showConfirmButton: false,
-                    showCancelButton: true,
-                    cancelButtonText: 'Fechar',
-                    onClose: () => {
-                      this.props.history.push('/listacontas');
-                      window.location.reload();
-                    }
-                  });
+                  this.props.history.push('/listacontas');
+                  window.location.reload();
                 } else {
                   this.props.history.push('/listacontas');
                   window.location.reload();
                 }
-              }
-            });
-            
             })
 
         ) : (
           window.location.href("/listacontas")
-        )
+        )}
+        </div>
     )
   }
 }
