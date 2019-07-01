@@ -222,6 +222,7 @@ class MeusBloqueios extends Component {
             value={this.state.arrayValue}
             options={accounts}
             onChange={this.selectMultipleOption}
+            className="multiSelMeusBloqueios"
             open={false}
             valueKey="value"
             labelKey="label"

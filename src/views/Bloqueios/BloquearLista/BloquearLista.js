@@ -200,6 +200,7 @@ class BloquearLista extends Component {
               value={this.state.arrayValue}
               options={accounts}
               onChange={this.selectMultipleOption}
+              className="multiSelBlockListOutros"
               open={false}
               valueKey="value"
               labelKey="label"
