@@ -34,7 +34,7 @@ class DefaultHeader extends Component {
 
         this.toggle = this.toggle.bind(this);
 
-        this.getNotifications()
+        //this.getNotifications()
     }
 
     gotNewNotification(){
