@@ -96,12 +96,7 @@ class ListaContas extends Component {
                 contas: res.data.data,
                 isLoading: false,
               });
-            } else {
-              this.setState({
-                contas: res.data.data,
-                isLoading: false,
-              });
-            }
+            } 
           } else {
             this.setState({
               isLoading: false
