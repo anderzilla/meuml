@@ -109,7 +109,7 @@ class BloquearComprador extends Component {
         this.fetchBlacklist(res.data.data[0].id);
 
         if(res.data.meta.total === 1) {
-          this.setState({ arrayValue: {'value':res.data.data[0].id, 'label':res.data.data[0].name } });
+          this.setState({ arrayValue: [{'value':res.data.data[0].id, 'label':res.data.data[0].name }] });
         }
       }else{
         Swal.fire({
@@ -194,6 +194,8 @@ class BloquearComprador extends Component {
     }else if(this.state.motiveId === '' ){
       alert('Defina o motivo do bloqueio.');
     }else{
+console.log("ArrayValue",this.state.arrayValue)
+
       this.state.arrayValue.map((s, k) => {
         const { value, name } = this.state;
         this.state.bloqueios.push({
