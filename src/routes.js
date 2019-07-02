@@ -29,7 +29,7 @@ const Processos = React.lazy(() => import('./views/Processos/Processos'));
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', name: 'Início', component: DefaultLayout, exact: true },
-  { path: '/inicio', name: 'MeuML', component: Inicio },
+  { path: '/inicio', name: 'MeuML', id: 'inicio', component: Inicio },
   //Autenticação
   { path: '/alterarsenha', name: 'Alterar Senha', component: AlterarSenha, exact: true},
   { path: '/confirmarcadastro', name: 'Confirmar Cadastro', component: ConfirmarCadastro, exact: true},

@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import logo from '../../../assets/img/brand/MeuML-logo2.png';
 import { AppSwitch } from '@coreui/react';
 import axios from 'axios';
+import ReactLoading from 'react-loading';
 
 
 class Cadastro extends Component {
@@ -26,6 +27,7 @@ class Cadastro extends Component {
       token: '',
       message: '',
       status: '',
+      isLoadingCadastro: false,
     };
 
     this.mudaTermos = this.mudaTermos.bind(this);
@@ -62,6 +64,10 @@ class Cadastro extends Component {
   handleSubmit(event) {
 
     event.preventDefault();
+    this.setState({
+      isLoadingCadastro: true,
+
+    });
     
     if (this.state.userName === ''){
       alert('Preencha  o seu Usuário! Nã deixe campos em branco');
@@ -120,6 +126,7 @@ class Cadastro extends Component {
 
 
   render() {
+    const {isLoadingCadastro} = this.state;
     return (
       <div className="app flex-row align-items-center">
         <Container>
@@ -196,10 +203,17 @@ class Cadastro extends Component {
                       </InputGroup>*/}
                       </Col>
                       <Col xs="12" sm="8" className="text-right">
+                      {!isLoadingCadastro ? (
+                      <div>
                       <Button type="submit" color="primary" disabled={this.state.submitButton}><i className="fa fa-check"></i> Concluir Cadastro</Button>
                       <Link to="./" >
-                        <Button className="btn btn-danger" title="Voltar" ><i className="fa fa-arrow-left"></i> Voltar</Button>
-                      </Link>
+                      <Button className="btn btn-danger" title="Voltar" ><i className="fa fa-arrow-left"></i> Voltar</Button>
+                    </Link>
+                    </div>
+                      ) : (
+                        <ReactLoading type={'spinningBubbles'} color={'#054785'} height={50} width={50}  className='spinnerStyle'/>
+                      )}
+                     
                       </Col>
                     </Row>
                   </Form>

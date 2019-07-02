@@ -91,7 +91,7 @@ class Processos extends Component {
   
 
   render() {
-    console.log(this.state.tempoProcesso);
+    
     const {isLoadingProcessos, processos, error, offset } = this.state;
 
     return (
