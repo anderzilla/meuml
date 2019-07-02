@@ -88,12 +88,24 @@ class Processos extends Component {
     this.fetchProcess();
   }
 
-  
+  isExpandableRow(row) {
+    if (row.id < 2) return true;
+    else return false;
+  }
+
+  expandComponent(row) {
+    return (
+      // <BSTable data={ row.expand } />
+      <div>{ row.expand } </div>
+    );
+  }
 
   render() {
     
     const {isLoadingProcessos, processos, error, offset } = this.state;
 
+
+    
     return (
       <div className="animated">
         <Card>
@@ -102,7 +114,10 @@ class Processos extends Component {
           </CardHeader>
           <CardBody>
           {!isLoadingProcessos ? (
-            <BootstrapTable data={this.state.listaProcessos} version="4" striped hover pagination search options={this.options}>
+            <BootstrapTable data={this.state.listaProcessos} 
+                    options={this.options}
+                    expandableRow={ this.isExpandableRow }
+                    expandComponent={ this.expandComponent }>
               <TableHeaderColumn isKey dataField="andamento" dataSort>Andamento</TableHeaderColumn>
               <TableHeaderColumn dataField="dataInicio" dataSort>Iniciado em...</TableHeaderColumn>
             </BootstrapTable>
