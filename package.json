@@ -45,6 +45,7 @@
     "formik": "^1.5.1",
     "handsontable": "^7.0.3",
     "jquery": "^3.4.1",
+    "moment-timezone": "^0.5.25",
     "node-sass": "^4.11.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
