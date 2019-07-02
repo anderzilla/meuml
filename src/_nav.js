@@ -3,6 +3,7 @@ export default {
     {
       name: 'Início',
       url: '/inicio',
+      id: 'inicio',
       icon: 'fa fa-home',
       badge: {
         variant: 'info',
@@ -12,6 +13,7 @@ export default {
     {
       name: 'Contas',
       url: '/listacontas',
+      id: 'contas',
       icon: 'fa fa-address-book',
 
     },
@@ -30,12 +32,14 @@ export default {
     {
       name: 'Pesos e Dimensões',
       url: '/categorias',
+      id: 'categorias',
       icon: 'fa fa-balance-scale',
 
     },
     {
       name: 'Bloqueios',
       url: '/bloqueios',
+      id: 'blqueios',
       icon: 'fa fa-lock',
       children: [
         {
