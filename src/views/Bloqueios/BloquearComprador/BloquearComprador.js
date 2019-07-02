@@ -165,6 +165,7 @@ class BloquearComprador extends Component {
       [name]: value
     });
   }
+
   handleChange = selectedOption => {
     this.setState({ selectedOption });
     console.log(`Option selected:`, selectedOption);
