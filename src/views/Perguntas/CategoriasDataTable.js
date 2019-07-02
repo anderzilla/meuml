@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import axios from "axios";
-import {getToken} from "../../auth";
+import api from '../../services/api';
+import { getToken } from "../../auth";
 import Swal from "sweetalert2";
 
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
 
 
-class CategoriasDataTable extends React.Component {
+class CategoriasDataTable extends Component {
     constructor(props) {
         super(props);
 
@@ -43,7 +43,7 @@ class CategoriasDataTable extends React.Component {
 
         url += '&sortOrder=' + sortOrder + '&sortName=' + sortName
 
-        axios.get(url,
+        api.get(url,
             {headers: {"Authorization": 'Bearer ' + getToken()}},
         ).then(res => {
             if (res.data.status === 'success') {

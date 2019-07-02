@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import api from '../../../services/api';
+
 import { Button, Card, CardBody, Col, Container, Form, Row } from 'reactstrap';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 
 class ConfirmarCadastro extends Component {
@@ -36,7 +37,7 @@ class ConfirmarCadastro extends Component {
     
     this.setState({auth: 'true'});
     
-    axios.post(process.env.REACT_APP_API_URL + `/auth/confirm`, {
+    api.post(process.env.REACT_APP_API_URL + `/auth/confirm`, {
       "hash":this.state.hash,
       "email":this.state.email,
     })

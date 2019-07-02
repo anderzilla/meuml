@@ -1,29 +1,14 @@
 import React, { Component } from 'react';
+import {getToken} from '../../../auth';
+import api from '../../../services/api';
+
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Table,
-  Form,
-  Label,
-  FormGroup,
-  Input,
-  Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Col,
-  Row,
+  Card, CardHeader, CardBody, CardFooter, Form,
+  Label, FormGroup, Input, Button, Col, Row,
 } from 'reactstrap';
 import { AppSwitch } from '@coreui/react'
-import { Link } from 'react-router-dom';
-import axios from 'axios';
 import Swal from 'sweetalert2';
-import {getToken} from '../../../auth';
-
-import Picky, {components} from "react-picky";
+import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 
 class BloquearLista extends Component {
@@ -84,7 +69,7 @@ class BloquearLista extends Component {
   fetchAccounts()
   {
     this.url = process.env.REACT_APP_API_URL + `/accounts`
-    axios.get(this.url,
+    api.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
     //console.log(res);
@@ -146,7 +131,7 @@ class BloquearLista extends Component {
     if (this.state.blackListName === ''){
       Swal.fire({html:'<p>Preencha o nome da lista para bloqueá-la</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else{
-      axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, {
+      api.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, {
         "blacklist_name":this.state.blackListName, 
         "accounts":this.state.accountId, 
         "bids": !this.state.bids ? false : true,

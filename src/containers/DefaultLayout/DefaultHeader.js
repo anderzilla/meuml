@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
+import {getToken} from "../../auth";
+import api from '../../services/api';
+
 import { DropdownMenu, DropdownToggle, Nav ,DropdownItem, Badge, Dropdown, Progress } from 'reactstrap';
 import PropTypes from 'prop-types';
-
 import { AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler} from '@coreui/react';
 import {Notifications} from '../../views/Notifications';
-
 import logo from '../../assets/img/brand/MeuML-logo2.png'
 import sygnet from '../../assets/img/brand/sygnet-logo.png'
 import avatar from '../../assets/img/avatars/user.svg'
-import axios from "axios";
-import {getToken} from "../../auth";
 import Notifier from "react-desktop-notification"
-
 import Swal from "sweetalert2";
 
 const propTypes = {
@@ -59,7 +57,7 @@ class DefaultHeader extends Component {
     getNotifications()
     {
 
-        axios.get(process.env.REACT_APP_API_URL + `/notifications`,
+        api.get(process.env.REACT_APP_API_URL + `/notifications`,
             { headers: { "Authorization": 'Bearer ' + getToken() } })
             .then(res => {
                 if (res.data.status === 'success') {
@@ -88,7 +86,7 @@ class DefaultHeader extends Component {
 
     setNotificationsAsViewed()
     {
-        axios.put(process.env.REACT_APP_API_URL + `/notifications/viewed/all`,
+        api.put(process.env.REACT_APP_API_URL + `/notifications/viewed/all`,
             {},
             { headers: { "Authorization": 'Bearer ' + getToken() } });
     }

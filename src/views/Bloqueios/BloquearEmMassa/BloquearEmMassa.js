@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, Collapse, ButtonGroup, Fade, CardHeader, CardBody, CardFooter, Table, Button, Form, FormGroup, Label, Input} from 'reactstrap';
-import axios from 'axios';
+import api from '../../../services/api';
+import { getToken } from '../../../auth';
+
+import { 
+  Row, Col, Card, Collapse, ButtonGroup, CardHeader,
+  CardBody, CardFooter, Button,FormGroup, Label, Input  
+} from 'reactstrap';
 import Swal from 'sweetalert2';
-import {getToken} from '../../../auth';
 import { AppSwitch } from '@coreui/react'
 import 'react-select/dist/react-select.min.css';
-import Picky, {components}  from "react-picky";
+import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 
-import {parse} from 'react-json-parser';
 class BloquearEmMassa extends Component {
   constructor(props) {
     super(props);
@@ -64,45 +67,50 @@ class BloquearEmMassa extends Component {
   fetchAccounts()
   {
     this.url = process.env.REACT_APP_API_URL + `/accounts`
-    axios.get(this.url,
+    api.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
     
     if (res.status === 200){
       const listaContas = [];
       const resContas = res.data.data;
+
       resContas.map((c, k) => {
-        const { id, name } = this.state;
         listaContas.push({'value':c.id, 'label':c.name });
       })
+
       this.setState({
         accounts: listaContas,
         isLoadingAccounts: false
       });
+
       if(res.data.data.meta.total > 0){
         this.fetchBlacklist(res.data.data[0].id);
-      }else{
       }
-    }else{
-      Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+    
+    } else{
+      Swal.fire({
+        html:'<p>'+res.data.message+'</p>',
+        type: 'error',
+        showConfirmButton: true
+      });
     }
-  }).catch(error => {
+  }).catch(() => {
   });
   }
 
   selectMultipleOption(value) {
     console.count('onChange')
     console.log("Val", value);
-    this.setState({ arrayValue: value });
-
-    const values = this.state;
-    this.state.values = value;
-    this.state.accountId = [];
+    this.setState({
+      arrayValue: value,
+      values: value,
+      accountId: []
+    });
 
     const valuesToRender = this.state.values.filter(val => val.value)
     const numRows = valuesToRender.length
     
-    const {accountId, accountName} = this.state;
     for (var i = 0; i < numRows; i++) {
       this.state.accountId.push(value[i].value); 
     }
@@ -111,7 +119,7 @@ class BloquearEmMassa extends Component {
   fetchMotivos()
   {
     this.url = process.env.REACT_APP_API_URL + `/blacklist/motives`
-    axios.get(this.url,
+    api.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
     
@@ -158,9 +166,14 @@ class BloquearEmMassa extends Component {
 
   async listagem(lista, closure){
     if (this.state.custom[1] === true){
-      var lista =  await lista.split("\n").map(function(id) {return ({customer_id:id, motive_id: "", motive_description: ""})}) ;
-    }else{
-      var lista =  await lista.split("\n").map(function(id) {return ({customer_id:id, motive_id: "", motive_description: ""})}) ;
+      var lista =  await lista.split("\n").map(function(id) {
+        return ({ customer_id:id, motive_id: "", motive_description: "" })
+      });
+    
+    } else{
+      var lista =  await lista.split("\n").map(function(id) {
+        return ({ customer_id:id, motive_id: "", motive_description: "" })
+      });
     }
     
     closure(lista, this);
@@ -200,11 +213,11 @@ class BloquearEmMassa extends Component {
     }else{
       if (this.state.custom[0] === true){
       //APENAS SALVAR A LISTA
-        axios.post(process.env.REACT_APP_API_URL + `/blacklist/list`, 
+        api.post(process.env.REACT_APP_API_URL + `/blacklist/list`, 
         {"list_name":this.state.nomeLista,"list_description":this.state.descricaoLista},
         {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},
         ).then(res => {
-          axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, 
+          api.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, 
           {"list_name":this.state.nomeLista,"customers":JSON.parse(this.state.listagemJSON)},
           {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},
           ).then(res => {
@@ -224,9 +237,7 @@ class BloquearEmMassa extends Component {
         //BLOQUEANDO OS IDS
         console.log(this.state.listagemJSON);
         this.state.arrayValue.map((s, k) => {
-          const { value, name } = this.state;
           this.state.listagem.map((cid, x) => {
-            const { customer_id } = this.state;
               this.state.bloqueios.push({
               "account_id": s.value,
               "bids": !this.state.bids ? false : true,
@@ -238,47 +249,55 @@ class BloquearEmMassa extends Component {
           })
         })
         
-        axios.post(process.env.REACT_APP_API_URL + `/blacklist`, this.state.bloqueios,
+        api.post(process.env.REACT_APP_API_URL + `/blacklist`, this.state.bloqueios,
         {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
         .then(res => {
           
           const status = res.data.status;
-          this.setState({status});
+          this.setState({ status });
+
           if (this.state.status === 'success'){
             const message = res.data.message;
             this.setState({message});
             Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
             this.props.history.push("/meusbloqueios");
-          }else{
+          
+          } else{
             const message = res.data.message;
             this.setState({message});
             Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
           }
+
         }).catch((error) => {
-          
           !error.response ?
-          (this.setState({tipoErro: error})) :
-          (this.setState({tipoErro: error.response.data.message}))
-          Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+          (this.setState({ tipoErro: error })) :
+          (this.setState({ tipoErro: error.response.data.message }))
+          
+          Swal.fire({
+            html:'<p>'+ this.state.tipoErro+'<br /></p>',
+            type: 'error', showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: 'Fechar'
+          });
         });
         
       }else if(this.state.custom[2] === true){
       //SALVAR A LISTA E BLOQUEAR 
         //SALVANDO A LISTA 
-        axios.post(process.env.REACT_APP_API_URL + `/blacklist/list`, {
+        api.post(process.env.REACT_APP_API_URL + `/blacklist/list`, {
           "list_name":this.state.nomeLista,
           "list_description":this.state.descricaoLista
         },
         {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
         ).then(res => {
-          axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, {
+          api.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, {
             "list_name":this.state.nomeLista,
             "customers":this.state.listagem
           },
           {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
           ).then(res => {
            
-            axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, 
+            api.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, 
               {
                 "blacklist_name":this.state.nomeLista, 
                 "accounts":this.state.accountId, 
@@ -287,24 +306,42 @@ class BloquearEmMassa extends Component {
               },
             {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
             .then(res => {
-             
               const status = res.data.status;
-              this.setState({status});
+              this.setState({ status });
+
               if (this.state.status === 'success'){
                 const message = res.data.message;
-                this.setState({message});
-                Swal.fire({html:'<p><b>'+this.state.message+'</b><br>'+res.data.data.status+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-              }else{
+                this.setState({ message });
+                
+                Swal.fire({
+                  html:'<p><b>'+this.state.message+'</b><br>'+res.data.data.status+'</p>',
+                  type: this.state.status,
+                  showCloseButton: false,
+                  showConfirmButton: true,
+                  textConfirmButton:"OK"
+                });
+             
+              } else{
                 const message = res.data.message;
-                this.setState({message});
-                Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
+                this.setState({ message });
+                Swal.fire({
+                  html:'<p>'+this.state.message+'</p>',
+                  type: 'error',
+                  showConfirmButton: true
+                });
               }
+            
             }).catch((error) => {
             
               !error.response ?
               (this.setState({tipoErro: error})) :
               (this.setState({tipoErro: error.response.data.message}))
-              Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+              Swal.fire({
+                html:'<p>'+ this.state.tipoErro+'<br /></p>',
+                type: 'error', showConfirmButton: false,
+                showCancelButton: true,
+                cancelButtonText: 'Fechar'
+              });
             });
 
           }).catch((error) => {
@@ -312,18 +349,22 @@ class BloquearEmMassa extends Component {
               !error.response ?
               (this.setState({tipoErro: error})) :
               (this.setState({tipoErro: error.response.data.message}))
-              Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+              Swal.fire({
+                html:'<p>'+ this.state.tipoErro+'<br /></p>',
+                type: 'error',
+                showConfirmButton: false,
+                showCancelButton: true,
+                cancelButtonText: 'Fechar'
+              });
           });
         });
-      }else{
-        
       }
+    }
   }
-}
 
   render() {
 
-    const { isLoadingAccounts, isLoadingLista, error, accounts, selectedOption, changes, source, options, grid  } = this.state;
+    const { isLoadingAccounts, isLoadingLista, accounts } = this.state;
     
     return (
       <div className="animated fadeIn">

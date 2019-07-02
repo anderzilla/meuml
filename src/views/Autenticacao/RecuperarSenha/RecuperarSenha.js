@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Card, CardBody, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import api from '../../../services/api';
+
+import {
+  Button, Card, CardBody, Col, Container, Form, Input,
+  InputGroup, InputGroupAddon, InputGroupText, Row
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 
 class RecuperarSenha extends Component {
@@ -37,7 +41,7 @@ class RecuperarSenha extends Component {
     
     this.setState({auth: 'true'});
     
-    axios.post(process.env.REACT_APP_API_URL + `/auth/resetpassword`, {
+    api.post(process.env.REACT_APP_API_URL + `/auth/resetpassword`, {
       "email":this.state.email
     })
     .then(res => {

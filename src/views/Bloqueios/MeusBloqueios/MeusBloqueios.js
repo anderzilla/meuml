@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Table, Row, Col, Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import api from '../../../services/api';
 import { getToken } from '../../../auth';
+
+import { Card, CardHeader, CardBody, CardFooter, Table, Row, Col } from 'reactstrap';
+import Swal from 'sweetalert2';
 import Pagination from "react-js-pagination";
 import 'react-toastify/dist/ReactToastify.css';
-import Picky, {components} from "react-picky";
+import Picky from "react-picky";
 import "react-picky/dist/picky.css";
-
-import { Redirect } from 'react-router';
-
-
 
 class MeusBloqueios extends Component {
 
@@ -57,26 +53,32 @@ class MeusBloqueios extends Component {
   fetchAccounts()
   {
     this.url = process.env.REACT_APP_API_URL + `/accounts`
-    axios.get(this.url,
+    api.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
     if (res.status === 200){
       const listaContas = [];
       const resContas = res.data.data;
+      
       resContas.map((c, k) => {
-        const { id, name } = this.state;
         listaContas.push({'value':c.id, 'label':c.name });
-      })
+      });
+
       this.setState({
         accounts: listaContas,
         isLoadingAccounts: false
       });
+
       if(res.data.data.meta.total > 0){
         this.fetchBlacklist(res.data.data[0].id);
       }
 
-    }else{
-      Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+    } else{
+      Swal.fire({
+        html:'<p>'+res.data.message+'</p>',
+        type: 'error',
+        showConfirmButton: true
+      });
     }
   }).catch(error => {
   });
@@ -92,11 +94,16 @@ class MeusBloqueios extends Component {
 
   selectMultipleOption(selectedAccount) {
     const select = selectedAccount;
-    this.setState({ arrayValue: select});
-    this.state.contas = []; 
+    
+    this.setState({
+      arrayValue: select,
+      contas: [],
+    });
+    
     select.map((x, k) => {  
       this.state.contas.push(x.value);
-      }) 
+    }) 
+
     if (this.isEmpty(select)) {
       this.setState({
         blacklist: [],
@@ -107,14 +114,15 @@ class MeusBloqueios extends Component {
         currentPage: '',
         nPagina: '',
       });
-    }else{
+
+    } else{
       this.fetchBlacklist(this.state.contas);
     }
   }
 
 
   handlePageChange(pageNumber) {
-    !pageNumber ? this.setState({activePage:'1'}) : this.setState({activePage: pageNumber});
+    !pageNumber ? this.setState({ activePage:'1' }) : this.setState({ activePage: pageNumber });
     this.fetchBlacklist(this.state.contas, pageNumber);
     //this.props.history.push('/meusbloqueios?offset='+this.state.offset+'&limit=50');
   }
@@ -132,75 +140,91 @@ class MeusBloqueios extends Component {
   fetchMotivos()
   {
     this.url = process.env.REACT_APP_API_URL + `/blacklist/motives`
-    axios.get(this.url,
+    api.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-    console.log('motivos:'+res);
-    if (res.status === 200){
-      const listaMotivos = [];
-      const resMotivos = res.data.data;
-      resMotivos.map((m, k) => {
-        const { id, name } = this.state;
-        listaMotivos.push({'id':m.id, 'name':m.name });
-      })
+      console.log('motivos:'+res);
+      
+      if (res.status === 200){
+        const listaMotivos = [];
+        const resMotivos = res.data.data;
+        
+        resMotivos.map((m, k) => {
+          listaMotivos.push({'id':m.id, 'name':m.name });
+        })
 
-      this.setState({
-        motivos: listaMotivos,
+        this.setState({ motivos: listaMotivos });
+
+      } else{
+        Swal.fire({
+          html:'<p>'+res.data.message+'</p>',
+          type: 'error',
+          showConfirmButton: true
+        });
+      }
       });
-    }else{ Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true}); }
-  });
   }
 
   fetchBlacklist(accountId, pageNumber) {
     if (accountId === []){
-      this.setState({blacklist: []}); 
-    }else{ 
-      if (pageNumber === '' || !pageNumber){
-        this.state.paginate = 1;
-      }else{
-        this.state.paginate = ((pageNumber * this.state.sizePerPage) - this.state.sizePerPage);
-      }
-      this.state.rota = '/blacklist?account_id='+accountId+'&offset='+this.state.paginate+'&limit=50';
-    axios.get(process.env.REACT_APP_API_URL + this.state.rota,
-        { headers: { "Authorization": 'Bearer ' + getToken() } })
-        .then(res => {
-          if (res.data.status === 'success') {
-            const message = res.data.message;
-            if (res.data.meta.total !== 0) {
-              this.setState({
-                blacklist: res.data.data,
-                paginacao: res.data.meta,
-                total: !res.data.meta.total? '0' : res.data.meta.total,
-                totalDataSize: res.data.meta.total,
-                sizePerPage: res.data.meta.limit,
-                currentPage: res.data.meta.page,
-                nPagina: res.data.meta.pages,
-                isLoading: false,
-              });
-            }else{
-              this.setState({
-                blacklist: res.data.data,
-                isLoading: false,
-                total: 0,
-              });
-              Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true,
-            });
-          }
-        }
-      }).catch(error => {
-
-        this.setState({
-          backend_error: true
-        });
-      });
-    }
+      this.setState({ blacklist: [] }); 
     
-  }
+    } else{ 
+      if (pageNumber === '' || !pageNumber){
+        this.setState({ paginate: 1 });
+      
+      } else{
+        const paginate = (pageNumber * this.state.sizePerPage) - this.state.sizePerPage;
+        
+        this.setState({ paginate: paginate });
+      }
+      
+      this.setState({ rota: `/blacklist?account_id=${accountId}&offset=${this.state.paginate}&limit=50` });
+      
+      api.get(process.env.REACT_APP_API_URL + this.state.rota,
+          { headers: { "Authorization": 'Bearer ' + getToken() } })
+          .then(res => {
+            if (res.data.status === 'success') {
+              const message = res.data.message;
+
+              if (res.data.meta.total !== 0) {
+                this.setState({
+                  blacklist: res.data.data,
+                  paginacao: res.data.meta,
+                  total: !res.data.meta.total? '0' : res.data.meta.total,
+                  totalDataSize: res.data.meta.total,
+                  sizePerPage: res.data.meta.limit,
+                  currentPage: res.data.meta.page,
+                  nPagina: res.data.meta.pages,
+                  isLoading: false,
+                });
+
+              } else{
+                this.setState({
+                  blacklist: res.data.data,
+                  isLoading: false,
+                  total: 0,
+                });
+
+                Swal.fire({
+                  html: '<p>' + message + '</p>',
+                  type: 'info',
+                  showConfirmButton: true 
+                });
+              }
+            }
+
+          }).catch(() => {
+            this.setState({ backend_error: true });
+          });
+      }
+    
+    }
 
   pagaNomeConta(contaId){
     const ct = this.state.accounts.find(x => x.value === contaId).label;
     return ct;
-    }
+  }
 
   pagaMotivo(motivoId){
     const mt = this.state.motivos.find(z => z.id === motivoId).name;
@@ -209,7 +233,8 @@ class MeusBloqueios extends Component {
 
   render() {
 
-    const { isLoading, isLoadingAccounts, blacklist, error, accounts, selectedOption, contas, arrayValue, contasMarcadas, offset } = this.state;
+    const { isLoading, isLoadingAccounts, blacklist, accounts } = this.state;
+    
     console.log(blacklist)  
     return (
       <div className="animated fadeIn">

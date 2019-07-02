@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button, ButtonDropdown, ButtonGroup, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { getToken } from '../../../auth';
+import api from '../../../services/api';
+
+import {
+  Card, CardBody, CardFooter, CardHeader,
+  Col, Row, Button, ButtonDropdown, ButtonGroup,
+  DropdownToggle, DropdownMenu, DropdownItem
+} from 'reactstrap';
 import Swal from 'sweetalert2';
-import {getToken} from '../../../auth';
-import axios from 'axios';
 import fotoPadrao from '../../../assets/img/avatars/user.svg';
 
 class ListaContas extends Component {
@@ -30,7 +35,7 @@ class ListaContas extends Component {
   }
   //Sincronizar Conta
   sincronizar(account_id){
-    axios.get(process.env.REACT_APP_API_URL + `/accounts/` + account_id + '/sync',
+    api.get(process.env.REACT_APP_API_URL + `/accounts/` + account_id + '/sync',
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       console.log(res);
@@ -45,7 +50,7 @@ class ListaContas extends Component {
   }
   //Excluir conta
   excluir(account_id){
-    axios.delete(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
+    api.delete(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       if (res.data.status === 'success'){
@@ -61,23 +66,26 @@ class ListaContas extends Component {
   }
   //Renomear conta * somente para o sistema
   renomear(account_id,index){
-    const {value: novoNome} =  Swal.fire({
+    Swal.fire({
       title: 'Renomear Conta:',
       input: 'text',
       showCancelButton: true,
       inputPlaceholder: 'Preencha o novo nome'
+    
     }).then((result) => {
       if (result.value) {
-        axios.put(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
+        api.put(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
             {'name' : result.value},
             { headers: {"Authorization" : 'Bearer '+getToken()}},
+
         ).then(res => {
-          console.log(res);
           if (res.data.status === 'success'){
             document.getElementById('nomeConta-'+index).innerHTML = result.value;
+          
           }else{
             Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,})
           }
+          
         }).catch(error => {
           Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', confirmButtonText: 'Fechar'});
         });
@@ -86,16 +94,16 @@ class ListaContas extends Component {
   }
 
   fetchAccounts() {
-    axios.get(process.env.REACT_APP_API_URL + `/accounts`,
+    api.get(process.env.REACT_APP_API_URL + `/accounts`,
         { headers: { "Authorization": 'Bearer ' + getToken() } })
         .then(res => {
           if (res.data.status === 'success') {
-            const message = res.data.message;
             if (res.data.meta.total !== 0) {
               this.setState({
                 contas: res.data.data,
                 isLoading: false,
               });
+
             } else {
               this.setState({
                 contas: res.data.data,
@@ -111,9 +119,16 @@ class ListaContas extends Component {
           }
         }).catch((error) => {
           !error.response ?
-          (this.setState({tipoErro: error})) :
-          (this.setState({tipoErro: error.response.data.message}))
-          Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+          (this.setState({ tipoErro: error })) :
+          (this.setState({ tipoErro: error.response.data.message }))
+          
+          Swal.fire({
+            html:'<p>'+ this.state.tipoErro+'<br /></p>',
+            type: 'error',
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: 'Fechar'
+          });
         });
   }
 
@@ -123,7 +138,7 @@ class ListaContas extends Component {
   }
 
   render() {
-    const { isLoading, contas, error } = this.state;
+    const { isLoading, contas } = this.state;
 
     return (
       
@@ -136,7 +151,6 @@ class ListaContas extends Component {
         <Row>
           {!isLoading ? (
             contas.map((c, k)=> {
-              const { username, name, email, id } = this.state;
                 return (
                     <Col xs="12" sm="4" md="3" key={c.id} className="CardConta">
                       <Card className="card-accent-primary">

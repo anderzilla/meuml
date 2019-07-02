@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Card, CardBody, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import api from '../../../services/api';
+
+import {
+  Button, Card, CardBody, Col, Container, Form,
+  Input, InputGroup, InputGroupAddon, InputGroupText, Row
+} from 'reactstrap';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 
 class AlterarSenha extends Component {
@@ -38,7 +42,7 @@ class AlterarSenha extends Component {
     
     this.setState({auth: 'true'});
     
-    axios.put(process.env.REACT_APP_API_URL + `/user/updatepassword`, {
+    api.put(process.env.REACT_APP_API_URL + `/user/updatepassword`, {
       "hash":this.state.hash,
       "email":this.state.email,
       "password":this.state.password,

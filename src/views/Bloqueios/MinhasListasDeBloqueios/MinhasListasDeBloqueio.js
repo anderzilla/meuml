@@ -1,26 +1,9 @@
 import React, { Component } from 'react';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Table,
-  Form,
-  Label,
-  FormGroup,
-  Input,
-  Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Col,
-  Row,
-} from 'reactstrap';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
+import api from '../../../services/api';
+
+import { Card,CardHeader, CardBody, Table, Button, Col, Row } from 'reactstrap';
+import Swal from 'sweetalert2';
 
 class MinhasListasDeBloqueio extends Component {
   constructor(props) {
@@ -74,30 +57,29 @@ class MinhasListasDeBloqueio extends Component {
   fetchAccounts()
   {
     this.url = process.env.REACT_APP_API_URL + `/accounts`
-    axios.get(this.url,
-      { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-    //console.log(res);
-    if (res.status === 200){
-      this.setState({
-        accounts: res.data.data,
-        isLoadingAccounts: false
+    api.get(
+      this.url, { headers: {"Authorization" : 'Bearer '+getToken()} })
+      .then(res => {
+        if (res.status === 200){
+          this.setState({
+            accounts: res.data.data,
+            isLoadingAccounts: false
+          });
+
+          if(res.data.data.meta.total > 0){
+            this.fetchBlacklist(res.data.data[0].id);
+          }
+
+        } else{
+          Swal.fire({ html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true });
+        }
       });
-      if(res.data.data.meta.total > 0){
-        this.fetchBlacklist(res.data.data[0].id);
-      }else{
-      }
-    }else{
-      Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-    }
-  }).catch(error => {
-  });
   }
 
   fetchDeletarLista(id)
   {
     this.url = process.env.REACT_APP_API_URL + `/blacklist/list/`+id
-    axios.delete(this.url,
+    api.delete(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       if (res.status === 200){
@@ -111,7 +93,7 @@ class MinhasListasDeBloqueio extends Component {
   fetchBlacklistList()
   {
     this.url = process.env.REACT_APP_API_URL + `/blacklist/list`
-    axios.get(this.url,
+    api.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       if (res.status === 200){
@@ -132,7 +114,7 @@ class MinhasListasDeBloqueio extends Component {
     if (this.state.blackListName === ''){
       Swal.fire({html:'<p>Preencha o nome da lista para bloqueá-la</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else{
-      axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, [{
+      api.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, [{
         "account_id": this.state.accountId,
         "blacklist_name": this.state.blackListName,
       }],
@@ -163,7 +145,7 @@ class MinhasListasDeBloqueio extends Component {
   }
 
   render() {
-    const { isLoading, isLoadingAccounts, isLoadingBlacklistList, backlistList, error, accounts} = this.state;
+    const { isLoadingBlacklistList, backlistList } = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -188,7 +170,6 @@ class MinhasListasDeBloqueio extends Component {
                   {console.log(backlistList)}
                   {!isLoadingBlacklistList ? (
                   backlistList.map((l, key) => {
-                          const { id, name } = this.state;
                           return (
                             <tr>
                               <td class="text-left">{l.name}</td>

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { Button, Card, CardBody, CardFooter, Col, Container, Form, Collapse, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import api from '../../../services/api';
+
+import {
+  Button, Card, CardBody, CardFooter, Col, Container,
+  Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import logo from '../../../assets/img/brand/MeuML-logo2.png';
-import { AppSwitch } from '@coreui/react';
-import axios from 'axios';
 
 
 class Cadastro extends Component {
@@ -76,7 +79,7 @@ class Cadastro extends Component {
     /*}else if (this.state.termos === '' ){
       alert('Aceite os termos de uso!' + this.state.termos);*/
     }else{
-      axios.post(process.env.REACT_APP_API_URL + `/user`, {
+      api.post(process.env.REACT_APP_API_URL + `/user`, {
         "email":this.state.email,
         "name":this.state.userName,
         "password":this.state.password

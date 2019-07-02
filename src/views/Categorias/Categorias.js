@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from "axios";
+import api from "../../services/api";
 import {getToken} from "../../auth";
 import Swal from "sweetalert2";
 import {Card, CardBody, CardHeader, } from "reactstrap";
@@ -26,7 +26,7 @@ class Categorias extends Component {
 
   fetchCategories() {
 
-    axios.get(process.env.REACT_APP_API_URL + `/categories`,
+    api.get(process.env.REACT_APP_API_URL + `/categories`,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       console.log(res);

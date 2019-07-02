@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {getToken} from '../../../auth';
-import axios from 'axios';
+import { getToken } from '../../../auth';
+import api from '../../../services/api';
 import ReactLoading from 'react-loading';
 
 class CallBack extends Component {
@@ -23,7 +23,7 @@ class CallBack extends Component {
       <div className="animated fadeIn">
         <ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100}  className='spinnerStyle'/>
       {!this.state.executed ? (
-            axios.post(process.env.REACT_APP_API_URL + `/accounts/from-mercado-livre`,
+            api.post(process.env.REACT_APP_API_URL + `/accounts/from-mercado-livre`,
                 {"code": token,},
                 {headers: {"Authorization": 'Bearer ' + getToken()}},
             ).then(res => {
