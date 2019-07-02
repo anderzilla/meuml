@@ -85,12 +85,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const expireToken = localStorage.getItem("@MeuML-Token-expire");
-    var ms = moment(moment(expireToken, "DD/MM/YYYY HH:mm")).diff(moment().format("DD/MM/YYYY HH:mm"))
 
+    
     this.setState({
-      warningTime: ms - 1000,
-      signoutTime: ms,
+      warningTime: 1000,
+      signoutTime: 2000,
     });
 
     this.events = [
@@ -128,8 +127,19 @@ class App extends Component {
   };
 
   logout = () => {
+    debugger
+    const expireToken = localStorage.getItem("@MeuML-Token-expire");
+    const dataIni = moment('02/07/2019 15:26')
+    const dataFim = moment().format("DD/MM/YYYY HH:mm")
+
+    var ms = moment(expireToken).diff(dataFim)
+ 
+   if(ms <= 0)
+   {
     console.log('Você será desconectado por inatividade no sistema.');
     this.destroy();
+ 
+   }
   };
 
   destroy = () => {
