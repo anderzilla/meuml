@@ -10,25 +10,19 @@ export const API = "https://api.app2.meuml.com";
 
 export const isAuthenticated = () => {
 
-  debugger
-//  if(localStorage.getItem(TOKEN_KEY) !== null;
+    const expireToken = localStorage.getItem("@MeuML-Token-expire");
+    const dataFim = moment().format("DD/MM/YYYY HH:mm")
+    const ms = moment(expireToken).diff(dataFim)
 
-//const expireToken = localStorage.getItem("@MeuML-Token-expire");
-const expireToken = "02/07/2019 19:35"
+    if(ms > 0)
+    {
+      if(localStorage.getItem(TOKEN_KEY) !== null){
+        return true
+      }
 
-const dataFim = moment().format("DD/MM/YYYY HH:mm")
-
-var ms = moment(expireToken).diff(dataFim)
-
-if(ms > 0)
-{
-  if(localStorage.getItem(TOKEN_KEY) !== null){
-    return true
-  }
-
-}else{
-return false
-}
+    }else{
+    return false
+    }
 
 }
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
