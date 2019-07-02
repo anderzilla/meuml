@@ -127,7 +127,6 @@ class App extends Component {
   };
 
   logout = () => {
-    debugger
     const expireToken = localStorage.getItem("@MeuML-Token-expire");
     const dataIni = moment('02/07/2019 15:26')
     const dataFim = moment().format("DD/MM/YYYY HH:mm")
