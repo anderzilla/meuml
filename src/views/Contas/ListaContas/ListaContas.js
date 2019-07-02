@@ -103,10 +103,8 @@ class ListaContas extends Component {
               });
             }
           } else {
-            Swal.fire({
-              html: '<p>' + res.data.message + '</p>', 
-              type: 'error', showConfirmButton: true,
-              onClose: () => { this.setState({ contas: res.data.data, isLoading: false, }); }
+            this.setState({
+              isLoading: false
             });
           }
         }).catch((error) => {
