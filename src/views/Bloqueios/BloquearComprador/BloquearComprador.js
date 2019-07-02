@@ -93,7 +93,7 @@ class BloquearComprador extends Component {
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-    //console.log(res);
+    console.log(res);
     if (res.status === 200){
       const listaContas = [];
       const resContas = res.data.data;
@@ -107,6 +107,10 @@ class BloquearComprador extends Component {
       });
       if(res.data.meta.total > 0){
         this.fetchBlacklist(res.data.data[0].id);
+
+        if(res.data.meta.total === 1) {
+          this.setState({ arrayValue: {'value':res.data.data[0].id, 'label':res.data.data[0].name } });
+        }
       }else{
         Swal.fire({
           title: '',

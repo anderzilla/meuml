@@ -123,7 +123,7 @@ class App extends Component {
   };
 
   warn = () => {
-    console.log('Você será desconectado em 1 minuto.');
+   // console.log('Você será desconectado em 1 minuto.');
   };
 
   logout = () => {
