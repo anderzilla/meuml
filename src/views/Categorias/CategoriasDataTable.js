@@ -25,15 +25,20 @@ class CategoriasDataTable extends React.Component {
             filter: '',
             filtro: '',
             first: '',
-            lastUpdate:''
+            lastUpdate:'',
+            last_page: 0
         };
 
         this.fetchCategorias();
     }
 
-    fetchCategorias(limit = 50, offset = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
+    fetchCategorias(limit = 50, page = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
 
-        let url = process.env.REACT_APP_API_URL + `/categories?offset=${(offset * limit)}&limit=${limit}`
+        if(page >= this.state.last_page){
+           page =  this.state.last_page
+        }
+
+        let url = process.env.REACT_APP_API_URL + `/categories?page=${page}&limit=${limit}`
 
         if (this.state.filter !== '') {
             url += `&filter=` + this.state.filter
@@ -63,8 +68,15 @@ class CategoriasDataTable extends React.Component {
                     totalDataSize: res.data.meta.total,
                     sizePerPage: res.data.meta.limit,
                     currentPage: res.data.meta.page,
-                    lastUpdate:res.data.meta.last_update
+                    lastUpdate:res.data.meta.last_update,
+                    last_page: res.data.meta.last_page
                 });
+
+                if(page >= this.state.last_page){
+                    this.setState({
+                        totalDataSize: res.data.meta.total - res.data.meta.limit
+                    });
+                }
 
             } else {
                 Swal.fire({ html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true });
