@@ -4,7 +4,8 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist//react-bootstrap-table-all.min.css';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import Moment from 'react-moment';
+import Moment, { locale } from 'moment';
+
 import { getToken } from '../../auth';
 import data from './_data';
 
@@ -12,6 +13,15 @@ import data from './_data';
 class Processos extends Component {
   constructor(props) {
     super(props);
+
+    Moment().locale('pt-br');
+
+    this.agora = new Date();
+    this.diaH = this.agora.getDate();
+    this.mesH = this.agora.getMonth();
+    this.anoH = this.agora.getFullYear();
+    this.horaH = this.agora.getHours();
+    
 
     this.state = {
       totalDataSize: 0,
@@ -21,6 +31,8 @@ class Processos extends Component {
       paginate:'',
       processos: [],
       isLoadingProcessos: true,
+      tempoProcesso: '',
+      listaProcessos: [],
     };
     
     this.table = data.rows;
@@ -43,20 +55,12 @@ class Processos extends Component {
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
     if (res.status === 200){
-      const listaProcessos = [];
       const resProcessos = res.data.data;
-      console.log(resProcessos);
       resProcessos.map(p => {
-        listaProcessos.push({
-          'andamento': (p.item_finished === null)? 0 : p.item_finished +' de '+ p.item_total, 
-          'dataInicio': p.date_created, 
-          'process_items': p.process_items,
-          });
-          console.log(p.date_created);
+        this.showData(p);
       })
-      console.log(listaProcessos);
       this.setState({
-        processos: listaProcessos,
+        processos: this.state.listaProcessos,
         isLoadingProcessos: false,
 
       });
@@ -68,6 +72,17 @@ class Processos extends Component {
   });
   }
 
+  showData(data){
+    const cria = Moment(data.date_created).format('DD/MM/YYYY HH:MM');
+    const res = Moment(cria, 'DD/MM/YYYY HH:MM').startOf().fromNow();
+    const resdiaa = res.replace('a day', '1 dia');
+    const resdia = resdiaa.replace('day', 'dia');
+    const reshora = resdia.replace('hour', 'hora');
+    const final = reshora.replace('ago', 'atrás' );
+    this.state.listaProcessos.push({
+          'andamento': (data.item_finished === null)? 0 : data.item_finished +' processos concluídos de '+ data.item_total, 
+          'dataInicio':final, });      
+  }
 
   componentDidMount() {
     this.fetchProcess();
@@ -76,7 +91,7 @@ class Processos extends Component {
   
 
   render() {
-
+    console.log(this.state.tempoProcesso);
     const {isLoadingProcessos, processos, error, offset } = this.state;
 
     return (
@@ -87,9 +102,8 @@ class Processos extends Component {
           </CardHeader>
           <CardBody>
           {!isLoadingProcessos ? (
-            <BootstrapTable data={processos} version="4" striped hover pagination search options={this.options}>
-              <TableHeaderColumn dataField="andamento" dataSort>Andamento</TableHeaderColumn>
-              <TableHeaderColumn isKey dataField="tipo">Tipo</TableHeaderColumn>
+            <BootstrapTable data={this.state.listaProcessos} version="4" striped hover pagination search options={this.options}>
+              <TableHeaderColumn isKey dataField="andamento" dataSort>Andamento</TableHeaderColumn>
               <TableHeaderColumn dataField="dataInicio" dataSort>Iniciado em...</TableHeaderColumn>
             </BootstrapTable>
             ) : (
