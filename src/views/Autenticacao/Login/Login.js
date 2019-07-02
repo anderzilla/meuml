@@ -6,6 +6,7 @@ import axios from 'axios';
 import {login} from '../../../auth';
 
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
+import moment  from 'moment';
 
 class Login extends Component {
 
@@ -18,7 +19,10 @@ class Login extends Component {
       message: '',
       status: '',
       tipoErro: '',
+      expiresin:''
     };
+
+   
 
     this.submitInput = React.createRef();
     this.focusSubmitInput = this.focusSubmitInput.bind(this);
@@ -59,8 +63,11 @@ class Login extends Component {
         this.setState({token});
         const user_id = res.data.user_id;
         this.setState({user_id});
-        login(this.state.token);
-        
+        const expiresin = res.data.data.expiresin;
+        this.setState({expiresin})
+
+        login(this.state.token,moment(res.data.data.expires_in).format('DD/MM/YYYY HH:MM'));
+
         //Redireciona para a tela inicial do sistema DASHBOARD
         this.props.history.push("/");
       }else{
