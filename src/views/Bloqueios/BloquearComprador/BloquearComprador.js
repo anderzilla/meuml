@@ -194,7 +194,10 @@ class BloquearComprador extends Component {
     }else if(this.state.motiveId === '' ){
       alert('Defina o motivo do bloqueio.');
     }else{
-console.log("ArrayValue",this.state.arrayValue)
+
+      if(!this.state.bids && !this.state.questions){
+        alert('Escolha pelo menos uma das opções bloqueio.');
+      }
 
       this.state.arrayValue.map((s, k) => {
         const { value, name } = this.state;

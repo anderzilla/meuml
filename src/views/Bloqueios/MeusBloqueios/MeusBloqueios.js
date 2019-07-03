@@ -73,6 +73,11 @@ class MeusBloqueios extends Component {
       });
       if(res.data.data.meta.total > 0){
         this.fetchBlacklist(res.data.data[0].id);
+
+
+        if(res.data.meta.total === 1) {
+          this.setState({ arrayValue: [{'value':res.data.data[0].id, 'label':res.data.data[0].name }] });
+        }
       }
 
     }else{
