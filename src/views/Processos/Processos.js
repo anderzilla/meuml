@@ -1,28 +1,17 @@
 import React, {Component} from 'react';
-import {Card, CardHeader, CardBody} from 'reactstrap';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import 'react-bootstrap-table/dist//react-bootstrap-table-all.min.css';
+import {Card, CardHeader, CardBody, Collapse, Button} from 'reactstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import Moment, { locale } from 'moment';
-
+import ReactLoading from 'react-loading';
 import { getToken } from '../../auth';
 import data from './_data';
-
-
 class Processos extends Component {
   constructor(props) {
     super(props);
 
-    Moment().locale('pt-br');
-
-    this.agora = new Date();
-    this.diaH = this.agora.getDate();
-    this.mesH = this.agora.getMonth();
-    this.anoH = this.agora.getFullYear();
-    this.horaH = this.agora.getHours();
+    this.toggleAccordion = this.toggleAccordion.bind(this); 
     
-
     this.state = {
       totalDataSize: 0,
       sizePerPage: 50,
@@ -33,6 +22,11 @@ class Processos extends Component {
       isLoadingProcessos: true,
       tempoProcesso: '',
       listaProcessos: [],
+      accordion: [],
+      fadeIn: true,
+      timeout: 300,
+      isLoading: true,
+      sublista:'',
     };
     
     this.table = data.rows;
@@ -48,6 +42,15 @@ class Processos extends Component {
 
   }
 
+  toggleAccordion(tab) {
+    const prevState = this.state.accordion;
+    const state = prevState.map((x, index) => tab === index ? !x : false);
+
+    this.setState({
+      accordion: state,
+    });
+  }
+
   fetchProcess()
   {
     this.url = process.env.REACT_APP_API_URL + `/process?offset=50&limit=50`
@@ -58,6 +61,7 @@ class Processos extends Component {
       const resProcessos = res.data.data;
       resProcessos.map(p => {
         this.showData(p);
+        this.state.accordion.push(false);
       })
       this.setState({
         processos: this.state.listaProcessos,
@@ -72,40 +76,36 @@ class Processos extends Component {
   });
   }
 
+  isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
   showData(data){
     const cria = Moment(data.date_created).format('DD/MM/YYYY HH:MM');
     const res = Moment(cria, 'DD/MM/YYYY HH:MM').startOf().fromNow();
     const resdiaa = res.replace('a day', '1 dia');
-    const resdia = resdiaa.replace('day', 'dia');
+    const resmesa = resdiaa.replace('a month', '1 mês');
+    const resmeses = resmesa.replace('months', 'meses');
+    const resmes = resmeses.replace('month', 'mes');
+    const resdia = resmes.replace('day', 'dia');
     const reshora = resdia.replace('hour', 'hora');
     const final = reshora.replace('ago', 'atrás' );
     this.state.listaProcessos.push({
           'andamento': (data.item_finished === null)? 0 : data.item_finished +' processos concluídos de '+ data.item_total, 
-          'dataInicio':final, });      
+          'dataInicio':final,
+          'subprocessos': data.process_items,
+        });      
   }
 
   componentDidMount() {
     this.fetchProcess();
   }
-
-  isExpandableRow(row) {
-    if (row.id < 2) return true;
-    else return false;
-  }
-
-  expandComponent(row) {
-    return (
-      // <BSTable data={ row.expand } />
-      <div>{ row.expand } </div>
-    );
-  }
-
   render() {
-    
-    const {isLoadingProcessos, processos, error, offset } = this.state;
-
-
-    
+    const {isLoadingProcessos, processos } = this.state;
     return (
       <div className="animated">
         <Card>
@@ -114,16 +114,34 @@ class Processos extends Component {
           </CardHeader>
           <CardBody>
           {!isLoadingProcessos ? (
-            <BootstrapTable data={this.state.listaProcessos} 
-                    options={this.options}
-                    expandableRow={ this.isExpandableRow }
-                    expandComponent={ this.expandComponent }>
-              <TableHeaderColumn isKey dataField="andamento" dataSort>Andamento</TableHeaderColumn>
-              <TableHeaderColumn dataField="dataInicio" dataSort>Iniciado em...</TableHeaderColumn>
-            </BootstrapTable>
-            ) : (
-              <h3>Carregando...</h3>
-            )}
+            <div id="accordion">
+              {processos.map((p, k)=> {
+                return (
+                  <Card className="mb-0">
+                    <CardHeader id="headingOne">
+                      <Button block color="link" className="text-left m-0 p-0" onClick={() => this.toggleAccordion(k)} aria-expanded={this.state.accordion[k]} aria-controls={'collapse'+k}>
+                        <h5 className="m-0 p-0">{p.andamento} iniciado em {p.dataInicio}</h5>
+                      </Button>
+                    </CardHeader>
+                    <Collapse isOpen={this.state.accordion[k]} data-parent="#accordion" id={'collapse'+k} aria-labelledby={'heading'+k}>
+                      <CardBody>
+                        <ul>
+                        {(!this.isEmpty(p.subprocessos))?
+                          p.subprocessos.map((d, k)=> {
+                            return (<li>{d.tool_name}</li>)
+                          }) 
+                        :
+                          <li>sem dados para exibir</li>
+                        }
+                        </ul>
+                      </CardBody>
+                    </Collapse>
+                  </Card>
+                  );
+                } )
+              }
+            </div>
+            ) : (<ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100}  className='spinnerStyle'/>)}
           </CardBody>
         </Card>
       </div>
