@@ -300,7 +300,7 @@ class BloquearEmMassa extends Component {
           },
           {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
           ).then(res => {
-           
+
             axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, 
               {
                 "blacklist_name":this.state.nomeLista, 

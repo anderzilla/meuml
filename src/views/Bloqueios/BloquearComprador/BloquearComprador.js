@@ -200,8 +200,6 @@ class BloquearComprador extends Component {
       alert('Preencha o id ou usuário do comprador.');
     }else if(this.state.motiveId === '' ){
       alert('Defina o motivo do bloqueio.');
-    }else if(!this.state.bids && !this.state.questions){
-      alert('Escolha pelo menos uma das opções bloqueio.');
     }else{
 
 
