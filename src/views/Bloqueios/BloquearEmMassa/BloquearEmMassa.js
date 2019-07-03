@@ -271,9 +271,25 @@ class BloquearEmMassa extends Component {
         },
         {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
         ).then(res => {
+
+          this.state.arrayValue.map((s, k) => {
+            const { value, name } = this.state;
+            this.state.listagem.map((cid, x) => {
+              const { customer_id } = this.state;
+              this.state.bloqueios.push({
+                "account_id": s.value,
+                "bids": !this.state.bids ? false : true,
+                "customer_id": cid.customer_id,
+                "motive_description": "Outros - Em Massa",
+                "motive_id": '9',
+                "questions": !this.state.questions ? false : true,
+              });
+            })
+          })
+
           axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, {
             "list_name":this.state.nomeLista,
-            "customers":this.state.listagem
+            "customers":this.state.bloqueios
           },
           {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
           ).then(res => {
