@@ -5,10 +5,12 @@ import {getToken} from '../../../auth';
 import axios from 'axios';
 import fotoPadrao from '../../../assets/img/avatars/user.svg';
 
+import VerticalBtnGroup from '../../Buttons/VerticalButton';
+
 class ListaContas extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
+    
     this.state = {
       dropdownOpen: new Array(50).fill(false),
       constas: [],
@@ -18,71 +20,9 @@ class ListaContas extends Component {
     };
     this.openAuth = this.openAuth.bind(this);
   }
-  //motor do dropdown
-  toggle(i) {
-    const newArray = this.state.dropdownOpen.map((element, index) => { return (index === i ? !element : false); });
-    this.setState({
-      dropdownOpen: newArray,
-    });
-  }
+
   componentDidMount() {
     this.fetchAccounts();
-  }
-  //Sincronizar Conta
-  sincronizar(account_id){
-    axios.get(process.env.REACT_APP_API_URL + `/accounts/` + account_id + '/sync',
-        { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-      console.log(res);
-      if (res.data.status === 'success'){
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true});
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-      }
-    }).catch(error => {
-      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
-  }
-  //Excluir conta
-  excluir(account_id){
-    axios.delete(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
-        { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-      if (res.data.status === 'success'){
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true, onClose: () => {
-          this.fetchAccounts();
-        }});
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-      }
-    }).catch(error => {
-      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
-  }
-  //Renomear conta * somente para o sistema
-  renomear(account_id,index){
-    const {value: novoNome} =  Swal.fire({
-      title: 'Renomear Conta:',
-      input: 'text',
-      showCancelButton: true,
-      inputPlaceholder: 'Preencha o novo nome'
-    }).then((result) => {
-      if (result.value) {
-        axios.put(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
-            {'name' : result.value},
-            { headers: {"Authorization" : 'Bearer '+getToken()}},
-        ).then(res => {
-          console.log(res);
-          if (res.data.status === 'success'){
-            document.getElementById('nomeConta-'+index).innerHTML = result.value;
-          }else{
-            Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,})
-          }
-        }).catch(error => {
-          Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', confirmButtonText: 'Fechar'});
-        });
-      }
-    });
   }
 
   fetchAccounts() {
@@ -135,20 +75,12 @@ class ListaContas extends Component {
                       <Card className="card-accent-primary">
                         <CardHeader>
                           <span id={'nomeConta-'+k}>{c.name}</span>
+                          
                           <div className="float-right">
-                          <ButtonGroup>
-                            <ButtonDropdown isOpen={this.state.dropdownOpen[k]} toggle={() => { this.toggle(k); }}>
-                              <DropdownToggle caret color="primary" size="sm">
-                                Opções
-                              </DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem onClick={() => this.renomear(c.id,k)}>Renomear</DropdownItem>
-                                <DropdownItem onClick={() => this.sincronizar(c.id)}>Sincronizar</DropdownItem>
-                                <DropdownItem onClick={() => this.excluir(c.id)}>Excluir</DropdownItem>
-                              </DropdownMenu>
-                            </ButtonDropdown>
-                          </ButtonGroup>
+                            <button onClick={console.log(c, k)}>Log</button>
+                            <VerticalBtnGroup key={c.id} account={c.id}/>
                           </div>
+                          
                         </CardHeader>
                         <CardBody>
                           <div className="imgConta">
