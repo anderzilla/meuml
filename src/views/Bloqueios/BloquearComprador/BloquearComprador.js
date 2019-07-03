@@ -193,11 +193,10 @@ class BloquearComprador extends Component {
       alert('Preencha o id ou usuário do comprador.');
     }else if(this.state.motiveId === '' ){
       alert('Defina o motivo do bloqueio.');
+    }else if(!this.state.bids && !this.state.questions){
+      alert('Escolha pelo menos uma das opções bloqueio.');
     }else{
 
-      if(!this.state.bids && !this.state.questions){
-        alert('Escolha pelo menos uma das opções bloqueio.');
-      }
 
       this.state.arrayValue.map((s, k) => {
         const { value, name } = this.state;
@@ -210,11 +209,11 @@ class BloquearComprador extends Component {
           "questions": !this.state.questions ? false : true,
          });
       })
-      console.log(this.state.bloqueios);
+
       axios.post(process.env.REACT_APP_API_URL + `/blacklist`, this.state.bloqueios,
       {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
       .then(res => {
-        //console.log(res.data);
+
         const status = res.data.status;
         this.setState({status});
         if (this.state.status === 'success'){
@@ -228,7 +227,6 @@ class BloquearComprador extends Component {
           Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
         }
       }).catch((error) => {
-        console.log(error);
         !error.response ?
         (this.setState({tipoErro: error})) :
         (this.setState({tipoErro: error.response.data.message}))

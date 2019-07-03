@@ -71,11 +71,11 @@ class MeusBloqueios extends Component {
         accounts: listaContas,
         isLoadingAccounts: false
       });
-      if(res.data.data.meta.total > 0){
+
+      if(res.data.data.length > 0){
         this.fetchBlacklist(res.data.data[0].id);
 
-
-        if(res.data.meta.total === 1) {
+        if(listaContas.length === 1) {
           this.setState({ arrayValue: [{'value':res.data.data[0].id, 'label':res.data.data[0].name }] });
         }
       }
@@ -268,13 +268,13 @@ class MeusBloqueios extends Component {
             
             (this.state.total ==='') ? (
               <tr>
-                    <td colspan="4" className="mensagemAviso">
+                    <td colSpan="4" className="mensagemAviso">
                       <div role="alert" className="alert alert-primary fade show ">Escolha uma conta para gerenciar os bloqueios!</div>
                     </td>
               </tr>
             ) : (
             !isLoading ? (
-            blacklist.map((bl, k)=> {
+            blacklist.map((bl)=> {
                 return (
                   <tr>
                     <td>{bl.customer_id}</td>
