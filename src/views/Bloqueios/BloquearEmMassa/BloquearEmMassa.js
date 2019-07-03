@@ -8,6 +8,8 @@ import 'react-select/dist/react-select.min.css';
 import Picky, {components}  from "react-picky";
 import "react-picky/dist/picky.css";
 
+import ReactLoading from 'react-loading';
+
 import {parse} from 'react-json-parser';
 class BloquearEmMassa extends Component {
   constructor(props) {
@@ -47,6 +49,7 @@ class BloquearEmMassa extends Component {
       value: null,
       arrayValue: [],
       grid: [],
+      isLoadingCadastro: false
     }
     //fim dos STATES
       
@@ -182,6 +185,7 @@ class BloquearEmMassa extends Component {
 
 
   concluirOperacao() {
+    this.setState({isLoadingCadastro: true});
     this.setState({bloqueios: []});
     if (this.state.listagem === ''){
       Swal.fire({html:'<p>Preencha o campo Lista antes de Salvar!</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
@@ -211,6 +215,7 @@ class BloquearEmMassa extends Component {
             const status_customer = res.data.status;
             this.setState({status_customer});
             Swal.fire({html:'<p>'+res.data.message+'</p>', type: this.state.status_customer, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+            this.setState({isLoadingCadastro: false});
             window.location.href = "#/minhaslistasdebloqueios";
           }).catch((error) => {     
             !error.response ?
@@ -325,7 +330,7 @@ class BloquearEmMassa extends Component {
 }
 
   render() {
-
+    const {isLoadingCadastro} = this.state;
     const { isLoadingAccounts, isLoadingLista, error, accounts, selectedOption, changes, source, options, grid  } = this.state;
     
     return (
@@ -525,7 +530,13 @@ class BloquearEmMassa extends Component {
         )}
         </CardBody>
         <CardFooter  className="text-right">
-          <Button color="primary" onClick={() => this.concluirOperacao()} disabled={this.state.salvar} >Concluir</Button>
+          {!isLoadingCadastro ? (
+            <div>
+              <Button color="primary" onClick={() => this.concluirOperacao()} disabled={this.state.salvar} >Concluir</Button>
+             </div>
+          ) : (
+             <ReactLoading type={'spinningBubbles'} color={'#054785'} height={30} width={30}  className='spinnerStyleMini'/>
+          )}
         </CardFooter>
         
         </Card>
