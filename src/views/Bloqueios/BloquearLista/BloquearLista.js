@@ -36,7 +36,6 @@ class BloquearLista extends Component {
         this.selectMultipleOption = this.selectMultipleOption.bind(this);
 
     this.state={
-      accountId : '',
       accountName: '',
       blackListName: '',
       accounts: [],
