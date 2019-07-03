@@ -156,7 +156,7 @@ class MeusBloqueios extends Component {
       this.setState({blacklist: []}); 
     }else{ 
       if (pageNumber === '' || !pageNumber){
-        this.state.paginate = 1;
+        this.state.paginate = 0;
       }else{
         this.state.paginate = ((pageNumber * this.state.sizePerPage) - this.state.sizePerPage);
       }
