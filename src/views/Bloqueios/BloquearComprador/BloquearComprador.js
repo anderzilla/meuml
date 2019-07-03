@@ -249,7 +249,7 @@ class BloquearComprador extends Component {
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" sm="12" md="10" xl="8">
+          <Col xs="12" sm="12" md="12" xl="8" className>
             <Card className="card-accent-primary">
             <Form onSubmit={this.handleSubmit} name='bloquearcomprador'>
               <CardHeader>
@@ -289,7 +289,7 @@ class BloquearComprador extends Component {
                   <Label for="idUsusario">ID ou Usuário do comprador</Label>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">
-                    <ButtonDropdown direction="right" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
+                    <ButtonDropdown direction="up" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
                       <DropdownToggle caret color="primary" size="md">
                         {!this.state.tipoUser ? ('Selecione') : this.state.tipoUser}
                       </DropdownToggle>

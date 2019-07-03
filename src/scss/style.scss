@@ -211,9 +211,9 @@ $spinkit-spinner-color: $body-color;
 //para resolver problemas de sobreposição de dropdown
 .multiSelect{ z-index: 9999; }
 .dropTipoComprador{
-  z-index: 6;
+  z-index: 2;
 }
-.dropAbaixo2{ z-index: 0; }
+.dropAbaixo2{ z-index: 3; }
 
 
 Label {
@@ -352,7 +352,7 @@ Label {
   bottom:-50px;
 }
 .app-footer{
-  z-index: 9999;
+  z-index: 1;
   position: fixed;
   height: 50px;
   left:0px;
