@@ -211,6 +211,7 @@ class BloquearEmMassa extends Component {
             const status_customer = res.data.status;
             this.setState({status_customer});
             Swal.fire({html:'<p>'+res.data.message+'</p>', type: this.state.status_customer, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+            window.location.href = "#/minhaslistasdebloqueios";
           }).catch((error) => {     
             !error.response ?
             (this.setState({tipoErro: error})) :
@@ -248,7 +249,8 @@ class BloquearEmMassa extends Component {
             const message = res.data.message;
             this.setState({message});
             Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-            this.props.history.push("/meusbloqueios");
+           // this.props.history.push("/meusbloqueios");
+            window.location.href = "#/meusbloqueios";
           }else{
             const message = res.data.message;
             this.setState({message});
@@ -298,6 +300,7 @@ class BloquearEmMassa extends Component {
                 const message = res.data.message;
                 this.setState({message});
                 Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
+                window.location.href = "#/minhaslistasdebloqueios";
               }
             }).catch((error) => {
             

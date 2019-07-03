@@ -160,6 +160,8 @@ class BloquearLista extends Component {
           const message = res.data.message;
           this.setState({message});
           Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+          window.location.href = "#/minhaslistasdebloqueios";
+
         }else{
           const message = res.data.message;
           this.setState({message});
