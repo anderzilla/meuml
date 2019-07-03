@@ -109,7 +109,7 @@ class Processos extends Component {
     return (
       <div className="animated">
         <Card>
-          <CardHeader>
+          <CardHeader className="">
             <h5>Processos</h5>
           </CardHeader>
           <CardBody>
@@ -117,26 +117,23 @@ class Processos extends Component {
             <div id="accordion">
               {processos.map((p, k)=> {
                 return (
-                  <Card className="mb-0">
-                    <CardHeader id="headingOne">
+                  (!this.isEmpty(p.subprocessos))?
+                  (<Card className="mb-0 listaProcessos ">
+                    <CardHeader id={'heading'+k} className="divListaProcessos">
                       <Button block color="link" className="text-left m-0 p-0" onClick={() => this.toggleAccordion(k)} aria-expanded={this.state.accordion[k]} aria-controls={'collapse'+k}>
-                        <h5 className="m-0 p-0">{p.andamento} iniciado em {p.dataInicio}</h5>
+                        <span>{p.andamento} iniciado em {p.dataInicio}</span>
                       </Button>
                     </CardHeader>
                     <Collapse isOpen={this.state.accordion[k]} data-parent="#accordion" id={'collapse'+k} aria-labelledby={'heading'+k}>
                       <CardBody>
                         <ul>
-                        {(!this.isEmpty(p.subprocessos))?
-                          p.subprocessos.map((d, k)=> {
+                          {p.subprocessos.map((d, k)=> {
                             return (<li>{d.tool_name}</li>)
-                          }) 
-                        :
-                          <li>sem dados para exibir</li>
-                        }
+                          })} 
                         </ul>
                       </CardBody>
                     </Collapse>
-                  </Card>
+                  </Card>): ''
                   );
                 } )
               }
