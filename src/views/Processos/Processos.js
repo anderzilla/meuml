@@ -53,7 +53,7 @@ class Processos extends Component {
 
   fetchProcess()
   {
-    this.url = process.env.REACT_APP_API_URL + `/process?offset=50&limit=50`
+    this.url = process.env.REACT_APP_API_URL + `/process?offset=0&limit=50`
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
