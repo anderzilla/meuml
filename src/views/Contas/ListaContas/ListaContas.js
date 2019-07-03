@@ -17,7 +17,10 @@ class ListaContas extends Component {
       isLoading: true,
       total: 0,
       fotoConta: fotoPadrao,
+      newName: '',
+      account_id: null,
     };
+    
     this.openAuth = this.openAuth.bind(this);
   }
 
@@ -55,8 +58,28 @@ class ListaContas extends Component {
     window.open('#/contas/adicionar', 'SomeAuthentication', 'width=972,height=660,modal=yes,alwaysRaised=yes')
   }
 
+
+
+    // Rename account
+    rename(account_id) {
+      Swal.fire({
+        title: 'Renomear Conta:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'Preencha o novo nome'
+      }).then(res => {
+          this.setState({ newName: res.value });
+
+          if(this.state.name !== null) {
+
+          }
+      });
+    };
+
+
+
   render() {
-    const { isLoading, contas, error } = this.state;
+    const { isLoading, contas } = this.state;
 
     return (
       
@@ -77,9 +100,20 @@ class ListaContas extends Component {
                           <span id={'nomeConta-'+k}>{c.name}</span>
                           
                           <div className="float-right">
-                            <button onClick={console.log(c, k)}>Log</button>
-                            <VerticalBtnGroup key={c.id} account={c.id}/>
+                            <VerticalBtnGroup
+                              url={`${process.env.REACT_APP_API_URL}/accounts/${id}`}
+                              charge={`name: ${name}`}
+                              name={name}
+                              />
                           </div>
+                            {/* <VerticalBtnGroup key={c.id} account={c.id} subButtons={[
+                              {
+                                name: 'Renomear',
+                                callback: 'requestPut',
+                                url: '${process.env.REACT_APP_API_URL}/accounts/${account_id}',
+                                name: this.state.name,
+                              }
+                            ]}/> */}
                           
                         </CardHeader>
                         <CardBody>

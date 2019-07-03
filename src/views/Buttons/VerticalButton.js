@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import api from '../../services/api';
 import { getToken } from '../../auth';
-import axios from 'axios';
 
 import Swal from 'sweetalert2';
 import ButtonGroup from 'reactstrap/lib/ButtonGroup';
@@ -38,7 +37,6 @@ export default class VerticalBtnGroup extends Component{
 
         try {
             const response = await api.get(url, headers);
-            console.log(response);
 
             if(response.data.status === 'success') {
                 Swal.fire({
@@ -56,7 +54,6 @@ export default class VerticalBtnGroup extends Component{
             };
 
         } catch(err) {
-            console.log(err);
             Swal.fire({
                 html: `<p>${err}</p>`,
                 type: 'error',
@@ -72,7 +69,6 @@ export default class VerticalBtnGroup extends Component{
 
         try {
             const response = await api.delete(url, headers);
-            console.log(response);
 
             if(response.data.status === 'success') {
                 Swal.fire({
@@ -91,7 +87,6 @@ export default class VerticalBtnGroup extends Component{
             };
 
         } catch(err) {
-            console.log(err);
             Swal.fire({
                 html: `<p>${err}</p>`,
                 type: 'error',
@@ -102,36 +97,34 @@ export default class VerticalBtnGroup extends Component{
         };
     };
 
-    // Rename account
-    rename(account_id) {
+    apiPut(){
         Swal.fire({
-          title: 'Renomear Conta:',
-          input: 'text',
-          showCancelButton: true,
-          inputPlaceholder: 'Preencha o novo nome'
-        }).then(res => {
-            this.setState({ newName: res.value });
-
-            if(this.state.name !== null) {
-                const url = `${process.env.REACT_APP_API_URL}/accounts/${account_id}`;
-                const name = {'name': this.state.newName};
-                const headers = {headers: {'Authorization': 'Bearer ' + getToken()}};
-
-                api.put(url, name, headers).then(response =>{
-                    if(response === 'success') {
-                        document.getElementById('nomeConta').innerHTML = this.state.newName;
-                    } else {
-                        Swal.fire({
-                            html: `<p>${response}</p>`,
-                            type: 'error',
-                            showConfirmButton: true
-                      });
-                    };
-                });
-            }
-        });
-    };
-
+            title: 'Renomear Conta:',
+            input: 'text',
+            showCancelButton: true,
+        }).then(response => {
+            console.log(response)
+        })
+        
+        // api.put(url, name)
+        //     .then(response =>{
+        //         if(response.status === 200) {
+        //             window.getElementById('nomeConta').innerHTML = name
+                    
+        //             Swal.fire({
+        //                 html: `<p>${response}</p>`,
+        //                 type: 'error',
+        //                 showConfirmButton: true
+        //             });
+        //         } else {
+        //             Swal.fire({
+        //                 html: `<p>${response}</p>`,
+        //                 type: 'error',
+        //                 showConfirmButton: true
+        //             });
+        //         };
+        // });
+    }
 
     render(){
         const acc = this.props.account
@@ -146,22 +139,32 @@ export default class VerticalBtnGroup extends Component{
                         >Opções
                     </DropdownToggle>
                     <DropdownMenu>
-                        <DropdownItem
-                            onClick={ () => this.rename(acc) }
-
-                        >Renomear</DropdownItem>
-                        <DropdownItem
-                            onClick={ () => this.sync(acc) }
-                            >Sincronizar
-                        </DropdownItem>
-                        <DropdownItem
-                            onClick={ () => this.delete(acc) }
-                            >Excluir
-                        </DropdownItem>
+                        <DropDownButton
+                            callback={()=>{
+                                {
+                                    url: this.props.url,
+                                    charge: this.props.charge
+                                }
+                            }}
+                            name="Renomear"
+                        />
                     </DropdownMenu>
                 </ButtonDropdown>
                 </ButtonGroup>
 
+            </div>
+        );
+    };
+};
+
+class DropDownButton extends Component {
+    render(){
+        return(
+            <div>
+                <DropdownItem
+                    onClick={this.props.callback}
+                    >{this.props.name}
+                </DropdownItem>
             </div>
         );
     };
