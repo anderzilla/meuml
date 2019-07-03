@@ -211,9 +211,9 @@ $spinkit-spinner-color: $body-color;
 //para resolver problemas de sobreposição de dropdown
 .multiSelect{ z-index: 9999; }
 .dropTipoComprador{
-  z-index: 6;
+  z-index: 2;
 }
-.dropAbaixo2{ z-index: 0; }
+.dropAbaixo2{ z-index: 3; }
 
 
 Label {
@@ -269,6 +269,16 @@ Label {
   margin-left: 50%;
   margin-bottom: 10%;
 }
+
+.spinnerStyleMini {
+  flex: 1;
+  margin-left: 85%;
+}
+.spinnerStyleMiniCenter {
+  flex: 1;
+  margin-left: 50%;
+}
+
 
 //################################################################
 //COMPONENTE DATATABLE PARA BLOQUEIO EM Massa
@@ -342,7 +352,7 @@ Label {
   bottom:-50px;
 }
 .app-footer{
-  z-index: 9999;
+  z-index: 1;
   position: fixed;
   height: 50px;
   left:0px;
@@ -367,9 +377,38 @@ Label {
 
 //###############################
 .listaProcessos{
-  border-radius: 0rem;
+  border-radius: 0.25rem;
+  border-color: #d3eef6;
 }
 .divListaProcessos{
   padding: 0.25rem 1rem;
-  border-bottom: 0px solid #c8ced3;
+  color: #336573;
+  background-color: #e0f3f8;
+  border-color: #d3eef6;
 }
+.divListaProcessos a{
+  color: #336573 !important;
+}
+.timeStamp{
+  text-align: right;
+}
+.subItensProcessos{
+  font-size: 12px;
+  color:#336573;
+  padding: 0.5rem;
+}
+.listaSubItem{
+  margin-bottom: 0.5rem;
+}
+.tituloProcessos{
+  font-weight: bold;
+  color:#336573;
+  font-size: 14px;
+}
+
+.headerListaProcessos{
+  outline:none;
+  color:#336573;
+}
+
+

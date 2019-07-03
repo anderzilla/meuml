@@ -27,6 +27,7 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.min.css';
 import Picky from "react-picky";
 import "react-picky/dist/picky.css";
+import ReactLoading from 'react-loading';
 
 class BloquearComprador extends Component {
   //Adaptar para os valores de motivos de bloqueio
@@ -63,7 +64,10 @@ class BloquearComprador extends Component {
       bloqueios: [],
       value: null,
       arrayValue: [],
+      isLoadingCadastro: false
     }
+
+
   }
 
   toggleFade() {
@@ -184,6 +188,9 @@ class BloquearComprador extends Component {
     this.setState({tipoUser: tipo, customer_id: ''});
   }
   handleSubmit(event) {
+
+    this.setState({isLoadingCadastro: true});
+
     this.setState({bloqueios: []});
     event.preventDefault();
     //customer_id
@@ -220,6 +227,8 @@ class BloquearComprador extends Component {
           const message = res.data.message;
           this.setState({message});
           Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+         
+          this.setState({isLoadingCadastro: false});
           this.props.history.push("/meusbloqueios");
         }else{
           const message = res.data.message;
@@ -235,11 +244,12 @@ class BloquearComprador extends Component {
   }
   }
   render() {
+    const {isLoadingCadastro} = this.state;
     const { isLoading, isLoadingAccounts, isLoadingMotivos, error, accounts, motivos, listaContas, selectedOption } = this.state;
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" sm="12" md="10" xl="8">
+          <Col xs="12" sm="12" md="12" xl="8" className>
             <Card className="card-accent-primary">
             <Form onSubmit={this.handleSubmit} name='bloquearcomprador'>
               <CardHeader>
@@ -279,7 +289,7 @@ class BloquearComprador extends Component {
                   <Label for="idUsusario">ID ou Usuário do comprador</Label>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">
-                    <ButtonDropdown direction="right" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
+                    <ButtonDropdown direction="up" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
                       <DropdownToggle caret color="primary" size="md">
                         {!this.state.tipoUser ? ('Selecione') : this.state.tipoUser}
                       </DropdownToggle>
@@ -354,7 +364,14 @@ class BloquearComprador extends Component {
                 </Row>
               </CardBody>
               <CardFooter  className="text-right">
-                <Button type="submit" size="md" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
+              {!isLoadingCadastro ? (
+                    <div>
+                       <Button type="submit" size="md" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
+                    </div>
+                ) : (
+                    <ReactLoading type={'spinningBubbles'} color={'#054785'} height={30} width={30}  className='spinnerStyleMini'/>
+              )}
+          
               </CardFooter>
               </Form>
             </Card>
