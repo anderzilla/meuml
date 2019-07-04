@@ -17,6 +17,7 @@ import {
   Col,
   Row,
 } from 'reactstrap';
+import { AppSwitch } from '@coreui/react'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -25,6 +26,7 @@ import {getToken} from '../../../auth';
 import Picky, {components} from "react-picky";
 import "react-picky/dist/picky.css";
 
+import ReactLoading from 'react-loading';
 class BloquearLista extends Component {
   constructor(props) {
     super(props);
@@ -35,16 +37,18 @@ class BloquearLista extends Component {
         this.selectMultipleOption = this.selectMultipleOption.bind(this);
 
     this.state={
-      accountId : '',
       accountName: '',
       blackListName: '',
       accounts: [],
+      bids: '',
+      questions: '',
       backlistList: [],
       isLoadingBlacklistList: true,
       isLoadingAccounts: true,
       accountId: null,
       value: null,
       arrayValue: [],
+      isLoadingCadastro: false
     }
 
     this.nbloqueios = "2048";
@@ -96,9 +100,21 @@ class BloquearLista extends Component {
         accounts: listaContas,
         isLoadingAccounts: false
       });
-      if(res.data.data.meta.total > 0){
+      if(res.data.meta.total > 0){
         this.fetchBlacklist(res.data.data[0].id);
       }else{
+        Swal.fire({
+          title: '',
+          text: "Você precisa ter ao menos 1 conta!",
+          type: 'info',
+          showCancelButton: false,
+          confirmButtonColor: '#366B9D',
+          confirmButtonText: 'OK',
+          confirmButtonClass: 'btn btn-success',
+          buttonsStyling: true
+        }).then(function () {
+          window.location.href = "#/listacontas";
+        })
       }
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
@@ -114,26 +130,29 @@ class BloquearLista extends Component {
     //Prepara o array para ser manipulado
     const values = this.state;
     this.state.values = value;
-    //Conta quantos resultados foram selecionados
+    this.state.accountId = [];
+
     const valuesToRender = this.state.values.filter(val => val.value)
     const numRows = valuesToRender.length
-    //Monta a variável com as contas que receberão a lsta de blqueios (123,124,125,...)
+    
     const {accountId, accountName} = this.state;
     for (var i = 0; i < numRows; i++) {
-    this.state.accountId = !this.state.accountId? this.state.accountId = value[i].value : this.state.accountId+','+value[i].value;
+      this.state.accountId.push(value[i].value); 
     }
   }
 
   handleSubmit(event) {
-
+    this.setState({isLoadingCadastro: true});
     event.preventDefault();
     if (this.state.blackListName === ''){
       Swal.fire({html:'<p>Preencha o nome da lista para bloqueá-la</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else{
-      axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, [{
-        "account_id": this.state.accountId,
-        "blacklist_name": this.state.blackListName,
-      }],
+      axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, {
+        "blacklist_name":this.state.blackListName, 
+        "accounts":this.state.accountId, 
+        "bids": !this.state.bids ? false : true,
+        "questions": !this.state.questions ? false : true
+      },
       {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
       .then(res => {
         //console.log(res.data);
@@ -143,6 +162,9 @@ class BloquearLista extends Component {
           const message = res.data.message;
           this.setState({message});
           Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+          this.setState({isLoadingCadastro: false});
+          window.location.href = "#/minhaslistasdebloqueios";
+
         }else{
           const message = res.data.message;
           this.setState({message});
@@ -162,10 +184,12 @@ class BloquearLista extends Component {
 
   render() {
     const { isLoading, isLoadingAccounts, isLoadingBlacklistList, backlistList, error, accounts} = this.state;
-
+    const {isLoadingCadastro} = this.state;
     return (
       <div className="animated fadeIn">
-        <Card>
+        <Row>
+        <Col xs="12" sm="12" md="10" xl="8">
+        <Card className="card-accent-primary">
         <Form name='novaLista' onSubmit={this.handleSubmit}>
           <CardHeader>
             <h5>Bloquear Lista</h5>
@@ -176,11 +200,11 @@ class BloquearLista extends Component {
             <FormGroup>
             <Label for="idConta">Conta do Mercado Livre</Label>
             {!isLoadingAccounts ? (
-
             <Picky
               value={this.state.arrayValue}
               options={accounts}
               onChange={this.selectMultipleOption}
+              className="multiSelBlockListOutros"
               open={false}
               valueKey="value"
               labelKey="label"
@@ -193,9 +217,8 @@ class BloquearLista extends Component {
               allSelectedPlaceholder="%s Selecionados"
               selectAllText="Selecionar Todos"
               filterPlaceholder="Filtrar por..."
-              className="multiSelect"
+              
             />
-
             ) : (
               <h3>Carregando...</h3>
             )}
@@ -214,14 +237,36 @@ class BloquearLista extends Component {
                     onChange={this.handleInputChange}
                     value={this.state.blackListName} />
                 </FormGroup>
+                <Row>
+                  <Col md="6" xs="12">
+                    <FormGroup>
+                    <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="bids" value="1" onChange={this.handleInputChange}  />
+                    <span className="textoSwitch"> Bloquear para compras</span>
+                    </FormGroup>
+                  </Col>
+                  <Col md="6" xs="12">
+                    <FormGroup>
+                    <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="questions" value="1" onChange={this.handleInputChange} />
+                    <span className="textoSwitch">Bloquear para perguntas</span>
+                    </FormGroup>
+                  </Col>
+                </Row>
             </Col>
           </Row>
           </CardBody>
-          <CardFooter>
-          <Button type="submit" size="sm" color="primary"><i className="fa fa-file-text"></i> Bloquear Lista</Button>
+          <CardFooter className="text-right">
+          {!isLoadingCadastro ? (
+            <div>
+             <Button type="submit" size="sm" color="primary"><i className="fa fa-file-text"></i> Bloquear Lista</Button>
+          </div>
+          ) : (
+             <ReactLoading type={'spinningBubbles'} color={'#054785'} height={30} width={30}  className='spinnerStyleMini'/>
+          )}
           </CardFooter>
           </Form>
         </Card>
+        </Col>
+        </Row>
       </div>
     )
   }

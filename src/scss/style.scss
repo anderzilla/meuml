@@ -164,6 +164,9 @@ $spinkit-spinner-color: $body-color;
   margin-left: 15px;
   margin-bottom: 15px;
 }
+.tituloAccordion{
+  margin-top: 15px;
+}
 
 //#############################################
 .app-header .navbar-brand{
@@ -175,6 +178,10 @@ $spinkit-spinner-color: $body-color;
   margin-top: 30px !important;
   margin-bottom: 30px;
   padding:10px;
+}
+
+.tab10{
+  width : 10%;
 }
 
 .tab15{
@@ -204,9 +211,9 @@ $spinkit-spinner-color: $body-color;
 //para resolver problemas de sobreposição de dropdown
 .multiSelect{ z-index: 9999; }
 .dropTipoComprador{
-  z-index: 6;
+  z-index: 2;
 }
-.dropAbaixo2{ z-index: 0; }
+.dropAbaixo2{ z-index: 3; }
 
 
 Label {
@@ -218,18 +225,60 @@ Label {
   text-align: left;
 }
 
-.dropright .dropdown-toggle::after {
-    display: none;
-}
-.dropContas{
-  min-width: 50%;
-  max-width: 200px;
-  text-align: left;
+// Resolve o problema dos indicadores de ordenação do Bootstrap Table
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-top: 4px solid \9;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
 }
 
-.tituloAccordion{
-  margin-top: 20px;
+.dropup .caret, .navbar-fixed-bottom .dropdown .caret {
+  border-top: 0;
+  border-bottom: 4px dashed;
+  border-bottom: 4px solid \9;
+  content: "";
 }
+
+.table {
+  margin-bottom: 0px !important;
+  
+}
+
+.filtro{
+  margin-bottom: 10px;
+}
+
+
+.labelAtualiza{
+  position: absolute;
+  margin-top: 10px;
+}
+
+// Resolve o problema dos indicadores de ordenação do Bootstrap Table
+
+
+.spinnerStyle {
+  flex: 1;
+  margin-top : 10%;
+  margin-left: 50%;
+  margin-bottom: 10%;
+}
+
+.spinnerStyleMini {
+  flex: 1;
+  margin-left: 85%;
+}
+.spinnerStyleMiniCenter {
+  flex: 1;
+  margin-left: 50%;
+}
+
 
 //################################################################
 //COMPONENTE DATATABLE PARA BLOQUEIO EM Massa
@@ -261,3 +310,105 @@ Label {
         }
     }
 }
+
+//#################################################
+//largura de colunas para tabelas
+.tbcol-50{
+  width: 50%;
+}
+
+.tbcol-40{
+  width: 40%;
+}
+
+.tbcol-30{
+  width: 30%;
+}
+
+.tbcol-20{
+  width: 20%;
+}
+
+.tbcol-15{
+  width: 15%;
+}
+
+.tbcol-10{
+  width: 10%;
+}
+
+.tbcol-5{
+  width: 5%;
+}
+
+//##############################################################3
+//Iframe Home
+.iframeHome{
+  margin:0px;
+  position:absolute;
+  top:50px;
+  left:10%;
+  right:50px;
+  bottom:-50px;
+}
+.app-footer{
+  z-index: 1;
+  position: fixed;
+  height: 50px;
+  left:0px;
+  right:0px;
+  bottom:0px;
+}
+.breadcrumb{
+  z-index: 8;
+  position: relative;
+  height: 50px;
+  left:0px;
+  right:0px;
+  top:0px;
+}
+.app-header{
+  z-index: 9999;
+}
+.main .container-fluid {
+  padding: 0 30px;
+  padding-bottom: 50px;
+}
+
+//###############################
+.listaProcessos{
+  border-radius: 0.25rem;
+  border-color: #d3eef6;
+}
+.divListaProcessos{
+  padding: 0.25rem 1rem;
+  color: #336573;
+  background-color: #e0f3f8;
+  border-color: #d3eef6;
+}
+.divListaProcessos a{
+  color: #336573 !important;
+}
+.timeStamp{
+  text-align: right;
+}
+.subItensProcessos{
+  font-size: 12px;
+  color:#336573;
+  padding: 0.5rem;
+}
+.listaSubItem{
+  margin-bottom: 0.5rem;
+}
+.tituloProcessos{
+  font-weight: bold;
+  color:#336573;
+  font-size: 14px;
+}
+
+.headerListaProcessos{
+  outline:none;
+  color:#336573;
+}
+
+

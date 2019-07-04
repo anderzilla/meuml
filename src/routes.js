@@ -1,7 +1,7 @@
 import React from 'react';
 import DefaultLayout from './containers/DefaultLayout';
 
-const Dashboard = React.lazy(() => import('./views/Dashboard'));
+const Inicio = React.lazy(() => import('./views/Inicio/Inicio'));
 const AlterarSenha = React.lazy(() => import('./views/Autenticacao/AlterarSenha'));
 const ConfirmarCadastro = React.lazy(() => import('./views/Autenticacao/ConfirmarCadastro'));
 const Login = React.lazy(() => import('./views/Autenticacao/Login'));
@@ -22,12 +22,14 @@ const MinhasListasDeBloqueios = React.lazy(() => import('./views/Bloqueios/Minha
 const Categorias = React.lazy(() => import('./views/Categorias/CategoriasDataTable'));
 //Perguntas
 const Perguntas = React.lazy(() => import('./views/Perguntas/Perguntas'));
+//Perguntas
+const Processos = React.lazy(() => import('./views/Processos/Processos'));
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/', name: 'Home', component: DefaultLayout, exact: true },
-  { path: '/dashboard', name: 'MeuML', component: Dashboard },
+  { path: '/', name: 'Início', component: DefaultLayout, exact: true },
+  { path: '/inicio', name: 'MeuML', id: 'inicio', component: Inicio },
   //Autenticação
   { path: '/alterarsenha', name: 'Alterar Senha', component: AlterarSenha, exact: true},
   { path: '/confirmarcadastro', name: 'Confirmar Cadastro', component: ConfirmarCadastro, exact: true},
@@ -44,11 +46,13 @@ const routes = [
   { path: '/bloquearemmassa', name: 'Bloquear em Massa', component: BloquearEmMassa, exact: true },
   { path: '/meusbloqueios', name: 'Meus Bloqueios', component: MeusBloqueios, exact: true },
   { path: '/bloquearlista', name: 'Bloquear Lista', component: BloquearLista, exact: true },
-  { path: '/minhaslistasdebloqueios', name: 'Minhas Listas de Bloqueios', component: MinhasListasDeBloqueios, exact: true },
+  { path: '/minhaslistasdebloqueios', name: 'Minhas Listas', component: MinhasListasDeBloqueios, exact: true },
   //Categorias
   { path: '/categorias', name: 'Categorias - Pesos e Dimensões', component: Categorias, exact: true },
   //Perguntas
   { path: '/perguntas', name: 'Perguntas e Respostas', component: Perguntas, exact: true },
+  //Processos
+  { path: '/processos', name: 'Processos', component: Processos, exact: true },
 ];
 
 export default routes;

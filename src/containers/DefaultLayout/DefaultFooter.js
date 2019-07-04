@@ -16,7 +16,7 @@ class DefaultFooter extends Component {
     return (
       <React.Fragment>
         <span>&copy; 2019 MeuML.com</span>
-        <span className="ml-auto">suporte@meuml.com ou (41)3333-4444</span>
+        <span className="ml-auto"> suporte@meuml.com ou <a href="https://wa.me/5541991230100">+55 (41)99123-0100</a></span>
       </React.Fragment>
     );
   }
