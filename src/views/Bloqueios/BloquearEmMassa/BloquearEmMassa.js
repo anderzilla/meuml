@@ -354,9 +354,7 @@ class BloquearEmMassa extends Component {
         <Row>
         <Col xs="12" sm="12" md="10" xl="8">
         <Card className="card-accent-primary">
-        <CardHeader>
-        <h5>Bloqueio em Massa</h5>
-        </CardHeader>
+       
         <CardBody>
         <FormGroup>
           <Label for="lista">Lista de Bloqueio</Label>
@@ -374,7 +372,7 @@ class BloquearEmMassa extends Component {
           > </Input>
         </FormGroup>
         
-        <ButtonGroup>
+        <ButtonGroup className="fullWidth">
         <Button 
           className="btn btn-md" 
           color="primary" 

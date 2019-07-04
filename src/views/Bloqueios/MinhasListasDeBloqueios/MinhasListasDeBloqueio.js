@@ -168,12 +168,12 @@ class MinhasListasDeBloqueio extends Component {
     return (
       <div className="animated fadeIn">
         <Card className="card-accent-primary">
-          <CardHeader>
+          {/* <CardHeader>
             <Row>
             <Col md="3" xs="3" sm="12"><h5>Listas - {this.state.nlistas}</h5> </Col>
             <Col md="6" xs="6" sm="12"></Col>
             </Row>
-          </CardHeader>
+          </CardHeader> */}
           <CardBody>
           <Table responsive>
                   <thead>
