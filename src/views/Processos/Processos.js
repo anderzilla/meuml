@@ -92,7 +92,8 @@ class Processos extends Component {
     const resmeses = resmesa.replace('months', 'meses');
     const resmes = resmeses.replace('month', 'mes');
     const resdia = resmes.replace('day', 'dia');
-    const reshora = resdia.replace('hour', 'hora');
+    const reshora = resdia.replace('hour', 'hora').replace('Few seconds', 'alguns segundos');
+    
     const final = reshora.replace('ago', 'atrás' );
     this.state.listaProcessos.push({
       'titulo':data.tool_name,      
@@ -111,16 +112,16 @@ class Processos extends Component {
     return (
       <div className="animated">
         <Card>
-          <CardHeader className="">
+          {/* <CardHeader className="">
             <h5>Processos</h5>
-          </CardHeader>
+          </CardHeader> */}
           <CardBody>
           {!isLoadingProcessos ? (
             <div id="accordion">
               {processos.map((p, k)=> {
                 return (
                   (!this.isEmpty(p.subprocessos))?
-                  (<Card className="mb-0 listaProcessos ">
+                  (<Card className="mb-0 listaProcessos " key={k}>
                     <CardHeader id={'heading'+k} className="divListaProcessos">
                       <Row>
                       <Col sm="6">
@@ -137,9 +138,9 @@ class Processos extends Component {
                     </CardHeader>
                     <Collapse isOpen={this.state.accordion[k]} data-parent="#accordion" id={'collapse'+k} aria-labelledby={'heading'+k}>
                       <CardBody className="subItensProcessos">
-                        <ul className="listaSubItem">
+                        <ul className="listaSubItem" >
                           {p.subprocessos.map((d, k)=> {
-                            return (<li>{d.tool_name}</li>)
+                            return (<li key={k}>{d.tool_name}</li>)
                           })} 
                         </ul>
                       </CardBody>
