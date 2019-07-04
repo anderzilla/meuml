@@ -50,7 +50,7 @@ class ListaContas extends Component {
     ).then(res => {
       if (res.data.status === 'success'){
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true, onClose: () => {
-          window.location.reload();
+          this.fetchAccounts();
         }});
       }else{
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
@@ -96,26 +96,17 @@ class ListaContas extends Component {
                 contas: res.data.data,
                 isLoading: false,
               });
-            } else {
-              Swal.fire({html: '<p>' + message + '</p>', type: 'info', showConfirmButton: true,
-              onClose: () => {
-                this.setState({
-                  contas: res.data.data,
-                  isLoading: false,
-                });
-              }
-            });
-            }
+            } 
           } else {
-            Swal.fire({html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true,
-            onClose: () => {
-              this.setState({
-                contas: res.data.data,
-                isLoading: false,
-              });
-            }
+            this.setState({
+              isLoading: false
             });
           }
+        }).catch((error) => {
+          !error.response ?
+          (this.setState({tipoErro: error})) :
+          (this.setState({tipoErro: error.response.data.message}))
+          Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
         });
   }
 
@@ -127,18 +118,11 @@ class ListaContas extends Component {
   render() {
     const { isLoading, contas, error } = this.state;
 
-    if(window.opener || window.history.length === 1){
-      let isPopupWindow = true;
-      window.opener.location.reload();
-      window.open('', '_self', '').close();
-    }
-
-
     return (
       
       <div className="animated fadeIn">
         <Row>
-          <a onClick={this.openAuth} className="botaoAdicionarConta"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
+          <a href="#/contas/adicionar" className="botaoAdicionarConta">
           <Button className="btn btn-primary float-left"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
           </a>
         </Row>
@@ -146,7 +130,6 @@ class ListaContas extends Component {
           {!isLoading ? (
             contas.map((c, k)=> {
               const { username, name, email, id } = this.state;
-              console.log(contas)
                 return (
                     <Col xs="12" sm="4" md="3" key={c.id} className="CardConta">
                       <Card className="card-accent-primary">
@@ -171,13 +154,13 @@ class ListaContas extends Component {
                           <div className="imgConta">
                           <img src={!c.external_data.thumbnail ? this.state.fotoConta  : c.external_data.thumbnail.picture_url } title={c.external_name} className="img-full70 align-content-center" alt="Loja Teste"></img>
                           </div>
-                          <p className="text-primary text-center nomeDuasLinhas" title={c.external_name}>{c.external_name}</p>
-                          <p className="text-left">
-                            <div className="labelCard"><i className="fa fa-envelope"></i> E-mail:</div>
+                          <div className="text-primary text-center nomeDuasLinhas" title={c.external_name}>{c.external_name}</div>
+                          <div className="text-left">
+                            <p className="labelCard"><i className="fa fa-envelope"></i> E-mail:</p>
                             {c.external_data.email}<br/>
-                            <div className="labelCard"><i className="fa fa-user"></i> Usuário:</div>
+                            <p className="labelCard"><i className="fa fa-user"></i> Usuário:</p>
                             {c.external_data.nickname}<br/>
-                          </p>
+                          </div>
                           
                         </CardBody>
                         <CardFooter>
@@ -196,9 +179,9 @@ class ListaContas extends Component {
                     </Col>
                 );
               })
-          ) : (
-              <h3>Loading...</h3>
-          )}
+          ) :          
+          (<h3>Loading...</h3>)
+          }
         
         </Row>
       </div>

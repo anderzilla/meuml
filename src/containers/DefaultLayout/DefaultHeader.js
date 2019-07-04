@@ -34,7 +34,7 @@ class DefaultHeader extends Component {
 
         this.toggle = this.toggle.bind(this);
 
-        this.getNotifications()
+        //this.getNotifications()
     }
 
     gotNewNotification(){
@@ -111,7 +111,7 @@ class DefaultHeader extends Component {
 
             <Nav className="ml-auto" navbar>
 
-                <Dropdown nav className="d-md-down-none" isOpen={this.state.dropdownOpen} onClick={() => this.setNotificationsAsViewed()} toggle={this.toggle}>
+                {/* <Dropdown nav className="d-md-down-none" isOpen={this.state.dropdownOpen} onClick={() => this.setNotificationsAsViewed()} toggle={this.toggle}>
                     <DropdownToggle nav>
                         <i className="icon-bell"></i><Badge pill color="danger">{this.state.notifications.length}</Badge>
                     </DropdownToggle>
@@ -131,15 +131,15 @@ class DefaultHeader extends Component {
                             <h3>Carregando notificações...</h3>
                         )}
                     </DropdownMenu>
-                </Dropdown>
-              <AppHeaderDropdown>
+                </Dropdown> */}
+              {/* <AppHeaderDropdown>
                 <DropdownToggle nav>
                   <img src={avatar} className="img-avatar" alt="admin@bootstrapmaster.com" />
                 </DropdownToggle>
                 <DropdownMenu right style={{ right: 'auto', height: '400px' }}>
                   AppHeaderDropdown
                 </DropdownMenu>
-              </AppHeaderDropdown>
+              </AppHeaderDropdown> */}
             </Nav>
             {/*<AppAsideToggler className="d-md-down-none" />*/}
             {/*<AppAsideToggler className="d-lg-none" mobile />*/}
