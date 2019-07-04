@@ -91,8 +91,8 @@ class Processos extends Component {
     const resmesa = resdiaa.replace('a month', '1 mês');
     const resmeses = resmesa.replace('months', 'meses');
     const resmes = resmeses.replace('month', 'mes');
-    const resdia = resmes.replace('day', 'dia');
-    const reshora = resdia.replace('hour', 'hora').replace('Few seconds', 'alguns segundos').replace('minutes','minutos');
+    const resdia = resmes.replace('day', 'dia').replace('an hour','1 hora').replace('a minute', '1 minuto');
+    const reshora = resdia.replace('hour', 'hora').replace('a few seconds', 'alguns segundos').replace('minute','minuto');
     
     const tituloProcesso = data.tool_name.replace('Blacklist', 'Bloqueio')
     
