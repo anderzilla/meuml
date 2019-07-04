@@ -322,7 +322,7 @@ class BloquearComprador extends Component {
                 <Label for="idMotivo">Selecione o motivo do bloqueio</Label>
                   {!isLoadingMotivos ? (
                     <Dropdown  direction="right" id="idMotivo" className="dropAbaixo2" isOpen={this.state.dropdownOpenMotivo} toggle={() => {this.toggleMotivo();}}>
-                      <DropdownToggle caret color="primary" size="md" className="dropWidth">
+                      <DropdownToggle caret color="primary" size="md" >
                         {!this.state.motiveId ? ('Selecione um motivo!') : (this.state.motiveId+' - '+this.state.motiveName)}
                       </DropdownToggle>
                       <DropdownMenu>

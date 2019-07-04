@@ -95,6 +95,10 @@ class Cadastro extends Component {
           const message = res.data.message;
           this.setState({message});
           Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+          this.setState({
+            isLoadingCadastro: false,
+      
+          });
           this.props.history.push("/");
           //TO DO: Inserir redirect
         }else{
@@ -107,6 +111,10 @@ class Cadastro extends Component {
             this.setState({tipoErro: "Erro desconhecido, tente novamente!"});
           }
           this.setState({message});
+          this.setState({
+            isLoadingCadastro: false,
+      
+          });
           Swal.fire({html:'<p>'+this.state.message+' <br /> <b>'+ this.state.tipoErro +'</b> </p>', type: 'error', showConfirmButton: true});
         }
       })/*.catch((error) => {
