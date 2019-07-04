@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import logo from '../../../assets/img/brand/MeuML-logo2.png';
 import { AppSwitch } from '@coreui/react';
 import axios from 'axios';
+import ReactLoading from 'react-loading';
 
 
 class Cadastro extends Component {
@@ -26,6 +27,7 @@ class Cadastro extends Component {
       token: '',
       message: '',
       status: '',
+      isLoadingCadastro: false,
     };
 
     this.mudaTermos = this.mudaTermos.bind(this);
@@ -62,6 +64,10 @@ class Cadastro extends Component {
   handleSubmit(event) {
 
     event.preventDefault();
+    this.setState({
+      isLoadingCadastro: true,
+
+    });
     
     if (this.state.userName === ''){
       alert('Preencha  o seu Usuário! Nã deixe campos em branco');
@@ -73,8 +79,8 @@ class Cadastro extends Component {
       alert('A senha deve ter um mínimo de 6 caracteres!');
     }else if(this.state.password !== this.state.confirmPassword ){
       alert('As senhas não conferem!');
-    }else if (this.state.termos === '' ){
-      alert('Aceite os termos de uso!' + this.state.termos);
+    /*}else if (this.state.termos === '' ){
+      alert('Aceite os termos de uso!' + this.state.termos);*/
     }else{
       axios.post(process.env.REACT_APP_API_URL + `/user`, {
         "email":this.state.email,
@@ -120,6 +126,7 @@ class Cadastro extends Component {
 
 
   render() {
+    const {isLoadingCadastro} = this.state;
     return (
       <div className="app flex-row align-items-center">
         <Container>
@@ -191,22 +198,28 @@ class Cadastro extends Component {
                     </InputGroup>
                     <Row>
                       <Col xs="12" sm="4">
-                      <InputGroup>
-                      
-                      <AppSwitch className={'mx-1'} variant={'3d'} color={'success'} name="termos" onChange={this.mudaTermos} defaultChecked={this.state.termos} label dataOn={'\u2713'} dataOff={'\u2715'}/> Aceito os termos de uso.
-                        </InputGroup>
+                      {/*<InputGroup>
+                        <AppSwitch className={'mx-1'} variant={'3d'} color={'success'} name="termos" onChange={this.mudaTermos} defaultChecked={this.state.termos} label dataOn={'\u2713'} dataOff={'\u2715'}/> Aceito os termos de uso.
+                      </InputGroup>*/}
                       </Col>
                       <Col xs="12" sm="8" className="text-right">
+                      {!isLoadingCadastro ? (
+                      <div>
                       <Button type="submit" color="primary" disabled={this.state.submitButton}><i className="fa fa-check"></i> Concluir Cadastro</Button>
                       <Link to="./" >
-                        <Button className="btn btn-danger" title="Voltar" ><i className="fa fa-arrow-left"></i> Voltar</Button>
-                      </Link>
+                      <Button className="btn btn-danger" title="Voltar" ><i className="fa fa-arrow-left"></i> Voltar</Button>
+                    </Link>
+                    </div>
+                      ) : (
+                        <ReactLoading type={'spinningBubbles'} color={'#054785'} height={50} width={50}  className='spinnerStyle'/>
+                      )}
+                     
                       </Col>
                     </Row>
                   </Form>
                 </CardBody>
                 <CardFooter className="p-4">
-                <div className="card-footer-actions">
+                {/*<div className="card-footer-actions">
                 <b>Termos de Uso</b> <Button className="card-footer-action badge badge-dark badge-pill float-right text-light" data-target="#collapseTermos" onClick={this.toggle}><i className="icon-arrow-down"></i></Button>
                 </div>
                 <Collapse isOpen={this.state.collapse} id="collapseTermos">
@@ -218,7 +231,7 @@ class Cadastro extends Component {
                     ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
                     </Col>
                   </Row>
-                  </Collapse>
+                    </Collapse>*/}
                 </CardFooter>
               </Card>
             </Col>

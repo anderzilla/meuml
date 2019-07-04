@@ -167,23 +167,21 @@ class MinhasListasDeBloqueio extends Component {
 
     return (
       <div className="animated fadeIn">
-        <Card>
+        <Card className="card-accent-primary">
           <CardHeader>
             <Row>
             <Col md="3" xs="3" sm="12"><h5>Listas - {this.state.nlistas}</h5> </Col>
-            <Col md="6" xs="6" sm="12"><Link to="/adicionaritemlista" className="btn btn-primary btn-sm">Criar Lista de Bloqueio</Link></Col>
+            <Col md="6" xs="6" sm="12"></Col>
             </Row>
           </CardHeader>
           <CardBody>
           <Table responsive>
                   <thead>
                   <tr>
-                    <th class="text-left">Nome da Lista</th>
-                    <th class="text-center">Compras</th>
-                    <th class="text-center">Perguntas</th>
-                    <th class="text-center">Descrição</th>
-                    <th class="text-center">Quantidade</th>
-                    <th class="text-right">Ação</th>
+                    <th class="text-left tbcol-30">Nome da Lista</th>
+                    <th class="text-let tbcol-50">Descrição</th>
+                    <th class="text-left tbcol-15">Quantidade</th>
+                    <th class="text-right tbcol-5"></th>
                   </tr>
                   </thead>
                   <tbody>
@@ -194,10 +192,8 @@ class MinhasListasDeBloqueio extends Component {
                           return (
                             <tr>
                               <td class="text-left">{l.name}</td>
-                              <td class="text-center">{!l.bids? <i class="fa fa-unlock text-disabled"></i> : <i class="fa fa-lock text-danger"></i>}</td>
-                              <td class="text-center">{!l.questions? <i class="fa fa-unlock text-disabled"></i> : <i class="fa fa-lock text-danger"></i>}</td>
                               <td class="text-center">{l.list_description}</td>
-                              <td class="text-center">{l.list_quantities}</td>
+                              <td class="text-center">{l.quantidade}</td>
                               <td class="text-right">
                                 <Button onClick={()=>this.fetchDeletarLista(l.id)} class="btn btn-danger btn-small"><i class="fa fa-trash"></i></Button>
                               </td>

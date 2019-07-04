@@ -6,6 +6,7 @@ import axios from 'axios';
 import {login} from '../../../auth';
 
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
+import moment  from 'moment';
 
 class Login extends Component {
 
@@ -18,7 +19,10 @@ class Login extends Component {
       message: '',
       status: '',
       tipoErro: '',
+      expiresin:''
     };
+
+   
 
     this.submitInput = React.createRef();
     this.focusSubmitInput = this.focusSubmitInput.bind(this);
@@ -59,22 +63,11 @@ class Login extends Component {
         this.setState({token});
         const user_id = res.data.user_id;
         this.setState({user_id});
-        login(this.state.token);
-        //Pega os dados do usuário baseado na resposta do servidor
-        axios.get(process.env.REACT_APP_API_URL + `/user/`+this.state.user_id, {
-          "hash":this.state.token,
-	        "email" : this.state.email,
-	        "password" : this.state.password,
-	        "password2" : this.state.password
-        }).then(resp =>{
-          localStorage.setItem(USER_ID, resp.data.id);
-          localStorage.setItem(USER_NAME, resp.data.name);
-          localStorage.setItem(USER_EMAIL, resp.data.email);
-          localStorage.setItem(USER_SELLER_ID, resp.data.seller_id);
-        })
-        .catch(error => {
-          Swal.fire({html:'<p>Não foi possivel carregar os dados do Usuário! <br/> '+error+'</p>', type: 'error', showConfirmButton: true,});
-      });
+        const expiresin = res.data.data.expiresin;
+        this.setState({expiresin})
+
+        login(this.state.token,moment(res.data.data.expires_in).format('DD/MM/YYYY HH:MM'));
+
         //Redireciona para a tela inicial do sistema DASHBOARD
         this.props.history.push("/");
       }else{
@@ -88,17 +81,9 @@ class Login extends Component {
       });
       }
     }).catch(error => {
-        if (error.response.data.errors.email !== '' || error.response.data.errors.email !== 'undefined'){
-          this.setState({tipoErro: error.response.data.errors.email});
-            
-        }else if(error.response.data.errors.password !== '' || error.response.data.errors.password !== 'undefined'){
-          this.setState({tipoErro: error.response.data.errors.password});
-            
-        }else{
-          this.setState({tipoErro: "Erro desconhecido, Tente novamente!"});
-            
-        }
-        Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+        !error.response.data.errors.email? this.setState({tipoErro: ''}) : this.setState({tipoErro: error.response.data.errors.email});
+        !error.response.data.errors.password? this.setState({erroPass: ''}) : this.setState({erroPass: error.response.data.errors.password});
+        Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro+ this.state.erroPass +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
   });
   }
 
@@ -148,7 +133,7 @@ class Login extends Component {
                       </InputGroup>
                       <Row>
                         <Col xs="5" className="text-right ">
-                          <Input type="submit" value="Entrar" className="px-4 btn btn-primary" />
+                          <Input type="submit" value="Entrar" className="btn btn-square btn-block btn-primary active" />
                         </Col>
                         <Col xs="7" className="text-right ">
                         <Link to="/recuperarsenha">

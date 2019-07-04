@@ -27,6 +27,7 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.min.css';
 import Picky from "react-picky";
 import "react-picky/dist/picky.css";
+import ReactLoading from 'react-loading';
 
 class BloquearComprador extends Component {
   //Adaptar para os valores de motivos de bloqueio
@@ -63,7 +64,10 @@ class BloquearComprador extends Component {
       bloqueios: [],
       value: null,
       arrayValue: [],
+      isLoadingCadastro: false
     }
+
+
   }
 
   toggleFade() {
@@ -93,7 +97,7 @@ class BloquearComprador extends Component {
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-    //console.log(res);
+    console.log(res);
     if (res.status === 200){
       const listaContas = [];
       const resContas = res.data.data;
@@ -105,9 +109,25 @@ class BloquearComprador extends Component {
         accounts: listaContas,
         isLoadingAccounts: false
       });
-      if(res.data.data.meta.total > 0){
+      if(res.data.meta.total > 0){
         this.fetchBlacklist(res.data.data[0].id);
+
+        if(res.data.meta.total === 1) {
+          this.setState({ arrayValue: [{'value':res.data.data[0].id, 'label':res.data.data[0].name }] });
+        }
       }else{
+        Swal.fire({
+          title: '',
+          text: "Você precisa ter ao menos 1 conta!",
+          type: 'info',
+          showCancelButton: false,
+          confirmButtonColor: '#366B9D',
+          confirmButtonText: 'OK',
+          confirmButtonClass: 'btn btn-success',
+          buttonsStyling: true
+        }).then(function () {
+          window.location.href = "#/listacontas";
+        })
       }
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
@@ -153,6 +173,7 @@ class BloquearComprador extends Component {
       [name]: value
     });
   }
+
   handleChange = selectedOption => {
     this.setState({ selectedOption });
     console.log(`Option selected:`, selectedOption);
@@ -167,6 +188,9 @@ class BloquearComprador extends Component {
     this.setState({tipoUser: tipo, customer_id: ''});
   }
   handleSubmit(event) {
+
+    this.setState({isLoadingCadastro: true});
+
     this.setState({bloqueios: []});
     event.preventDefault();
     //customer_id
@@ -177,7 +201,9 @@ class BloquearComprador extends Component {
     }else if(this.state.motiveId === '' ){
       alert('Defina o motivo do bloqueio.');
     }else{
-      this.state.selectedOption.map((s, k) => {
+
+
+      this.state.arrayValue.map((s, k) => {
         const { value, name } = this.state;
         this.state.bloqueios.push({
           "account_id": s.value,
@@ -188,17 +214,19 @@ class BloquearComprador extends Component {
           "questions": !this.state.questions ? false : true,
          });
       })
-      console.log(this.state.bloqueios);
+
       axios.post(process.env.REACT_APP_API_URL + `/blacklist`, this.state.bloqueios,
       {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
       .then(res => {
-        //console.log(res.data);
+
         const status = res.data.status;
         this.setState({status});
         if (this.state.status === 'success'){
           const message = res.data.message;
           this.setState({message});
           Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+         
+          this.setState({isLoadingCadastro: false});
           this.props.history.push("/meusbloqueios");
         }else{
           const message = res.data.message;
@@ -206,7 +234,6 @@ class BloquearComprador extends Component {
           Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
         }
       }).catch((error) => {
-        console.log(error);
         !error.response ?
         (this.setState({tipoErro: error})) :
         (this.setState({tipoErro: error.response.data.message}))
@@ -215,11 +242,12 @@ class BloquearComprador extends Component {
   }
   }
   render() {
+    const {isLoadingCadastro} = this.state;
     const { isLoading, isLoadingAccounts, isLoadingMotivos, error, accounts, motivos, listaContas, selectedOption } = this.state;
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" sm="12" md="10" xl="8">
+          <Col xs="12" sm="12" md="12" xl="8" className>
             <Card className="card-accent-primary">
             <Form onSubmit={this.handleSubmit} name='bloquearcomprador'>
               <CardHeader>
@@ -235,6 +263,7 @@ class BloquearComprador extends Component {
                 <Picky
                   value={this.state.arrayValue}
                   options={accounts}
+                  className="multiSelBlockUser"
                   onChange={this.selectMultipleOption}
                   open={false}
                   valueKey="value"
@@ -258,7 +287,7 @@ class BloquearComprador extends Component {
                   <Label for="idUsusario">ID ou Usuário do comprador</Label>
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">
-                    <ButtonDropdown direction="right" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
+                    <ButtonDropdown direction="up" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
                       <DropdownToggle caret color="primary" size="md">
                         {!this.state.tipoUser ? ('Selecione') : this.state.tipoUser}
                       </DropdownToggle>
@@ -333,7 +362,14 @@ class BloquearComprador extends Component {
                 </Row>
               </CardBody>
               <CardFooter  className="text-right">
-                <Button type="submit" size="md" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
+              {!isLoadingCadastro ? (
+                    <div>
+                       <Button type="submit" size="md" color="primary"><i className="fa fa-lock"></i> Bloquear</Button>
+                    </div>
+                ) : (
+                    <ReactLoading type={'spinningBubbles'} color={'#054785'} height={30} width={30}  className='spinnerStyleMini'/>
+              )}
+          
               </CardFooter>
               </Form>
             </Card>

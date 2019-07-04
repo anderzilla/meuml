@@ -1,9 +1,10 @@
 export default {
   items: [
     {
-      name: 'Dashboard',
-      url: '/dashboard',
-      icon: 'icon-speedometer',
+      name: 'Início',
+      url: '/inicio',
+      id: 'inicio',
+      icon: 'fa fa-home',
       badge: {
         variant: 'info',
         text: '',
@@ -12,30 +13,33 @@ export default {
     {
       name: 'Contas',
       url: '/listacontas',
+      id: 'contas',
       icon: 'fa fa-address-book',
 
     },
-    {
-      name: 'Anúncios',
-      url: '/dashboard',
-      icon: 'fa fa-bullhorn',
+    // {
+    //   name: 'Anúncios',
+    //   url: '/dashboard',
+    //   icon: 'fa fa-bullhorn',
 
-    },
-    {
-      name: 'Vendas',
-      url: '/dashboard',
-      icon: 'fa fa-shopping-cart',
+    // },
+    // {
+    //   name: 'Vendas',
+    //   url: '/dashboard',
+    //   icon: 'fa fa-shopping-cart',
 
-    },
+    // },
     {
       name: 'Pesos e Dimensões',
       url: '/categorias',
+      id: 'categorias',
       icon: 'fa fa-balance-scale',
 
     },
     {
       name: 'Bloqueios',
       url: '/bloqueios',
+      id: 'blqueios',
       icon: 'fa fa-lock',
       children: [
         {
@@ -59,25 +63,25 @@ export default {
           icon: 'fa fa-times-rectangle',
         },
         {
-          name: 'Listas de Bloqueios',
+          name: 'Minhas Listas',
           url: '/minhaslistasdebloqueios',
           icon: 'fa fa-address-card-o',
         },
       ]
 
     },
-    {
-      name: 'Processos',
-      url: '/dashboard',
-      icon: 'fa fa-file-powerpoint-o',
+     {
+       name: 'Processos',
+       url: '/processos',
+       icon: 'fa fa-file-powerpoint-o',
+     },
+    
+    // {
+    //   name: 'Perguntas',
+    //   url: '/perguntas',
+    //   icon: 'fa fa-question-circle',
 
-    },
-    {
-      name: 'Perguntas',
-      url: '/perguntas',
-      icon: 'fa fa-question-circle',
-
-    },
+    // },
     {
       name: 'Sair',
       url: '/logout',
