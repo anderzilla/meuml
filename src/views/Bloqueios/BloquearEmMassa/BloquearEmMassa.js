@@ -354,9 +354,7 @@ class BloquearEmMassa extends Component {
         <Row>
         <Col xs="12" sm="12" md="10" xl="8">
         <Card className="card-accent-primary">
-        <CardHeader>
-        <h5>Bloqueio em Massa</h5>
-        </CardHeader>
+       
         <CardBody>
         <FormGroup>
           <Label for="lista">Lista de Bloqueio</Label>
@@ -370,11 +368,10 @@ class BloquearEmMassa extends Component {
           autoComplete="given-name"
           autoFocus={true}
           onMouseOut={() => this.montarTabela(this.state.lista)}
-          
-          > </Input>
+          /> 
         </FormGroup>
         
-        <ButtonGroup>
+        <ButtonGroup className="fullWidth">
         <Button 
           className="btn btn-md" 
           color="primary" 
@@ -548,7 +545,7 @@ class BloquearEmMassa extends Component {
         <CardFooter  className="text-right">
           {!isLoadingCadastro ? (
             <div>
-              <Button color="primary" onClick={() => this.concluirOperacao()} disabled={this.state.salvar} >Concluir</Button>
+              <Button color="primary" onClick={() => this.concluirOperacao()} disabled={this.state.salvar?true:false} >Concluir</Button>
              </div>
           ) : (
              <ReactLoading type={'spinningBubbles'} color={'#054785'} height={30} width={30}  className='spinnerStyleMini'/>

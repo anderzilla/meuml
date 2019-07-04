@@ -201,6 +201,11 @@ $spinkit-spinner-color: $body-color;
 
 .textoSwitch{
   text-align: inherit;
+  font-weight: bold;
+}
+
+.fullWidth{
+  width: 100%;
 }
 
 .switch-slider{
@@ -221,7 +226,7 @@ Label {
 }
 
 .dropWidth{
-  min-width: 50%;
+  min-width: 100%;
   text-align: left;
 }
 
