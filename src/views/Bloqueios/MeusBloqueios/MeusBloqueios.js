@@ -246,9 +246,9 @@ class MeusBloqueios extends Component {
               <h3>Carregando...</h3>
             )}
             </Col>
-            <Col md="4" sm="6" xs="4">
+            {/* <Col md="4" sm="6" xs="4">
               {(this.state.total > 0)? <div className="alert alert-primary fade show">Registros Encontrados:<b> {(this.state.total -1)} </b></div> : <span></span>}
-            </Col>
+            </Col> */}
             </Row>
           </CardHeader>
           <CardBody>

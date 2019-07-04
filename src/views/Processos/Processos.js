@@ -111,9 +111,9 @@ class Processos extends Component {
     return (
       <div className="animated">
         <Card>
-          <CardHeader className="">
+          {/* <CardHeader className="">
             <h5>Processos</h5>
-          </CardHeader>
+          </CardHeader> */}
           <CardBody>
           {!isLoadingProcessos ? (
             <div id="accordion">
