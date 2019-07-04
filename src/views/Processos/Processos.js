@@ -92,7 +92,8 @@ class Processos extends Component {
     const resmeses = resmesa.replace('months', 'meses');
     const resmes = resmeses.replace('month', 'mes');
     const resdia = resmes.replace('day', 'dia');
-    const reshora = resdia.replace('hour', 'hora');
+    const reshora = resdia.replace('hour', 'hora').replace('Few seconds', 'alguns segundos');
+    
     const final = reshora.replace('ago', 'atrás' );
     this.state.listaProcessos.push({
       'titulo':data.tool_name,      
