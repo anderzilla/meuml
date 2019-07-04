@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 import axios from 'axios';
 import fotoPadrao from '../../../assets/img/avatars/user.svg';
+import ReactLoading from 'react-loading';
 
 class ListaContas extends Component {
   constructor(props) {
@@ -180,8 +181,11 @@ class ListaContas extends Component {
                 );
               })
           ) :          
-          (<h3>Loading...</h3>)
-          }
+          (
+          <div className="center">
+                <ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100}  className='spinnerStyle'/>
+          </div>
+          )}
         
         </Row>
       </div>

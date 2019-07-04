@@ -101,7 +101,7 @@ class MinhasListasDeBloqueio extends Component {
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
       if (res.status === 200){
-        Swal.fire({html:'<p>Lista excluída com sucesso</p>', type: 'error', showConfirmButton: true});
+        Swal.fire({html:'<p>Lista excluída com sucesso</p>', type: 'success', showConfirmButton: true});
       }else{
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
       }
@@ -144,7 +144,7 @@ class MinhasListasDeBloqueio extends Component {
         if (this.state.status === 'success'){
           const message = res.data.message;
           this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+          Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'success', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
         }else{
           const message = res.data.message;
           this.setState({message});
