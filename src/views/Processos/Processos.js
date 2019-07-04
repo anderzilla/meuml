@@ -92,12 +92,18 @@ class Processos extends Component {
     const resmeses = resmesa.replace('months', 'meses');
     const resmes = resmeses.replace('month', 'mes');
     const resdia = resmes.replace('day', 'dia');
-    const reshora = resdia.replace('hour', 'hora').replace('Few seconds', 'alguns segundos');
+    const reshora = resdia.replace('hour', 'hora').replace('Few seconds', 'alguns segundos').replace('minutes','minutos');
     
+    const tituloProcesso = data.tool_name.replace('Blacklist', 'Bloqueio')
+    
+    const andamento = (data.item_finished === null)? 0 : data.item_finished+'/'+ data.item_total;
+    const andamentoStatus = (data.item_finished === data.item_total)? 
+      ' processos executados a ' : 
+      ' processos executando a ';
     const final = reshora.replace('ago', 'atrás' );
     this.state.listaProcessos.push({
-      'titulo':data.tool_name,      
-      'andamento': (data.item_finished === null)? 0 : data.item_finished+' processos concluídos de '+ data.item_total, 
+      'titulo':tituloProcesso,      
+      'andamento': andamento + andamentoStatus, 
       'dataInicio':final,
       'criacao': cria,
       'subprocessos': data.process_items,
@@ -128,7 +134,7 @@ class Processos extends Component {
                       
                       <Button block color="ghost-link" size="sm" className="text-left m-0 p-0 headerListaProcessos" onClick={() => this.toggleAccordion(k)} aria-expanded={this.state.accordion[k]} aria-controls={'collapse'+k}>
                         <h5 className="tituloProcessos">{p.titulo}</h5>
-                        <span>{p.andamento} iniciado em {p.dataInicio}</span>
+                        <span>{p.andamento} {p.dataInicio}</span>
                       </Button>
                       </Col>
                       <Col sm="6" md="6" className="text-right">
@@ -140,7 +146,16 @@ class Processos extends Component {
                       <CardBody className="subItensProcessos">
                         <ul className="listaSubItem" >
                           {p.subprocessos.map((d, k)=> {
-                            return (<li key={k}>{d.tool_name}</li>)
+                            const tituloSubItem = d.tool_name.replace('Blacklist', 'Bloqueio');
+                            return (
+                            <li key={k}>
+                              {(d.status === 'false')? 
+                                <i className="fa fa-circle redBall"></i> : 
+                                <i className="fa fa-circle greenBall"></i>
+                              }
+                              {' '+tituloSubItem+' : ID - '}<b>{d.item_id}</b>
+                              {(d.cause !== null)? <em> ( d.cause ) </em>: <span></span>}
+                            </li>)
                           })} 
                         </ul>
                       </CardBody>
