@@ -121,7 +121,7 @@ class Processos extends Component {
               {processos.map((p, k)=> {
                 return (
                   (!this.isEmpty(p.subprocessos))?
-                  (<Card className="mb-0 listaProcessos ">
+                  (<Card className="mb-0 listaProcessos " key={k}>
                     <CardHeader id={'heading'+k} className="divListaProcessos">
                       <Row>
                       <Col sm="6">
@@ -138,9 +138,9 @@ class Processos extends Component {
                     </CardHeader>
                     <Collapse isOpen={this.state.accordion[k]} data-parent="#accordion" id={'collapse'+k} aria-labelledby={'heading'+k}>
                       <CardBody className="subItensProcessos">
-                        <ul className="listaSubItem">
+                        <ul className="listaSubItem" >
                           {p.subprocessos.map((d, k)=> {
-                            return (<li>{d.tool_name}</li>)
+                            return (<li key={k}>{d.tool_name}</li>)
                           })} 
                         </ul>
                       </CardBody>

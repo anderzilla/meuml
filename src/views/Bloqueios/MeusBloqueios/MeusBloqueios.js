@@ -276,7 +276,7 @@ class MeusBloqueios extends Component {
             !isLoading ? (
             blacklist.map((bl)=> {
                 return (
-                  <tr>
+                  <tr key={bl.customer_id}>
                     <td>{bl.customer_id}</td>
                     <td className="text-center">
                       {bl.bids ? (<i className="fa fa-times text-danger"></i>) : ( <span></span>)}

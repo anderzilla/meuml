@@ -247,7 +247,7 @@ class BloquearComprador extends Component {
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" sm="12" md="12" xl="8" className>
+          <Col xs="12" sm="12" md="12" xl="8">
             <Card className="card-accent-primary">
             <Form onSubmit={this.handleSubmit} name='bloquearcomprador'>
              
@@ -327,8 +327,8 @@ class BloquearComprador extends Component {
                       </DropdownToggle>
                       <DropdownMenu>
                         {motivos.map((m, key) => {
-                          const { id, name, description } = this.state;
-                          return (<DropdownItem onClick={() => this.fetchMotivoSelecionado(m.id, m.name, m.description)}>{m.id} - {m.name}</DropdownItem>)
+                          const { id, name } = this.state;
+                          return (<DropdownItem key={m.id} onClick={() => this.fetchMotivoSelecionado(m.id, m.name, m.description)}>{m.id} - {m.name}</DropdownItem>)
                         })}
                       </DropdownMenu>
                       </Dropdown>
