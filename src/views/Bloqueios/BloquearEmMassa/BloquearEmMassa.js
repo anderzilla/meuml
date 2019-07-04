@@ -368,8 +368,7 @@ class BloquearEmMassa extends Component {
           autoComplete="given-name"
           autoFocus={true}
           onMouseOut={() => this.montarTabela(this.state.lista)}
-          
-          > </Input>
+          /> 
         </FormGroup>
         
         <ButtonGroup className="fullWidth">
@@ -546,7 +545,7 @@ class BloquearEmMassa extends Component {
         <CardFooter  className="text-right">
           {!isLoadingCadastro ? (
             <div>
-              <Button color="primary" onClick={() => this.concluirOperacao()} disabled={this.state.salvar} >Concluir</Button>
+              <Button color="primary" onClick={() => this.concluirOperacao()} disabled={this.state.salvar?true:false} >Concluir</Button>
              </div>
           ) : (
              <ReactLoading type={'spinningBubbles'} color={'#054785'} height={30} width={30}  className='spinnerStyleMini'/>
