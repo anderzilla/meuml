@@ -379,7 +379,7 @@ class BloquearEmMassa extends Component {
         <Row>
         <Col xs="12" sm="12" md="10" xl="8">
         <Card className="card-accent-primary">
-       
+        <input type="hidden" value="autocompleteOff"/>
         <CardBody>
         <FormGroup>
           <Label for="lista">Lista de Bloqueio</Label>

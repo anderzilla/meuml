@@ -257,7 +257,7 @@ class BloquearComprador extends Component {
           <Col xs="12" sm="12" md="12" xl="8">
             <Card className="card-accent-primary">
             <Form onSubmit={this.handleSubmit} name='bloquearcomprador'>
-             
+            <input type="hidden" value="autocompleteOff"/> 
               <CardBody>
               <Row>
               <Col xs="12" sm="6" md="6">
