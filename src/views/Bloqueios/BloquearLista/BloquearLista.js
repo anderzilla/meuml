@@ -193,9 +193,7 @@ class BloquearLista extends Component {
         <Col xs="12" sm="12" md="10" xl="8">
         <Card className="card-accent-primary">
         <Form name='novaLista' onSubmit={this.handleSubmit}>
-          {/* <CardHeader>
-            <h5>Bloquear Lista</h5>
-          </CardHeader> */}
+        <input type="hidden" value="autocompleteOff"/>
           <CardBody>
           <Row>
             <Col md="4" xs="12">
