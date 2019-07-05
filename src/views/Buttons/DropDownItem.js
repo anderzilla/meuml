@@ -71,14 +71,13 @@ class DropDownItem extends Component {
   // Listening for state changes
   apiHandler() {
     const { url, data, method, headers, hasChanged } = this.state;
-    console.log(this.state)
 
     if (hasChanged === true) {
       
       // Choosing the right HTTP method to work with
       // GET
       if (method === 'get') {
-        api.get(url, headers).then(res => {
+        api.get(url).then(res => {
           if (res.status === 200) {
             Swal.fire({
               html: '<p>Feito!</p>',
@@ -87,12 +86,12 @@ class DropDownItem extends Component {
               showCancelButton: false,
               confirmButtonText: 'Fechar'
             })
-          } else { console.log(res)}
+          }
         });
 
       // PUT
       } else if (method === "put") {
-        api.put(url, data, headers).then(res => {
+        api.put(url, data).then(res => {
           if (res.status === 200) {
             Swal.fire({
               html: `<p>Editado com sucesso</p>`,
@@ -145,8 +144,7 @@ class DropDownItem extends Component {
         method={this.props.children}
         headers={this.props.children}
         onClick={() => this.apiRequest(this.props)}
-      >
-        {this.props.children}
+        >{this.props.children}
       </DropdownItem>
     );
   }

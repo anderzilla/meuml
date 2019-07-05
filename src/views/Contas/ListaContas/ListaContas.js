@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
+import api from '../../../services/api';
 
 import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button } from 'reactstrap';
 import VerticalDropDown from '../../Buttons/VerticalDropDown';
 import DropDownItem from '../../Buttons/DropDownItem';
+
 import fotoPadrao from '../../../assets/img/avatars/user.svg';
 import ReactLoading from 'react-loading';
 import Swal from 'sweetalert2';
-
-import {getToken} from '../../../auth';
-import axios from 'axios';
-
-
 
 class ListaContas extends Component {
   constructor(props) {
@@ -32,15 +29,12 @@ class ListaContas extends Component {
   }
 
   fetchAccounts() {
-    axios.get(process.env.REACT_APP_API_URL + `/accounts`,
-        { headers: { "Authorization": 'Bearer ' + getToken() } })
+    api.get('/accounts')
         .then(res => {
           if (res.data.status === 'success') {
-            const message = res.data.message;
             if (res.data.meta.total !== 0) {
               this.setState({
                 contas: res.data.data,
-                tk: getToken(),
                 isLoading: false,
               });
               console.log(this.state)
@@ -63,68 +57,47 @@ class ListaContas extends Component {
     window.open('#/contas/adicionar', 'SomeAuthentication', 'width=972,height=660,modal=yes,alwaysRaised=yes')
   }
 
-
-
-    // Rename account
-    rename(account_id) {
-      Swal.fire({
-        title: 'Renomear Conta:',
-        input: 'text',
-        showCancelButton: true,
-        inputPlaceholder: 'Preencha o novo nome'
-      }).then(res => {
-          this.setState({ newName: res.value });
-
-          if(this.state.name !== null) {
-
-          }
-      });
-    };
-
-
-
   render() {
     const { isLoading, contas } = this.state;
 
     return (
-      
       <div className="animated fadeIn">
         <Row>
           <a href="#/contas/adicionar" className="botaoAdicionarConta">
-          <Button className="btn btn-primary float-left"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
+            <Button
+              className="btn btn-primary float-left">
+                <i className="fa fa-plus-circle" /> 
+                Adicionar Conta
+            </Button>
           </a>
         </Row>
+
         <Row>
           {!isLoading ? (
-            contas.map((c, k)=> {
-              const { username, name, email, id } = this.state;
-              
+            contas.map((acc, index)=> {
                 return (
-                    <Col xs="12" sm="4" md="3" key={c.id} className="CardConta">
+                    <Col xs="12" sm="4" md="3" key={acc.id} className="CardConta">
                       <Card className="card-accent-primary">
                         <CardHeader>
-                          <span id={'nomeConta-'+k}>{c.name}</span>
+                          <span id={'nomeConta-'+index}>{acc.name}</span>
                           
                           <div className="float-right">
                               <VerticalDropDown>
                                 <DropDownItem
-                                  url={process.env.REACT_APP_API_URL + '/accounts/' + 260}
+                                  url={'/accounts/' + acc.id}
                                   method="put"
-                                  headers={ {headers: {"Authorization" : 'Bearer ' + this.state.tk}} }
                                   >Renomear
                                 </DropDownItem>
 
                                 <DropDownItem
-                                  url={process.env.REACT_APP_API_URL + '/accounts/' + 260 + '/sync'}
+                                  url={'/accounts/' + acc.id + '/sync'}
                                   method="get"
-                                  headers={ {headers: {"Authorization" : 'Bearer ' + this.state.tk}} }
                                   >Sincronizar
                                 </DropDownItem>
                                 
                                 <DropDownItem
-                                  url={process.env.REACT_APP_API_URL + '/accounts/' + 260}
+                                  url={'/accounts/' + acc.id}
                                   method="delete"
-                                  headers={ {headers: {"Authorization" : 'Bearer ' + this.state.tk}} }
                                   >Excluir
                                 </DropDownItem>
                               </VerticalDropDown>
@@ -132,14 +105,14 @@ class ListaContas extends Component {
                         </CardHeader>
                         <CardBody>
                           <div className="imgConta">
-                          <img src={!c.external_data.thumbnail ? this.state.fotoConta  : c.external_data.thumbnail.picture_url } title={c.external_name} className="img-full70 align-content-center" alt="Loja Teste"></img>
+                          <img src={!acc.external_data.thumbnail ? this.state.fotoConta  : acc.external_data.thumbnail.picture_url } title={acc.external_name} className="img-full70 align-content-center" alt="Loja Teste"></img>
                           </div>
-                          <div className="text-primary text-center nomeDuasLinhas" title={c.external_name}>{c.external_name}</div>
+                          <div className="text-primary text-center nomeDuasLinhas" title={acc.external_name}>{acc.external_name}</div>
                           <div className="text-left">
                             <p className="labelCard"><i className="fa fa-envelope"></i> E-mail:</p>
-                            {c.external_data.email}<br/>
+                            {acc.external_data.email}<br/>
                             <p className="labelCard"><i className="fa fa-user"></i> Usuário:</p>
-                            {c.external_data.nickname}<br/>
+                            {acc.external_data.nickname}<br/>
                           </div>
                           
                         </CardBody>
@@ -147,11 +120,11 @@ class ListaContas extends Component {
                         <Row>
                           <Col md="6" sm="12">
                           <h5 className="tituloVendas">Vendas</h5>
-                          <h5 className="text-success valores">{c.external_data.seller_reputation.metrics.sales.completed}</h5>
+                          <h5 className="text-success valores">{acc.external_data.seller_reputation.metrics.sales.completed}</h5>
                           </Col>
                           <Col md="6" sm="12">
                           <h5 className="tituloAnuncios">Anúncios</h5>
-                          <h5 className="text-success valores">{c.count_advertisings}</h5>
+                          <h5 className="text-success valores">{acc.count_advertisings}</h5>
                           </Col>
                         </Row>
                         </CardFooter>

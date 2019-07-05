@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { DropdownToggle, ButtonDropdown, ButtonGroup } from "reactstrap";
-import DropDownMenu from './DropDownMenu';
+import { DropdownToggle, DropdownMenu, ButtonDropdown, ButtonGroup } from "reactstrap";
 
 class VerticalDropDown extends Component {
   constructor(props) {
@@ -26,9 +25,9 @@ class VerticalDropDown extends Component {
             isOpen={this.state.isDropdownOpen}
             toggle={() => { this.toggle() }}>
           <DropdownToggle caret color="primary" size="sm">Opções</DropdownToggle>
-          <DropDownMenu>
+          <DropdownMenu>
               {this.props.children}
-          </DropDownMenu>
+          </DropdownMenu>
         </ButtonDropdown>
       </ButtonGroup>
     );
