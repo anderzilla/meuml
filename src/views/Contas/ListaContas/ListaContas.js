@@ -8,84 +8,27 @@ import ReactLoading from 'react-loading';
 import VerticalDropDown from '../../Buttons/VerticalDropDown';
 import DropDownItem from '../../Buttons/DropDownItem';
 
+import VerticalBtnGroup from '../../Buttons/VerticalButton';
+
 class ListaContas extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
+    
     this.state = {
       dropdownOpen: new Array(50).fill(false),
       constas: [],
       isLoading: true,
       total: 0,
       fotoConta: fotoPadrao,
+      newName: '',
+      account_id: null,
     };
+    
     this.openAuth = this.openAuth.bind(this);
   }
-  //motor do dropdown
-  toggle(i) {
-    const newArray = this.state.dropdownOpen.map((element, index) => { return (index === i ? !element : false); });
-    this.setState({
-      dropdownOpen: newArray,
-    });
-  }
+
   componentDidMount() {
     this.fetchAccounts();
-  }
-  //Sincronizar Conta
-  sincronizar(account_id){
-    axios.get(process.env.REACT_APP_API_URL + `/accounts/` + account_id + '/sync',
-        { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-      console.log(res);
-      if (res.data.status === 'success'){
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true});
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-      }
-    }).catch(error => {
-      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
-  }
-  //Excluir conta
-  excluir(account_id){
-    axios.delete(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
-        { headers: {"Authorization" : 'Bearer '+getToken()}},
-    ).then(res => {
-      if (res.data.status === 'success'){
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true, onClose: () => {
-          this.fetchAccounts();
-        }});
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-      }
-    }).catch(error => {
-      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
-  }
-  //Renomear conta * somente para o sistema
-  renomear(account_id,index){
-    const {value: novoNome} =  Swal.fire({
-      title: 'Renomear Conta:',
-      input: 'text',
-      showCancelButton: true,
-      inputPlaceholder: 'Preencha o novo nome'
-    }).then((result) => {
-      if (result.value) {
-        axios.put(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
-            {'name' : result.value},
-            { headers: {"Authorization" : 'Bearer '+getToken()}},
-        ).then(res => {
-          console.log(res);
-          if (res.data.status === 'success'){
-            document.getElementById('nomeConta-'+index).innerHTML = result.value;
-          }else{
-            Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true,})
-          }
-        }).catch(error => {
-          Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', confirmButtonText: 'Fechar'});
-        });
-      }
-    });
   }
 
   fetchAccounts() {
@@ -120,8 +63,28 @@ class ListaContas extends Component {
     window.open('#/contas/adicionar', 'SomeAuthentication', 'width=972,height=660,modal=yes,alwaysRaised=yes')
   }
 
+
+
+    // Rename account
+    rename(account_id) {
+      Swal.fire({
+        title: 'Renomear Conta:',
+        input: 'text',
+        showCancelButton: true,
+        inputPlaceholder: 'Preencha o novo nome'
+      }).then(res => {
+          this.setState({ newName: res.value });
+
+          if(this.state.name !== null) {
+
+          }
+      });
+    };
+
+
+
   render() {
-    const { isLoading, contas, error } = this.state;
+    const { isLoading, contas } = this.state;
 
     return (
       
@@ -141,6 +104,7 @@ class ListaContas extends Component {
                       <Card className="card-accent-primary">
                         <CardHeader>
                           <span id={'nomeConta-'+k}>{c.name}</span>
+                          
                           <div className="float-right">
                               <VerticalDropDown>
                                 <DropDownItem
