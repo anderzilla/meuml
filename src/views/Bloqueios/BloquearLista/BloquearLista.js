@@ -98,7 +98,10 @@ class BloquearLista extends Component {
       if(res.data.meta.total > 0){
         if(res.data.meta.total === 1) {        
           console.log(this.state.arrayValue);
-          this.setState({'arrayValue' : [{'value':res.data.data[0].id, 'label':res.data.data[0].name }],});
+          this.setState({
+            'arrayValue' : [{'value':res.data.data[0].id, 'label':res.data.data[0].name }],
+            'accountId': res.data.data[0].id,
+          });
           console.log(this.state.arrayValue);
           }
     }else{
@@ -127,43 +130,56 @@ class BloquearLista extends Component {
     }
   }
 
+  isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+  }
+
   handleSubmit(event) {
     this.setState({isLoadingCadastro: true});
     event.preventDefault();
-    if (this.state.blackListName === ''){
-      Swal.fire({html:'<p>Preencha o nome da lista para bloqueá-la</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    if (this.isEmpty(this.state.arrayValue)){
+      this.setState({isLoadingCadastro: false});
+      Swal.fire({html:'<p>Selecione uma conta para realizar o bloqueio!</p>', type: 'error', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
     }else{
-      axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, {
-        "blacklist_name":this.state.blackListName, 
-        "accounts":this.state.accountId, 
-        "bids": !this.state.bids ? false : true,
-        "questions": !this.state.questions ? false : true
-      },
-      {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
-      .then(res => {
-        //console.log(res.data);
-        const status = res.data.status;
-        this.setState({status});
-        if (this.state.status === 'success'){
-          const message = res.data.message;
-          this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+      if (this.state.blackListName === ''){
+        Swal.fire({html:'<p>Preencha o nome da lista para bloqueá-la</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+      }else{
+        axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, {
+          "blacklist_name":this.state.blackListName, 
+          "accounts":this.state.accountId, 
+          "bids": !this.state.bids ? false : true,
+          "questions": !this.state.questions ? false : true
+        },
+        {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
+        .then(res => {
+          //console.log(res.data);
+          const status = res.data.status;
+          this.setState({status});
+          if (this.state.status === 'success'){
+            const message = res.data.message;
+            this.setState({message});
+            Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+            this.setState({isLoadingCadastro: false});
+            window.location.href = "#/minhaslistasdebloqueios";
+
+          }else{
+            const message = res.data.message;
+            this.setState({message});
+            Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
+          }
+
+        }).catch((error) => {
           this.setState({isLoadingCadastro: false});
-          window.location.href = "#/minhaslistasdebloqueios";
-
-        }else{
-          const message = res.data.message;
-          this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
-        }
-
-      }).catch((error) => {
-        console.log(error);
-        !error.response ?
-        (this.setState({tipoErro: error})) :
-        (this.setState({tipoErro: error.response.data.message}))
-        Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
+          !error.response ?
+          (this.setState({tipoErro: error})) :
+          (this.setState({tipoErro: error.response.data.message}))
+          Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+      });
+    }
   }
 
   }

@@ -84,7 +84,10 @@ class BloquearEmMassa extends Component {
       });
       if(res.data.meta.total > 0){
         if(res.data.meta.total === 1) {        
-          this.state.arrayValue = [{'value':res.data.data[0].id, 'label':res.data.data[0].name }];
+          this.setState({
+            'arrayValue' : [{'value':res.data.data[0].id, 'label':res.data.data[0].name }],
+            'accountId': res.data.data[0].id,
+          });
         }
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
@@ -184,8 +187,19 @@ class BloquearEmMassa extends Component {
     });
   }
 
+  isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
 
   concluirOperacao() {
+    if (this.state.lista === ''){
+      Swal.fire({html:'<p>É necessário preencher a lista antes de Concluir!</p>', type: 'error', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+    }else{
     this.setState({isLoadingCadastro: true});
     this.setState({bloqueios: []});
     if (this.state.listagem === ''){
@@ -230,120 +244,129 @@ class BloquearEmMassa extends Component {
       //APENAS BLOQUEAR A LISTA  
         //BLOQUEANDO OS IDS
         console.log(this.state.listagemJSON);
-        this.state.arrayValue.map((s, k) => {
-          const { value, name } = this.state;
-          this.state.listagem.map((cid, x) => {
-            const { customer_id } = this.state;
-              this.state.bloqueios.push({
-              "account_id": s.value,
-              "bids": !this.state.bids ? false : true,
-              "customer_id": cid.customer_id,
-              "motive_description": this.state.motivoBloqueio,
-              "motive_id": '9',
-              "questions": !this.state.questions ? false : true,
-             });
-          })
-        })
-        
-        axios.post(process.env.REACT_APP_API_URL + `/blacklist`, this.state.bloqueios,
-        {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
-        .then(res => {
-          
-          const status = res.data.status;
-          this.setState({status});
-          if (this.state.status === 'success'){
-            const message = res.data.message;
-            this.setState({message});
-            Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-           // this.props.history.push("/meusbloqueios");
-            window.location.href = "#/meusbloqueios";
-          }else{
-            const message = res.data.message;
-            this.setState({message});
-            Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
-          }
-        }).catch((error) => {
-          
-          !error.response ?
-          (this.setState({tipoErro: error})) :
-          (this.setState({tipoErro: error.response.data.message}))
-          Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-        });
-        
-      }else if(this.state.custom[2] === true){
-      //SALVAR A LISTA E BLOQUEAR 
-        //SALVANDO A LISTA 
-        axios.post(process.env.REACT_APP_API_URL + `/blacklist/list`, {
-          "list_name":this.state.nomeLista,
-          "list_description":this.state.descricaoLista
-        },
-        {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
-        ).then(res => {
-
+        if (this.isEmpty(this.state.arrayValue)){
+          this.setState({isLoadingCadastro: false});
+          Swal.fire({html:'<p>Selecione uma conta para realizar os bloqueios!</p>', type: 'error', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+        }else{
           this.state.arrayValue.map((s, k) => {
             const { value, name } = this.state;
             this.state.listagem.map((cid, x) => {
               const { customer_id } = this.state;
-              this.state.bloqueios.push({
+                this.state.bloqueios.push({
                 "account_id": s.value,
                 "bids": !this.state.bids ? false : true,
                 "customer_id": cid.customer_id,
-                "motive_description": "Outros - Em Massa",
+                "motive_description": this.state.motivoBloqueio,
                 "motive_id": '9',
                 "questions": !this.state.questions ? false : true,
               });
             })
           })
-
-          axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, {
+          
+          axios.post(process.env.REACT_APP_API_URL + `/blacklist`, this.state.bloqueios,
+          {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
+          .then(res => {
+            
+            const status = res.data.status;
+            this.setState({status});
+            if (this.state.status === 'success'){
+              const message = res.data.message;
+              this.setState({message});
+              Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+            // this.props.history.push("/meusbloqueios");
+              window.location.href = "#/meusbloqueios";
+            }else{
+              const message = res.data.message;
+              this.setState({message});
+              Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
+            }
+          }).catch((error) => {
+            this.setState({isLoadingCadastro: false});
+            !error.response ?
+            (this.setState({tipoErro: error})) :
+            (this.setState({tipoErro: error.response.data.message}))
+            Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+          });
+        }
+        
+      }else if(this.state.custom[2] === true){
+      //SALVAR A LISTA E BLOQUEAR 
+        //SALVANDO A LISTA 
+        if (this.isEmpty(this.state.arrayValue)){
+          this.setState({isLoadingCadastro: false});
+          Swal.fire({html:'<p>Selecione uma conta para realizar os bloqueios!</p>', type: 'error', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+        }else{
+          axios.post(process.env.REACT_APP_API_URL + `/blacklist/list`, {
             "list_name":this.state.nomeLista,
-            "customers":this.state.bloqueios
+            "list_description":this.state.descricaoLista
           },
           {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
           ).then(res => {
 
-            axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, 
-              {
-                "blacklist_name":this.state.nomeLista, 
-                "accounts":this.state.accountId, 
-                "bids": !this.state.bids ? false : true,
-                "questions": !this.state.questions ? false : true
-              },
-            {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
-            .then(res => {
-             
-              const status = res.data.status;
-              this.setState({status});
-              if (this.state.status === 'success'){
-                const message = res.data.message;
-                this.setState({message});
-                Swal.fire({html:'<p><b>'+this.state.message+'</b><br>'+res.data.data.status+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-                window.location.href = "#/minhaslistasdebloqueios";
-              }else{
-                const message = res.data.message;
-                this.setState({message});
-                Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
-              
-              }
-            }).catch((error) => {
-            
-              !error.response ?
-              (this.setState({tipoErro: error})) :
-              (this.setState({tipoErro: error.response.data.message}))
-              Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-            });
+            this.state.arrayValue.map((s, k) => {
+              const { value, name } = this.state;
+              this.state.listagem.map((cid, x) => {
+                const { customer_id } = this.state;
+                this.state.bloqueios.push({
+                  "account_id": s.value,
+                  "bids": !this.state.bids ? false : true,
+                  "customer_id": cid.customer_id,
+                  "motive_description": "Outros - Em Massa",
+                  "motive_id": '9',
+                  "questions": !this.state.questions ? false : true,
+                });
+              })
+            })
 
-          }).catch((error) => {
-          
-              !error.response ?
-              (this.setState({tipoErro: error})) :
-              (this.setState({tipoErro: error.response.data.message}))
-              Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+            axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, {
+              "list_name":this.state.nomeLista,
+              "customers":this.state.bloqueios
+            },
+            {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
+            ).then(res => {
+
+              axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, 
+                {
+                  "blacklist_name":this.state.nomeLista, 
+                  "accounts":this.state.accountId, 
+                  "bids": !this.state.bids ? false : true,
+                  "questions": !this.state.questions ? false : true
+                },
+              {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
+              .then(res => {
+              
+                const status = res.data.status;
+                this.setState({status});
+                if (this.state.status === 'success'){
+                  const message = res.data.message;
+                  this.setState({message});
+                  Swal.fire({html:'<p><b>'+this.state.message+'</b><br>'+res.data.data.status+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+                  window.location.href = "#/minhaslistasdebloqueios";
+                }else{
+                  const message = res.data.message;
+                  this.setState({message});
+                  Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
+                
+                }
+              }).catch((error) => {
+                this.setState({isLoadingCadastro: false});
+                !error.response ?
+                (this.setState({tipoErro: error})) :
+                (this.setState({tipoErro: error.response.data.message}))
+                Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+              });
+
+            }).catch((error) => {
+              this.setState({isLoadingCadastro: false});
+                !error.response ?
+                (this.setState({tipoErro: error})) :
+                (this.setState({tipoErro: error.response.data.message}))
+                Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+            });
           });
-        });
-      }else{
-        
+        }
       }
+    }
   }
 }
 
