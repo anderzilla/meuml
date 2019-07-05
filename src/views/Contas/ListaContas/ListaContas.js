@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
-import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button, ButtonDropdown, ButtonGroup, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import Swal from 'sweetalert2';
-import {getToken} from '../../../auth';
-import axios from 'axios';
-import fotoPadrao from '../../../assets/img/avatars/user.svg';
-import ReactLoading from 'react-loading';
+
+import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button } from 'reactstrap';
 import VerticalDropDown from '../../Buttons/VerticalDropDown';
 import DropDownItem from '../../Buttons/DropDownItem';
+import fotoPadrao from '../../../assets/img/avatars/user.svg';
+import ReactLoading from 'react-loading';
+import Swal from 'sweetalert2';
 
-import VerticalBtnGroup from '../../Buttons/VerticalButton';
+import {getToken} from '../../../auth';
+import axios from 'axios';
+
+
 
 class ListaContas extends Component {
   constructor(props) {
     super(props);
     
     this.state = {
-      dropdownOpen: new Array(50).fill(false),
-      constas: [],
       isLoading: true,
       total: 0,
       fotoConta: fotoPadrao,
@@ -111,13 +111,21 @@ class ListaContas extends Component {
                                   url={process.env.REACT_APP_API_URL + '/accounts/' + 260}
                                   method="put"
                                   headers={ {headers: {"Authorization" : 'Bearer ' + this.state.tk}} }
-                                  >Botão1
+                                  >Renomear
                                 </DropDownItem>
+
                                 <DropDownItem
-                                  url="d"
-                                  data="e"
-                                  method="f"
-                                  >Botão2
+                                  url={process.env.REACT_APP_API_URL + '/accounts/' + 260 + '/sync'}
+                                  method="get"
+                                  headers={ {headers: {"Authorization" : 'Bearer ' + this.state.tk}} }
+                                  >Sincronizar
+                                </DropDownItem>
+                                
+                                <DropDownItem
+                                  url={process.env.REACT_APP_API_URL + '/accounts/' + 260}
+                                  method="delete"
+                                  headers={ {headers: {"Authorization" : 'Bearer ' + this.state.tk}} }
+                                  >Excluir
                                 </DropDownItem>
                               </VerticalDropDown>
                           </div>

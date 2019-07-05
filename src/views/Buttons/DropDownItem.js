@@ -22,52 +22,83 @@ class DropDownItem extends Component {
     };
 
     // Binds
-    this.buttonCall = this.buttonCall.bind(this);
-    this.listenChanges = this.listenChanges.bind(this);
+    this.apiRequest = this.apiRequest.bind(this);
+    this.apiHandler = this.apiHandler.bind(this);
   }
 
   // Asking for 'data parameter' then sets new states
-  buttonCall(props) {
+  apiRequest(props) {
     const { url, method, headers } = props;
-
-    // Getting data
-    Swal.fire({
-      title: "Informe o valor:",
-      input: "text",
-      showCancelButton: true,
-      cancelButtonText: "Cancelar",
-      showConfirmButton: true,
-      confirmButtonText: "Confirmar"
-
-      // Setting the new state
-    }).then(res => {
-      this.state.url = url;
-      this.state.data = { name: res.value };
-      this.state.method = method;
-      this.state.headers = headers;
-
-      // Firing a state reactive function
-      this.state.hasChanged = true;
-      this.listenChanges();
-    });
+    this.validateRequest(url, method, headers);
   }
 
+  validateRequest(url, method, headers) {
+    if (method === 'get' || method === 'delete' ) {
+      this.state.url = url
+      this.state.method = method
+      this.state.headers = headers
+
+      this.state.hasChanged = true
+
+      this.apiHandler();
+
+    } else {
+      // Getting data
+      Swal.fire({
+        title: "Informe o valor:",
+        input: "text",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar",
+        showConfirmButton: true,
+        confirmButtonText: "Confirmar"
+
+        // Setting the new state
+      }).then(res => {
+        const data = { name: res.value };
+
+        this.state.url = url
+        this.state.data = data
+        this.state.method = method
+        this.state.headers = headers
+
+        this.state.hasChanged = true
+
+        this.apiHandler();
+      });
+    };
+  };
+
   // Listening for state changes
-  listenChanges() {
+  apiHandler() {
     const { url, data, method, headers, hasChanged } = this.state;
+    console.log(this.state)
 
     if (hasChanged === true) {
       
       // Choosing the right HTTP method to work with
+      // GET
+      if (method === 'get') {
+        api.get(url, headers).then(res => {
+          if (res.status === 200) {
+            Swal.fire({
+              html: '<p>Feito!</p>',
+              type: 'success',
+              showConfirmButton: true,
+              showCancelButton: false,
+              confirmButtonText: 'Fechar'
+            })
+          } else { console.log(res)}
+        });
+
       // PUT
-      if (method === "put") {
+      } else if (method === "put") {
         api.put(url, data, headers).then(res => {
           if (res.status === 200) {
             Swal.fire({
-              html: `<p>Feito!</p>`,
+              html: `<p>Editado com sucesso</p>`,
               type: "success",
               showConfirmButton: true,
-              confirmButtonText: "Ok"
+              confirmButtonText: "Fechar"
             });
           }
         });
@@ -76,7 +107,7 @@ class DropDownItem extends Component {
       } else if (method === "post") {
         api.post(url, data).then(res => {
           Swal.fire({
-            html: `<p>Renomeado com sucesso</p>`,
+            html: `<p>Enviado com sucesso</p>`,
             type: "success",
             showConfirmButton: true,
             confirmButtonText: "Ok"
@@ -87,7 +118,7 @@ class DropDownItem extends Component {
       } else if (method === "delete") {
         api.delete(url, data).then(res => {
           Swal.fire({
-            html: `<p>Renomeado com sucesso</p>`,
+            html: `<p>Deletado com sucesso</p>`,
             type: "success",
             showConfirmButton: true,
             confirmButtonText: "Ok"
@@ -97,7 +128,7 @@ class DropDownItem extends Component {
       // Warning a BAD REQUEST
       } else {
         Swal.fire({
-          html: `<p>Método da API inválido.</p>`,
+          html: `<p>Método da API inválido. ${method}</p>`,
           type: "error",
           showConfirmButton: false,
           showCancelButton: true,
@@ -113,7 +144,7 @@ class DropDownItem extends Component {
         url={this.props.children}
         method={this.props.children}
         headers={this.props.children}
-        onClick={() => this.buttonCall(this.props)}
+        onClick={() => this.apiRequest(this.props)}
       >
         {this.props.children}
       </DropdownItem>
