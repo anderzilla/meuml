@@ -5,6 +5,8 @@ import {getToken} from '../../../auth';
 import axios from 'axios';
 import fotoPadrao from '../../../assets/img/avatars/user.svg';
 import ReactLoading from 'react-loading';
+import VerticalDropDown from '../../Buttons/VerticalDropDown';
+import DropDownItem from '../../Buttons/DropDownItem';
 
 class ListaContas extends Component {
   constructor(props) {
@@ -95,8 +97,10 @@ class ListaContas extends Component {
             if (res.data.meta.total !== 0) {
               this.setState({
                 contas: res.data.data,
+                tk: getToken(),
                 isLoading: false,
               });
+              console.log(this.state)
             } 
           } else {
             this.setState({
@@ -131,24 +135,27 @@ class ListaContas extends Component {
           {!isLoading ? (
             contas.map((c, k)=> {
               const { username, name, email, id } = this.state;
+              
                 return (
                     <Col xs="12" sm="4" md="3" key={c.id} className="CardConta">
                       <Card className="card-accent-primary">
                         <CardHeader>
                           <span id={'nomeConta-'+k}>{c.name}</span>
                           <div className="float-right">
-                          <ButtonGroup>
-                            <ButtonDropdown isOpen={this.state.dropdownOpen[k]} toggle={() => { this.toggle(k); }}>
-                              <DropdownToggle caret color="primary" size="sm">
-                                Opções
-                              </DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem onClick={() => this.renomear(c.id,k)}>Renomear</DropdownItem>
-                                <DropdownItem onClick={() => this.sincronizar(c.id)}>Sincronizar</DropdownItem>
-                                <DropdownItem onClick={() => this.excluir(c.id)}>Excluir</DropdownItem>
-                              </DropdownMenu>
-                            </ButtonDropdown>
-                          </ButtonGroup>
+                              <VerticalDropDown>
+                                <DropDownItem
+                                  url={process.env.REACT_APP_API_URL + '/accounts/' + 260}
+                                  method="put"
+                                  headers={ {headers: {"Authorization" : 'Bearer ' + this.state.tk}} }
+                                  >Botão1
+                                </DropDownItem>
+                                <DropDownItem
+                                  url="d"
+                                  data="e"
+                                  method="f"
+                                  >Botão2
+                                </DropDownItem>
+                              </VerticalDropDown>
                           </div>
                         </CardHeader>
                         <CardBody>
