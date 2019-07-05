@@ -318,11 +318,12 @@ class BloquearEmMassa extends Component {
                 const message = res.data.message;
                 this.setState({message});
                 Swal.fire({html:'<p><b>'+this.state.message+'</b><br>'+res.data.data.status+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+                window.location.href = "#/minhaslistasdebloqueios";
               }else{
                 const message = res.data.message;
                 this.setState({message});
                 Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
-                window.location.href = "#/minhaslistasdebloqueios";
+              
               }
             }).catch((error) => {
             
