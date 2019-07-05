@@ -34,7 +34,7 @@ class BloquearLista extends Component {
     this.toggleConta = this.toggleConta.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-        this.selectMultipleOption = this.selectMultipleOption.bind(this);
+    this.selectMultipleOption = this.selectMultipleOption.bind(this);
 
     this.state={
       accountName: '',
@@ -73,13 +73,8 @@ class BloquearLista extends Component {
     }));
   }
 
-  fetchBlacklist(accountId,accountName) {
-    this.setState({accountId: accountId, accountName: accountName});
-  }
-
   componentDidMount() {
     this.fetchAccounts();
-
   }
 
   fetchAccounts()
@@ -101,24 +96,15 @@ class BloquearLista extends Component {
         isLoadingAccounts: false
       });
       if(res.data.meta.total > 0){
-        this.fetchBlacklist(res.data.data[0].id);
-      }else{
-        Swal.fire({
-          title: '',
-          text: "Você precisa ter ao menos 1 conta!",
-          type: 'info',
-          showCancelButton: false,
-          confirmButtonColor: '#366B9D',
-          confirmButtonText: 'OK',
-          confirmButtonClass: 'btn btn-success',
-          buttonsStyling: true
-        }).then(function () {
-          window.location.href = "#/listacontas";
-        })
-      }
+        if(res.data.meta.total === 1) {        
+          console.log(this.state.arrayValue);
+          this.setState({'arrayValue' : [{'value':res.data.data[0].id, 'label':res.data.data[0].name }],});
+          console.log(this.state.arrayValue);
+          }
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
     }
+  }
   }).catch(error => {
   });
   }
@@ -237,14 +223,16 @@ class BloquearLista extends Component {
                     onChange={this.handleInputChange}
                     value={this.state.blackListName} />
                 </FormGroup>
+                </Col>
+                <Col md="12" xs="12">
                 <Row>
-                  <Col md="6" xs="12">
+                  <Col md="4" xs="12">
                     <FormGroup>
                     <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="bids" value="1" onChange={this.handleInputChange}  />
                     <span className="textoSwitch"> Bloquear para compras</span>
                     </FormGroup>
                   </Col>
-                  <Col md="6" xs="12">
+                  <Col md="8" xs="12">
                     <FormGroup>
                     <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="questions" value="1" onChange={this.handleInputChange} />
                     <span className="textoSwitch">Bloquear para perguntas</span>

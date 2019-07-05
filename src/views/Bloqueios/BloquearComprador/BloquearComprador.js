@@ -110,10 +110,9 @@ class BloquearComprador extends Component {
         isLoadingAccounts: false
       });
       if(res.data.meta.total > 0){
-        this.fetchBlacklist(res.data.data[0].id);
-
-        if(res.data.meta.total === 1) {
-          this.setState({ arrayValue: [{'value':res.data.data[0].id, 'label':res.data.data[0].name }] });
+        if(res.data.meta.total === 1) {        
+          this.fetchBlacklist(res.data.data[0].id);
+          this.state.arrayValue = [{'value':res.data.data[0].id, 'label':res.data.data[0].name }];
         }
       }else{
         Swal.fire({
@@ -280,6 +279,7 @@ class BloquearComprador extends Component {
                 ) : (
                   <h3>Carregando...</h3>
                 )}
+                {console.log(this.state.arrayValue)}
                 </FormGroup>
                 <FormGroup>
                   <Label for="idUsusario">ID ou Usuário do comprador</Label>

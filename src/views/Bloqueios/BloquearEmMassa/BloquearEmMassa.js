@@ -82,13 +82,14 @@ class BloquearEmMassa extends Component {
         accounts: listaContas,
         isLoadingAccounts: false
       });
-      if(res.data.data.meta.total > 0){
-        this.fetchBlacklist(res.data.data[0].id);
-      }else{
-      }
+      if(res.data.meta.total > 0){
+        if(res.data.meta.total === 1) {        
+          this.state.arrayValue = [{'value':res.data.data[0].id, 'label':res.data.data[0].name }];
+        }
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
     }
+  }
   }).catch(error => {
   });
   }
