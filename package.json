@@ -60,7 +60,7 @@
     "react-chartjs-2": "^2.7.4",
     "react-codemirror2": "^5.1.0",
     "react-data-grid": "^6.1.0",
-    "react-data-grid-addons": "^6.1.0",
+    "react-data-grid-addons": "6.1.0",
     "react-dates": "^18.5.0",
     "react-desktop-notification": "^1.0.9",
     "react-dom": "^16.8.4",
