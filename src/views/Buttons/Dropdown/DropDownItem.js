@@ -17,7 +17,6 @@ class DropDownItem extends Component {
       url: "",
       data: "",
       method: "",
-      headers: "",
       hasChanged: false
     };
 
@@ -32,18 +31,17 @@ class DropDownItem extends Component {
     this.validateRequest(url, method, headers);
   }
 
-  validateRequest(url, method, headers) {
+  validateRequest(url, method) {
     if (method === 'get' || method === 'delete' ) {
-      this.state.url = url
+      this.state.url = url // Delete parameters must be passed through the URL
       this.state.method = method
-      this.state.headers = headers
 
       this.state.hasChanged = true
 
       this.apiHandler();
 
     } else {
-      // Getting data
+      // Getting data to POST or PUT
       Swal.fire({
         title: "Informe o valor:",
         input: "text",
@@ -59,7 +57,6 @@ class DropDownItem extends Component {
         this.state.url = url
         this.state.data = data
         this.state.method = method
-        this.state.headers = headers
 
         this.state.hasChanged = true
 
@@ -70,7 +67,7 @@ class DropDownItem extends Component {
 
   // Listening for state changes
   apiHandler() {
-    const { url, data, method, headers, hasChanged } = this.state;
+    const { url, data, method, hasChanged } = this.state;
 
     if (hasChanged === true) {
       
@@ -142,7 +139,6 @@ class DropDownItem extends Component {
       <DropdownItem
         url={this.props.children}
         method={this.props.children}
-        headers={this.props.children}
         onClick={() => this.apiRequest(this.props)}
         >{this.props.children}
       </DropdownItem>

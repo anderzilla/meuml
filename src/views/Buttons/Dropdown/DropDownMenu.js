@@ -24,7 +24,7 @@ class DropDownMenu extends Component {
         <ButtonDropdown
             isOpen={this.state.isDropdownOpen}
             toggle={() => { this.toggle() }}>
-          <DropdownToggle caret color="primary" size="sm">Opções</DropdownToggle>
+          <DropdownToggle caret color={this.props.className} size="sm">Opções</DropdownToggle>
           <DropdownMenu>
               {this.props.children}
           </DropdownMenu>

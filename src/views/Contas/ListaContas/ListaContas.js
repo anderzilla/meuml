@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import api from '../../../services/api';
 
 import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button } from 'reactstrap';
-import VerticalDropDown from '../../Buttons/Dropdown/DropDownMenu';
+import DropDownMenu from '../../Buttons/Dropdown/DropDownMenu';
 import DropDownItem from '../../Buttons/Dropdown/DropDownItem';
 
 import fotoPadrao from '../../../assets/img/avatars/user.svg';
@@ -82,25 +82,23 @@ class ListaContas extends Component {
                           <span id={'nomeConta-'+index}>{acc.name}</span>
                           
                           <div className="float-right">
-                              <VerticalDropDown>
+                              <DropDownMenu className="primary">
                                 <DropDownItem
                                   url={'/accounts/' + acc.id}
                                   method="put"
                                   >Renomear
                                 </DropDownItem>
-
                                 <DropDownItem
                                   url={'/accounts/' + acc.id + '/sync'}
                                   method="get"
                                   >Sincronizar
                                 </DropDownItem>
-                                
                                 <DropDownItem
                                   url={'/accounts/' + acc.id}
                                   method="delete"
                                   >Excluir
                                 </DropDownItem>
-                              </VerticalDropDown>
+                              </DropDownMenu>
                           </div>
                         </CardHeader>
                         <CardBody>
