@@ -6,7 +6,7 @@ import { DropdownItem } from "reactstrap";
 import Swal from "sweetalert2";
 
 // Other dependencies
-import api from "../../services/api";
+import api from "../../../services/api";
 
 // Main Component
 class DropDownItem extends Component {

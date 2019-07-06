@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import api from '../../../services/api';
 
 import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button } from 'reactstrap';
-import VerticalDropDown from '../../Buttons/VerticalDropDown';
-import DropDownItem from '../../Buttons/DropDownItem';
+import VerticalDropDown from '../../Buttons/Dropdown/DropDownMenu';
+import DropDownItem from '../../Buttons/Dropdown/DropDownItem';
 
 import fotoPadrao from '../../../assets/img/avatars/user.svg';
 import ReactLoading from 'react-loading';

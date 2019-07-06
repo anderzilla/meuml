@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { DropdownToggle, DropdownMenu, ButtonDropdown, ButtonGroup } from "reactstrap";
 
-class VerticalDropDown extends Component {
+class DropDownMenu extends Component {
   constructor(props) {
     super(props);
     
@@ -34,4 +34,4 @@ class VerticalDropDown extends Component {
   }
 }
 
-export default VerticalDropDown;
+export default DropDownMenu;
