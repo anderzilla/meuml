@@ -86,16 +86,19 @@ class ListaContas extends Component {
                                 <DropDownItem
                                   url={'/accounts/' + acc.id}
                                   method="put"
+                                  onSuccess="Renomeado com sucesso!"
                                   >Renomear
                                 </DropDownItem>
                                 <DropDownItem
                                   url={'/accounts/' + acc.id + '/sync'}
                                   method="get"
+                                  onSuccess="Contas sincronizadas."
                                   >Sincronizar
                                 </DropDownItem>
                                 <DropDownItem
                                   url={'/accounts/' + acc.id}
                                   method="delete"
+                                  onSuccess={`Conta ${acc.name} deletada com sucesso!`}
                                   >Excluir
                                 </DropDownItem>
                               </DropDownMenu>

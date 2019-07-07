@@ -17,6 +17,7 @@ class DropDownItem extends Component {
       url: "",
       data: "",
       method: "",
+      onSuccess: "",
       hasChanged: false
     };
 
@@ -27,16 +28,17 @@ class DropDownItem extends Component {
 
   // Asking for 'data parameter' then sets new states
   apiRequest(props) {
-    const { url, method, headers } = props;
-    this.validateRequest(url, method, headers);
+    const { url, method, onSuccess } = props;
+    this.validateRequest(url, method, onSuccess);
   }
 
-  validateRequest(url, method) {
+  validateRequest(url, method, onSuccess) {
     if (method === 'get' || method === 'delete' ) {
-      this.state.url = url // Delete parameters must be passed through the URL
-      this.state.method = method
-
-      this.state.hasChanged = true
+      this.state.url = url; // Delete parameters must be passed through the URL
+      this.state.method = method;
+      this.state.onSuccess = onSuccess;
+      
+      this.state.hasChanged = true;
 
       this.apiHandler();
 
@@ -54,11 +56,12 @@ class DropDownItem extends Component {
       }).then(res => {
         const data = { name: res.value };
 
-        this.state.url = url
-        this.state.data = data
-        this.state.method = method
+        this.state.url = url;
+        this.state.data = data;
+        this.state.method = method;
+        this.state.onSuccess = onSuccess;
 
-        this.state.hasChanged = true
+        this.state.hasChanged = true;
 
         this.apiHandler();
       });
@@ -67,8 +70,7 @@ class DropDownItem extends Component {
 
   // Listening for state changes
   apiHandler() {
-    const { url, data, method, hasChanged } = this.state;
-
+    const { url, data, method, hasChanged, onSuccess } = this.state;
     if (hasChanged === true) {
       
       // Choosing the right HTTP method to work with
@@ -77,7 +79,7 @@ class DropDownItem extends Component {
         api.get(url).then(res => {
           if (res.status === 200) {
             Swal.fire({
-              html: '<p>Feito!</p>',
+              html: `<p>${onSuccess}</p>`,
               type: 'success',
               showConfirmButton: true,
               showCancelButton: false,
@@ -91,7 +93,7 @@ class DropDownItem extends Component {
         api.put(url, data).then(res => {
           if (res.status === 200) {
             Swal.fire({
-              html: `<p>Editado com sucesso</p>`,
+              html: `<p>${onSuccess}</p>`,
               type: "success",
               showConfirmButton: true,
               confirmButtonText: "Fechar"
@@ -103,7 +105,7 @@ class DropDownItem extends Component {
       } else if (method === "post") {
         api.post(url, data).then(res => {
           Swal.fire({
-            html: `<p>Enviado com sucesso</p>`,
+            html: `<p>${onSuccess}</p>`,
             type: "success",
             showConfirmButton: true,
             confirmButtonText: "Ok"
@@ -114,7 +116,7 @@ class DropDownItem extends Component {
       } else if (method === "delete") {
         api.delete(url, data).then(res => {
           Swal.fire({
-            html: `<p>Deletado com sucesso</p>`,
+            html: `<p>${onSuccess}</p>`,
             type: "success",
             showConfirmButton: true,
             confirmButtonText: "Ok"
@@ -137,8 +139,9 @@ class DropDownItem extends Component {
   render() {
     return (
       <DropdownItem
-        url={this.props.children}
-        method={this.props.children}
+        url={this.props.children.url}
+        method={this.props.children.method}
+        onSuccess={this.props.children.onSuccess}
         onClick={() => this.apiRequest(this.props)}
         >{this.props.children}
       </DropdownItem>
