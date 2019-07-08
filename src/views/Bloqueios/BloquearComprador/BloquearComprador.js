@@ -290,10 +290,10 @@ class BloquearComprador extends Component {
                 {console.log(this.state.arrayValue)}
                 </FormGroup>
                 <FormGroup>
-                  <Label for="idUsusario">ID ou Usuário do comprador</Label>
-                  <InputGroup>
+                  <Label for="idUsusario">ID ou Apelido do comprador</Label>
+                  <InputGroup className="idApelido">
                     <InputGroupAddon addonType="prepend">
-                    <ButtonDropdown direction="up" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
+                    <ButtonDropdown direction="right" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
                       <DropdownToggle caret color="primary" size="md">
                         {!this.state.tipoUser ? ('Selecione') : this.state.tipoUser}
                       </DropdownToggle>
