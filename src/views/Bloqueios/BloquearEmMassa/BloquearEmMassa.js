@@ -238,6 +238,11 @@ class BloquearEmMassa extends Component {
             (this.setState({tipoErro: error.response.data.message}))
             Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
           });
+        }).catch((error) => {     
+          !error.response ?
+          (this.setState({tipoErro: error})) :
+          (this.setState({tipoErro: error.response.data.message}))
+          Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
         });
         
       }else if(this.state.custom[1] === true){
@@ -363,6 +368,11 @@ class BloquearEmMassa extends Component {
                 (this.setState({tipoErro: error.response.data.message}))
                 Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
             });
+          }).catch((error) => {     
+            !error.response ?
+            (this.setState({tipoErro: error})) :
+            (this.setState({tipoErro: error.response.data.message}))
+            Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
           });
         }
       }
