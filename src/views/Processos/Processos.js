@@ -154,7 +154,7 @@ class Processos extends Component {
                                 <i className="fa fa-circle greenBall"></i>
                               }
                               {' '+tituloSubItem+' : ID - '}<b>{d.item_id}</b>
-                              {(d.cause !== null)? <em> ( d.cause ) </em>: <span></span>}
+                              {(d.cause !== null)? <em> ( {d.cause} ) </em>: <span></span>}
                             </li>)
                           })} 
                         </ul>
