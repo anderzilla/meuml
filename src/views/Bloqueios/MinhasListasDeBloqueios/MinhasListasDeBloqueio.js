@@ -105,7 +105,13 @@ class MinhasListasDeBloqueio extends Component {
       }else{
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
       }
-    }).catch(error => { console.log(error)});
+      this.fetchBlacklistList();
+    }).catch((error) => {     
+      !error.response ?
+      (this.setState({tipoErro: error})) :
+      (this.setState({tipoErro: error.response.data.message}))
+      Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    });
   }
 
   fetchBlacklistList()
