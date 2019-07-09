@@ -30,6 +30,9 @@ class Processos extends Component {
       fim: '',
       cria: '',
       timeX: '',
+      numeros:'',
+      tx1:'',
+      tx2:'',
     };
     
     this.table = data.rows;
@@ -118,6 +121,22 @@ class Processos extends Component {
     });      
   }
 
+  preFormatedext(text){
+    const thenum = text.replace( /^\D+/g, '');
+    !thenum? this.state.numeros ='': this.state.numeros = '#'+thenum.match(/\d+/)[0];
+    if(this.state.numeros !== ''){
+      const explode = text.split(this.state.numeros);
+      this.state.tx1 = explode[0];
+      this.state.tx2 = explode[1];
+    }else{
+      this.state.tx1 = text;
+      this.state.tx2 = '';
+    }
+    
+    //console.log(newText);
+    //return newText;
+  }
+
   componentDidMount() {
     this.fetchProcess();
   }
@@ -154,6 +173,7 @@ class Processos extends Component {
                       <CardBody className="subItensProcessos">
                         <ListGroup className="listaSubItem" >
                           {p.subprocessos.map((d, k)=> {
+                            this.preFormatedext(d.cause);
                             const tituloSubItem = d.tool_name.replace('Blacklist', 'Bloqueio');
                             return (
                             <ListGroupItem key={k}>
@@ -161,8 +181,7 @@ class Processos extends Component {
                               {(d.status === 1)? <i className="fa fa-circle greenBall"></i> : ''}
                               {(d.status === 2)? <i className="fa fa-circle yellowBall"></i> : ''}
                               {(d.status === 3)? <i className="fa fa-circle greyBall"></i> : ''}
-                              <b>{' '+tituloSubItem+' '}</b>
-                              {(d.cause !== null)? <em> ( {d.cause} ) </em>: <span></span>}
+                              {(d.cause !== null)? <span> {this.state.tx1} <b>{this.state.numeros}</b> {this.state.tx2}</span> : ''}
                             </ListGroupItem>)
                           })} 
                         </ListGroup>
