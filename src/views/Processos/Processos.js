@@ -94,7 +94,7 @@ class Processos extends Component {
       this.state.timeX = Moment(this.state.fim, 'DD/MM/YYYY HH:mm').startOf().fromNow():
       this.state.timeX = Moment(this.state.cria, 'DD/MM/YYYY HH:mm').startOf().fromNow();
     const res = Moment(this.state.timeX, 'DD/MM/YYYY HH:mm').startOf().fromNow();
-    const resdiaa = res.replace('a day', '1 dia');
+    const resdiaa = res.replace('a day', '1 dia').replace('in','');
     const resmesa = resdiaa.replace('a month', '1 mês');
     const resmeses = resmesa.replace('months', 'meses');
     const resmes = resmeses.replace('month', 'mes');
