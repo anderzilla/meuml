@@ -137,7 +137,6 @@ class Cadastro extends Component {
     const {isLoadingCadastro} = this.state;
     return (
       <div className="app flex-row align-items-center">
-        {console.log(this.props.location.pathname)}
         <Container>
           <Row className="justify-content-center">
             <Col md="9" lg="7" xl="6">
