@@ -1,5 +1,6 @@
 import React from 'react';
 import DefaultLayout from './containers/DefaultLayout';
+import Testes from './Components/Testes';
 
 const Inicio = React.lazy(() => import('./views/Inicio/Inicio'));
 const AlterarSenha = React.lazy(() => import('./views/Autenticacao/AlterarSenha'));
@@ -53,6 +54,9 @@ const routes = [
   { path: '/perguntas', name: 'Perguntas e Respostas', component: Perguntas, exact: true },
   //Processos
   { path: '/processos', name: 'Processos', component: Processos, exact: true },
+
+  // Testes
+  { path:'/testes', name:'Testes', component: Testes}
 ];
 
 export default routes;
