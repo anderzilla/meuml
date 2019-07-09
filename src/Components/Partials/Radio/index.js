@@ -25,12 +25,25 @@ export default class Radioflix extends React.Component {
     }
   }
 
+  kurasumei(perspective) {
+
+    if(perspective === '') {
+      return '';
+    
+    } else if(perspective === 'inline') {
+      return 'form-check-inline';
+    
+      } else {
+        return '';
+      }
+  }
+
   render() {
     return (
       <div>
         {this.props.config.map(config => {
           return (
-            <div className="form-check">
+            <div className={`form-check ${this.kurasumei(config.orientation)}`}>
               <input className="form-check-input"
                      type="radio"
                      name={config.name}

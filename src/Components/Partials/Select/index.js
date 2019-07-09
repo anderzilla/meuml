@@ -2,16 +2,16 @@ import React from "react";
 
 export default class Selectflix extends React.Component {
 
-  kurasumei(size) {
+  kurasumei(size, kurasu) {
 
     if(size === 'sm') {
-      return 'form-control-sm';
+      return `${kurasu} form-control-sm`;
     
     } else if(size === 'lg') {
-      return 'form-control-lg';
+      return `${kurasu} form-control-lg`;
     
       } else {
-        return '';
+        return kurasu;
       }
   }
 
@@ -19,7 +19,7 @@ export default class Selectflix extends React.Component {
     return (
       <div>
         { this.props.options !== undefined ? (
-        <select className={`form-control ${this.kurasumei(this.props.size)}`}
+        <select className={`${this.kurasumei(this.props.size, this.props.className)}`}
                 name={this.props.name}
                 id={this.props.id}
         >{this.props.options.map(text => {
