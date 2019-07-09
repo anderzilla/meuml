@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Card, CardHeader, CardBody, Collapse, Button, Col, Row} from 'reactstrap';
+import {Card, CardHeader, CardBody, Collapse, Button, Col,ListGroup, ListGroupItem, Row} from 'reactstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import Moment from 'moment';
@@ -27,6 +27,9 @@ class Processos extends Component {
       timeout: 300,
       isLoading: true,
       sublista:'',
+      fim: '',
+      cria: '',
+      timeX: '',
     };
     
     this.table = data.rows;
@@ -85,8 +88,12 @@ class Processos extends Component {
 }
 
   showData(data){
-    const cria = Moment(data.date_created).format('DD/MM/YYYY HH:mm');
-    const res = Moment(cria, 'DD/MM/YYYY HH:mm').startOf().fromNow();
+    this.state.cria = Moment(data.date_created).format('DD/MM/YYYY HH:mm');
+    this.state.fim = Moment(data.date_finished).format('DD/MM/YYYY HH:mm');
+    (this.state.fim !== null || this.state.fim !== '')? 
+      this.state.timeX = Moment(this.state.fim, 'DD/MM/YYYY HH:mm').startOf().fromNow():
+      this.state.timeX = Moment(this.state.cria, 'DD/MM/YYYY HH:mm').startOf().fromNow();
+    const res = Moment(this.state.timeX, 'DD/MM/YYYY HH:mm').startOf().fromNow();
     const resdiaa = res.replace('a day', '1 dia');
     const resmesa = resdiaa.replace('a month', '1 mês');
     const resmeses = resmesa.replace('months', 'meses');
@@ -105,7 +112,8 @@ class Processos extends Component {
       'titulo':tituloProcesso,      
       'andamento': andamento + andamentoStatus, 
       'dataInicio':final,
-      'criacao': cria,
+      'criacao': this.state.cria,
+      'conclusao': this.state.fim,
       'subprocessos': data.process_items,
     });      
   }
@@ -138,26 +146,26 @@ class Processos extends Component {
                       </Button>
                       </Col>
                       <Col sm="6" md="6" className="text-right">
-                        <span className="m-0 p-0 text-right"><sup>iniciado em {p.criacao} <i className="fa fa-clock-o"></i></sup></span>
+                        <span className="m-0 p-0 text-right"><sup>{(p.conclusao !== null || p.conslusão !== '')? 'finalizado em '+p.conclusao+' ' : 'iniciado em '+p.criacao+' '}<i className="fa fa-clock-o"></i></sup></span>
                       </Col>
                       </Row>
                     </CardHeader>
                     <Collapse isOpen={this.state.accordion[k]} data-parent="#accordion" id={'collapse'+k} aria-labelledby={'heading'+k}>
                       <CardBody className="subItensProcessos">
-                        <ul className="listaSubItem" >
+                        <ListGroup className="listaSubItem" >
                           {p.subprocessos.map((d, k)=> {
                             const tituloSubItem = d.tool_name.replace('Blacklist', 'Bloqueio');
                             return (
-                            <li key={k}>
-                              {(d.status === 'false')? 
-                                <i className="fa fa-circle redBall"></i> : 
-                                <i className="fa fa-circle greenBall"></i>
-                              }
-                              {' '+tituloSubItem+' : ID - '}<b>{d.item_id}</b>
+                            <ListGroupItem key={k}>
+                              {(d.status === 0)? <i className="fa fa-circle redBall"></i> : ''}
+                              {(d.status === 1)? <i className="fa fa-circle greenBall"></i> : ''}
+                              {(d.status === 2)? <i className="fa fa-circle yellowBall"></i> : ''}
+                              {(d.status === 3)? <i className="fa fa-circle greyBall"></i> : ''}
+                              <b>{' '+tituloSubItem+' '}</b>
                               {(d.cause !== null)? <em> ( {d.cause} ) </em>: <span></span>}
-                            </li>)
+                            </ListGroupItem>)
                           })} 
-                        </ul>
+                        </ListGroup>
                       </CardBody>
                     </Collapse>
                   </Card>): ''
