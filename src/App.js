@@ -146,7 +146,7 @@ class App extends Component {
     if (this.props.location.pathname !== '/cadastro'){
       window.location.assign('#/login');
     }else{
-      console.log(' Continuando o cadastro!');
+      console.log(this.props.location.pathname+' Continuando o cadastro!');
     }
     
   };
