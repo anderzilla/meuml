@@ -142,8 +142,9 @@ class App extends Component {
   };
 
   destroy = () => {
-    localStorage.setItem('@MeuML-Token', null)
-    window.location.assign('#/login');
+    
+    localStorage.setItem('@MeuML-Token', null) 
+    isAuthenticated()? (window.location.assign('#/login')) : console.log('Logido:'+isAuthenticated());
   };
 
   render() {
