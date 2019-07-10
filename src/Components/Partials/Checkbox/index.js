@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Checkflix = (props) => {
+const Check = (props) => {
   return (
     <div class="form-check">
-      <input class="form-check-input" 
+      <input class="form-check-input"
              type="checkbox"
              value={props.value}
              id={props.children+'Id'}
@@ -17,4 +17,4 @@ const Checkflix = (props) => {
   );
 }
 
-export default Checkflix;
+export default Check;

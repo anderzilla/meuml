@@ -1,15 +1,15 @@
-import React from "react";
+import React, { Component } from 'react';
 
-export default class Selectflix extends React.Component {
+class Select extends Component {
 
   kurasumei(size, kurasu) {
 
     if(size === 'sm') {
       return `${kurasu} form-control-sm`;
-    
+
     } else if(size === 'lg') {
       return `${kurasu} form-control-lg`;
-    
+
       } else {
         return kurasu;
       }
@@ -39,3 +39,5 @@ export default class Selectflix extends React.Component {
     );
   }
 }
+
+export default Select;

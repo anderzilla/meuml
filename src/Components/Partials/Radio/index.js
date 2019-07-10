@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class Radioflix extends React.Component {
+export default class Radio extends React.Component {
   constructor(props) {
     super(props);
 
@@ -29,10 +29,10 @@ export default class Radioflix extends React.Component {
 
     if(perspective === '') {
       return '';
-    
+
     } else if(perspective === 'inline') {
       return 'form-check-inline';
-    
+
       } else {
         return '';
       }
