@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated } from "./auth";
-//import { logout } from "./logout";
 import Loadable from 'react-loadable';
 import './App.scss';
 import moment from 'moment';
+import Swal from 'sweetalert2';
 const loading = () => <div className="animated fadeIn pt-3 text-center"><div className="sk-spinner sk-spinner-pulse"></div></div>;
 
-// Containers
 const DefaultLayout = Loadable({
   loader: () => import('./containers/DefaultLayout'),
   loading
@@ -18,7 +17,6 @@ const CallBack = Loadable({
   loading
 });
 
-// Autenticação
 const Login = Loadable({
   loader: () => import('./views/Autenticacao/Login'),
   loading
@@ -49,7 +47,6 @@ const ConfirmarCadastro = Loadable({
   loading
 });
 
-//Sistema
 const Page404 = Loadable({
   loader: () => import('./views/Sistema/Page404'),
   loading
@@ -58,6 +55,7 @@ const Page404 = Loadable({
 const Page500 = Loadable({
   loader: () => import('./views/Sistema/Page500'),
   loading
+
 });
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
@@ -86,8 +84,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-
-    
     this.setState({
       warningTime: 1000,
       signoutTime: 2000,
@@ -124,37 +120,45 @@ class App extends Component {
   };
 
   warn = () => {
-   // console.log('Você será desconectado em 1 minuto.');
+    const expireToken = localStorage.getItem("@MeuML-Token-expire");
+    const dataFim = moment().format("DD/MM/YYYY HH:mm")
+    
+    if(moment(expireToken).diff(dataFim) <= 0){
+      Swal.fire({
+        html: '<p>Você será desconectado por inatividade.</p>',
+        type: 'warning',
+        showCloseButton: true
+      })
+    }
   };
 
   logout = () => {
     const expireToken = localStorage.getItem("@MeuML-Token-expire");
-    const dataIni = moment('02/07/2019 15:26')
     const dataFim = moment().format("DD/MM/YYYY HH:mm")
 
     var ms = moment(expireToken).diff(dataFim)
  
    if(ms <= 0)
    {
-    console.log('Você será desconectado por inatividade no sistema.');
+    this.warn();
     this.destroy();
- 
+
    }
   };
 
   destroy = () => {
     localStorage.setItem('@MeuML-Token', null)
-    //Método para evitar o redirecionamento para login sem sessão ou com sessão expirada
     const cpath = window.location.href.split('#');
     const cpathComposto = cpath[1].split('/');
-    if (cpathComposto[1] === 'cadastro'){
-      console.log('Cadastro de Usuário');
-    }else if(cpathComposto[1] === 'confirmarcadastro'){
-      console.log('Confirmação de Cadastro');
-    }else if(cpathComposto[1] === 'recuperarsenha'){
-      console.log('Recuperação de senha');     
-    }else{
-      window.location.assign('#/login');
+
+    if(
+      cpathComposto[1] !== 'cadastro'||
+      cpathComposto[1] !== 'confirmarcadastro'||
+      cpathComposto[1] !== 'recuperarsenha'
+    ){ window.location.assign('#/login') }
+
+    else {
+      window.location.assign('#/login')
     }
   };
 
@@ -167,7 +171,6 @@ class App extends Component {
           <Route exact path="/recuperarsenha" component={RecuperarSenha} />
           <Route exact path="/confirmarcadastro/:email/:hash" component={ConfirmarCadastro} />
           <Route exact path="/alterarsenha/:email/:hash" component={AlterarSenha} />
-          {/*acesso restrito */}
           <PrivateRoute path="/" name="MeuML.com" component={DefaultLayout} />
           <PrivateRoute path="/callback" name="MeuML.com - Callback" component={CallBack} />
           <PrivateRoute path="/logout" name="MeuML.com" component={Logout} />
