@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { apiGet, apiPost, apiPut, apiDelete } from './api-lexicon';
-import swalShout from '../../swalShout';
+import swalShout from '../../helpers/swalShout';
 
 class ApiInvoker extends Component {
     constructor(props) {
