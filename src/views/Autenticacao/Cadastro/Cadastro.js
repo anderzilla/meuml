@@ -64,21 +64,20 @@ class Cadastro extends Component {
   handleSubmit(event) {
 
     event.preventDefault();
-    this.setState({
-      isLoadingCadastro: true,
-
-    });
+    this.setState({isLoadingCadastro: true});
     
     if (this.state.userName === ''){
-      alert('Preencha  o seu Usuário! Nã deixe campos em branco');
+      Swal.fire({html:'<p>Preencha o seu Usuário!<br/> Não deixe campos em branco</p>', type: 'error', showConfirmButton: true});
     }else if(this.state.email === ''){
-      alert('Preencha  o seu E-mail! Nã deixe campos em branco');
+      Swal.fire({html:'<p>Preencha o seu E-mail!<br/>Não deixe campos em branco</p>', type: 'error', showConfirmButton: true});
+    }else if(!this.state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
+      Swal.fire({html:'<p>Preencha o seu E-mail corretamente!<br/>Formato de email Inválido!</p>', type: 'error', showConfirmButton: true});
     }else if(this.state.password === '' || this.state.confirmPassword === ''){
-      alert('Preencha  o sua Senha! Não deixe campos em branco');
+      Swal.fire({html:'<p>Preencha a sua Senha!<br/>Não deixe campos em branco</p>', type: 'error', showConfirmButton: true});
     }else if(this.state.password.length < 6 || this.state.confirmPassword < 6){
-      alert('A senha deve ter um mínimo de 6 caracteres!');
+      Swal.fire({html:'<p>A senha deve ter um mínimo de 6 caracteres!</p>', type: 'error', showConfirmButton: true});
     }else if(this.state.password !== this.state.confirmPassword ){
-      alert('As senhas não conferem!');
+      Swal.fire({html:'<p>As senhas não conferem!</p>', type: 'error', showConfirmButton: true});
     /*}else if (this.state.termos === '' ){
       alert('Aceite os termos de uso!' + this.state.termos);*/
     }else{
@@ -117,18 +116,13 @@ class Cadastro extends Component {
           });
           Swal.fire({html:'<p>'+this.state.message+' <br /> <b>'+ this.state.tipoErro +'</b> </p>', type: 'error', showConfirmButton: true});
         }
-      })/*.catch((error) => {
-        
-        if (error.response.data.data.email !== '' || error.response.data.data.email !== 'undefined'){
-          this.setState({tipoErro: error.response.data.data.email});
-        }else if(error.response.data.data._schema !== '' || error.response.data.data._schema !== 'undefined'){
-          this.setState({tipoErro: error.response.data.data._schema});
-        }else{
-          this.setState({tipoErro: "Erro desconhecido, tente novamente!"});
-        }
-       
-        Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    })*/;
+      }).catch((error) => {
+        this.setState({isLoadingCadastro: false});
+        !error.response ?
+        (this.setState({tipoErro: error})) :
+        (this.setState({tipoErro: error.response.data.message}))
+        Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    });
   }
   }
 
