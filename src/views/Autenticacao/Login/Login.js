@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import {login} from '../../../auth';
-
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 import moment  from 'moment';
+import api from '../../../services/api';
 
 class Login extends Component {
 
@@ -49,7 +48,7 @@ class Login extends Component {
     const USER_EMAIL = "@MeuML-UserEmail";
     const USER_SELLER_ID = "@MeuML-UserSellerId";
     //Realiza o login testando os dados do usuário no servidor
-    axios.post(process.env.REACT_APP_API_URL + `/auth/login`, {
+    api.post(`/auth/login`, {
       "email":this.state.email,
       "password":this.state.password
     })
