@@ -151,6 +151,8 @@ class App extends Component {
       console.log('Cadastro de Usuário');
     }else if(cpathComposto[1] === 'confirmarcadastro'){
       console.log('Confirmação de Cadastro');
+    }else if(cpathComposto[1] === 'alterarsenha'){
+      console.log('Alteração de Senha');
     }else if(cpathComposto[1] === 'recuperarsenha'){
       console.log('Recuperação de senha');     
     }else{
