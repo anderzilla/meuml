@@ -1,6 +1,6 @@
 import React from 'react';
 import DefaultLayout from './containers/DefaultLayout';
-import Testes from './Components/Testes';
+import Testes from './components/Testes';
 
 const Inicio = React.lazy(() => import('./views/Inicio/Inicio'));
 const AlterarSenha = React.lazy(() => import('./views/Autenticacao/AlterarSenha'));
