@@ -1,29 +1,22 @@
 import React, { Component } from 'react';
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
-  Table,
   Form,
   Label,
   FormGroup,
   Input,
   Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Col,
   Row,
 } from 'reactstrap';
 import { AppSwitch } from '@coreui/react'
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 
-import Picky, {components} from "react-picky";
+import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 
 import ReactLoading from 'react-loading';
@@ -53,8 +46,6 @@ class BloquearLista extends Component {
 
     this.nbloqueios = "2048";
     this.nlistas = "48";
-    // ...
-
   }
 
   handleInputChange(event) {
@@ -115,7 +106,7 @@ class BloquearLista extends Component {
 
   selectMultipleOption(value) {
     this.setState({ arrayValue: value });
-    //Prepara o array para ser manipulado
+
     const values = this.state;
     this.state.values = value;
     this.state.accountId = [];

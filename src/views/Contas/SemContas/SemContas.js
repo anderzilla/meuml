@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
-import {
-  Button,
-} from "reactstrap";
+import { Button } from "reactstrap";
 import {Link} from "react-router-dom";
 
 class SemContas extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
         <div className="animated fadeIn">
@@ -17,7 +11,7 @@ class SemContas extends Component {
           <p>
             Para acessar esté modulo é necessário pelo menos um conta do Mercado Livre cadastrada.
           </p>
-          <Link to="/contas/adicionar"> {/* ADICIONAR ROTA PARA O MECADO LIVRE OAUTH */}
+          <Link to="/contas/adicionar">
             <Button className="btn btn-primary"> <i className="fa fa-plus-circle" ></i> Adicionar Conta </Button>
           </Link>
         </div>

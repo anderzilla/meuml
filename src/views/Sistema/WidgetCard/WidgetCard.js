@@ -28,7 +28,6 @@ class WidgetCard extends Component {
     render() {
         const { className, cssModule, header, icon, color, value, children, invert, ...attributes } = this.props;
 
-        // demo purposes only
         const progress = { style: '', color: color, value: value };
         const card = { style: '', bgColor: '', icon: icon };
 

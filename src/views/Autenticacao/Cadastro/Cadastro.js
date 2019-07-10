@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Card, CardBody, CardFooter, Col, Container, Form, Collapse, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import { Button, Card, CardBody, CardFooter, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import logo from '../../../assets/img/brand/MeuML-logo2.png';
-import { AppSwitch } from '@coreui/react';
 import axios from 'axios';
 import ReactLoading from 'react-loading';
 
@@ -78,8 +77,6 @@ class Cadastro extends Component {
       Swal.fire({html:'<p>A senha deve ter um mínimo de 6 caracteres!</p>', type: 'error', showConfirmButton: true});
     }else if(this.state.password !== this.state.confirmPassword ){
       Swal.fire({html:'<p>As senhas não conferem!</p>', type: 'error', showConfirmButton: true});
-    /*}else if (this.state.termos === '' ){
-      alert('Aceite os termos de uso!' + this.state.termos);*/
     }else{
       axios.post(process.env.REACT_APP_API_URL + `/user`, {
         "email":this.state.email,
@@ -98,7 +95,6 @@ class Cadastro extends Component {
       
           });
           this.props.history.push("/");
-          //TO DO: Inserir redirect
         }else{
           const message = res.data.message;
           if (res.data.email !== '' || res.data.email !== 'undefined'){
@@ -198,11 +194,7 @@ class Cadastro extends Component {
                                      value={this.state.confirmPassword} />
                     </InputGroup>
                     <Row>
-                      <Col xs="12" sm="4">
-                      {/*<InputGroup>
-                        <AppSwitch className={'mx-1'} variant={'3d'} color={'success'} name="termos" onChange={this.mudaTermos} defaultChecked={this.state.termos} label dataOn={'\u2713'} dataOff={'\u2715'}/> Aceito os termos de uso.
-                      </InputGroup>*/}
-                      </Col>
+                      <Col xs="12" sm="4" />
                       <Col xs="12" sm="8" className="text-right">
                       {!isLoadingCadastro ? (
                       <div>
@@ -219,21 +211,7 @@ class Cadastro extends Component {
                     </Row>
                   </Form>
                 </CardBody>
-                <CardFooter className="p-4">
-                {/*<div className="card-footer-actions">
-                <b>Termos de Uso</b> <Button className="card-footer-action badge badge-dark badge-pill float-right text-light" data-target="#collapseTermos" onClick={this.toggle}><i className="icon-arrow-down"></i></Button>
-                </div>
-                <Collapse isOpen={this.state.collapse} id="collapseTermos">
-                  <Row>
-                    <Col xs="12" sm="12">
-                      <em>Termos de Uso</em>
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
-                    laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation
-                    ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-                    </Col>
-                  </Row>
-                    </Collapse>*/}
-                </CardFooter>
+                <CardFooter className="p-4"/>
               </Card>
             </Col>
           </Row>

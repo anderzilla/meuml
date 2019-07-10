@@ -16,9 +16,9 @@ class Logout extends Component {
             history.push('/');
         } catch (error){
             this.setState({ error });
-            
         }
     }
+    
     render() {
         if (this.state.error) {
           return Swal.fire({html:'<p>'+this.state.error+'</p>', type: 'error', showConfirmButton: true,});
@@ -31,8 +31,6 @@ class Logout extends Component {
         }})
         )
     }
-    
-
 }
 export default Logout;
 

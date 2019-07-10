@@ -22,8 +22,6 @@ class Login extends Component {
       expiresin:''
     };
 
-   
-
     this.submitInput = React.createRef();
     this.focusSubmitInput = this.focusSubmitInput.bind(this);
 
@@ -43,12 +41,12 @@ class Login extends Component {
   handleSubmit(event) {
 
     event.preventDefault();
-    //Constantes para serem utilizadas na montagem dos dados do usuário no sistema
+    
     const USER_ID = "@MeuML-UserId";
     const USER_NAME = "@MeuML-UserName";
     const USER_EMAIL = "@MeuML-UserEmail";
     const USER_SELLER_ID = "@MeuML-UserSellerId";
-    //Realiza o login testando os dados do usuário no servidor
+    
     axios.post(process.env.REACT_APP_API_URL + `/auth/login`, {
       "email":this.state.email,
       "password":this.state.password
@@ -68,7 +66,6 @@ class Login extends Component {
 
         login(this.state.token,moment(res.data.data.expires_in).format('DD/MM/YYYY HH:MM'));
 
-        //Redireciona para a tela inicial do sistema DASHBOARD
         this.props.history.push("/");
       }else{
         const message = res.data.message;
@@ -88,8 +85,6 @@ class Login extends Component {
   }
 
   focusSubmitInput() {
-    // Explicitly focus the text input using the raw DOM API
-    // Note: we're accessing "current" to get the DOM node
     this.submitInput.current.focus();
   }
 

@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, CardFooter, Table, Row, Col, Button, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Card, CardHeader, CardBody, CardFooter, Table, Row, Col } from 'reactstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { getToken } from '../../../auth';
 import Pagination from "react-js-pagination";
 import 'react-toastify/dist/ReactToastify.css';
-import Picky, {components} from "react-picky";
+import Picky from "react-picky";
 import "react-picky/dist/picky.css";
-
-import { Redirect } from 'react-router';
-
-
 
 class MeusBloqueios extends Component {
 
@@ -73,8 +68,6 @@ class MeusBloqueios extends Component {
       });
 
       if(res.data.meta.total > 0){
-        //this.fetchBlacklist(res.data.data[0].id);
-
         if(res.data.meta.total === 1) {
           this.fetchBlacklist(res.data.data[0].id);
           this.state.arrayValue = [{'value':res.data.data[0].id, 'label':res.data.data[0].name }];
@@ -242,9 +235,6 @@ class MeusBloqueios extends Component {
               <h3>Carregando...</h3>
             )}
             </Col>
-            {/* <Col md="4" sm="6" xs="4">
-              {(this.state.total > 0)? <div className="alert alert-primary fade show">Registros Encontrados:<b> {(this.state.total -1)} </b></div> : <span></span>}
-            </Col> */}
             </Row>
           </CardHeader>
           <CardBody>
@@ -309,9 +299,7 @@ class MeusBloqueios extends Component {
           activeLinkClass = "text-white" 
         />
           </CardFooter>
-
         </Card>
-
       </div>
     )
   }

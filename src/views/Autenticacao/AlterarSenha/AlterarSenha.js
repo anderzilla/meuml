@@ -56,7 +56,6 @@ class AlterarSenha extends Component {
           window.location.reload();
         }
       });
-        //TO DO: Inserir redirect
       }else{
         const message = res.data.message;
         this.setState({message});

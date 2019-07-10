@@ -43,7 +43,6 @@ class Categorias extends Component {
           paginationShowsTotal: true
         }
 
-
         this.setState({
           categorias: res.data.data,
           isLoading: false,
@@ -59,18 +58,12 @@ class Categorias extends Component {
   }
 
   render() {
-
-
-    const { isLoading, categorias, error } = this.state;
-
     return (
-
         <div className="animated fadeIn">
           <Card>
             <CardHeader>
               <h4>Categorias - ({this.state.total}) </h4>
             </CardHeader>
-
             <CardBody>
               <BootstrapTable data={this.table} version="4" striped hover pagination search options={this.options}>
                 <TableHeaderColumn isKey dataField="external_id" dataSort>ID</TableHeaderColumn>
@@ -79,9 +72,7 @@ class Categorias extends Component {
                 <TableHeaderColumn dataField="dimension" dataSort>Dimensão</TableHeaderColumn>
               </BootstrapTable>
             </CardBody>
-
           </Card>
-
         </div>
     );
   }

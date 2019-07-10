@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, Collapse, ButtonGroup, Fade, CardHeader, CardBody, CardFooter, Table, Button, Form, FormGroup, Label, Input} from 'reactstrap';
+import { Row, Col, Card, Collapse, ButtonGroup, CardBody, CardFooter, Button, FormGroup, Label, Input} from 'reactstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 import { AppSwitch } from '@coreui/react'
 import 'react-select/dist/react-select.min.css';
-import Picky, {components}  from "react-picky";
+import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 
 import ReactLoading from 'react-loading';
 
-import {parse} from 'react-json-parser';
 class BloquearEmMassa extends Component {
   constructor(props) {
     super(props);
@@ -50,10 +49,7 @@ class BloquearEmMassa extends Component {
       arrayValue: [],
       grid: [],
       isLoadingCadastro: false
-    }
-    //fim dos STATES
-      
-
+    }    
   }
 
   toggleFade() {
@@ -159,8 +155,6 @@ class BloquearEmMassa extends Component {
     });
   }
 
-//Captura a lista de forma assincrona para transformar em JSON
-
   async listagem(lista, closure){
     if (this.state.custom[1] === true){
       var lista =  await lista.split("\n").map(function(id) {return ({customer_id:id, motive_id: "", motive_description: ""})}) ;
@@ -216,7 +210,7 @@ class BloquearEmMassa extends Component {
       Swal.fire({html:'<p>Escolha uma opção de bloqueio antes de salvar.</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     }else{
       if (this.state.custom[0] === true){
-      //APENAS SALVAR A LISTA
+      
         axios.post(process.env.REACT_APP_API_URL + `/blacklist/list`, 
         {"list_name":this.state.nomeLista,"list_description":this.state.descricaoLista},
         {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},
@@ -244,8 +238,7 @@ class BloquearEmMassa extends Component {
         });
         
       }else if(this.state.custom[1] === true){
-      //APENAS BLOQUEAR A LISTA  
-        //BLOQUEANDO OS IDS
+
         if (this.isEmpty(this.state.arrayValue)){
           this.setState({isLoadingCadastro: false});
           Swal.fire({html:'<p>Selecione uma conta para realizar os bloqueios!</p>', type: 'error', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
@@ -275,7 +268,6 @@ class BloquearEmMassa extends Component {
               const message = res.data.message;
               this.setState({message});
               Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-            // this.props.history.push("/meusbloqueios");
               window.location.href = "#/meusbloqueios";
             }else{
               const message = res.data.message;
@@ -292,8 +284,6 @@ class BloquearEmMassa extends Component {
         }
         
       }else if(this.state.custom[2] === true){
-      //SALVAR A LISTA E BLOQUEAR 
-        //SALVANDO A LISTA 
         if (this.isEmpty(this.state.arrayValue)){
           this.setState({isLoadingCadastro: false});
           Swal.fire({html:'<p>Selecione uma conta para realizar os bloqueios!</p>', type: 'error', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});

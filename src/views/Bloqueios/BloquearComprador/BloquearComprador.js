@@ -3,7 +3,6 @@ import {
   Row,
   Col,
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   Button,
@@ -23,14 +22,13 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 import { AppSwitch } from '@coreui/react'
-import Select from 'react-select';
+
 import 'react-select/dist/react-select.min.css';
 import Picky from "react-picky";
 import "react-picky/dist/picky.css";
 import ReactLoading from 'react-loading';
 
 class BloquearComprador extends Component {
-  //Adaptar para os valores de motivos de bloqueio
   constructor(props) {
     super(props);
 
@@ -194,7 +192,7 @@ class BloquearComprador extends Component {
 
     this.setState({bloqueios: []});
     event.preventDefault();
-    //customer_id
+
     if (this.isEmpty(this.state.arrayValue)){
       this.setState({isLoadingCadastro: false});
       Swal.fire({html:'<p>Selecione uma conta para realizar o bloqueio!</p>', type: 'error', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});

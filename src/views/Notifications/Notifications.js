@@ -9,18 +9,10 @@ class Notifications extends React.Component {
     }
 
     showNotifications() {
-        // If the Notifications API is supported by the browser
-        // then show the notification
         if(this.n.supported()) this.n.show();
     }
 
     handleClick(event) {
-        // Do something here such as
-        // console.log("Notification Clicked") OR
-        // window.focus() OR
-        // window.open("http://www.google.com")
-
-        // Lastly, Close the notification
         this.n.close(event.target.tag);
     }
 
@@ -29,8 +21,8 @@ class Notifications extends React.Component {
             <div>
 
                 <ReactNotifications
-                    onRef={ref => (this.n = ref)} // Required
-                    title="Hey There!" // Required
+                    onRef={ref => (this.n = ref)}
+                    title="Hey There!"
                     body="This is the body"
                     icon="icon.png"
                     tag="abcdef"
@@ -41,7 +33,6 @@ class Notifications extends React.Component {
                 <button onClick={this.showNotifications}>
                     Notify Me!
                 </button>
-
             </div>
         )
     }

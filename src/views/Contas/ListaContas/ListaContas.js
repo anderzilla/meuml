@@ -19,17 +19,18 @@ class ListaContas extends Component {
     };
     this.openAuth = this.openAuth.bind(this);
   }
-  //motor do dropdown
+
   toggle(i) {
     const newArray = this.state.dropdownOpen.map((element, index) => { return (index === i ? !element : false); });
     this.setState({
       dropdownOpen: newArray,
     });
   }
+
   componentDidMount() {
     this.fetchAccounts();
   }
-  //Sincronizar Conta
+  
   sincronizar(account_id){
     axios.get(process.env.REACT_APP_API_URL + `/accounts/` + account_id + '/sync',
         { headers: {"Authorization" : 'Bearer '+getToken()}},
@@ -43,7 +44,7 @@ class ListaContas extends Component {
       Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     });
   }
-  //Excluir conta
+  
   excluir(account_id){
     axios.delete(process.env.REACT_APP_API_URL + `/accounts/` + account_id,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
@@ -59,7 +60,7 @@ class ListaContas extends Component {
       Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     });
   }
-  //Renomear conta * somente para o sistema
+  
   renomear(account_id,index){
     const {value: novoNome} =  Swal.fire({
       title: 'Renomear Conta:',

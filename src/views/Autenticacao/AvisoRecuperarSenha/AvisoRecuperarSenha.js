@@ -9,8 +9,6 @@ class AvisoRecuperarSenha extends Component {
     super(props);
 
     this.setState({email : props.match.params.value});
-    // ...
-
   }
 
   render() {

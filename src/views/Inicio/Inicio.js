@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Col, Row } from 'reactstrap';
-import Iframe from 'react-iframe';
 import logo from '../../assets/img/Logo-transparente.png';
 
 class Inicio extends Component {
@@ -44,20 +43,8 @@ class Inicio extends Component {
             Bloqueie compradores indesejados de forma simples e rápida, em várias contas ao mesmo tempo, de forma gratuita!
           </p>
         </Col>
-      </Row>
-     {/*<Iframe url="https://meuml.com/v2inicio"
-        width="90%"
-        height="92%"
-        id="myId"
-        allowFullScreen
-        frameBorder="0"
-        display="initial"
-        scrolling="no"
-        className="iframeHome"
-        /> 
-    */}  
-      
-        </div>
+      </Row>      
+    </div>
     );
   }
 }

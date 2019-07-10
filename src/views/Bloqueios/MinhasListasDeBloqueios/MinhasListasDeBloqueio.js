@@ -4,27 +4,13 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  Table,
-  Form,
-  Label,
-  FormGroup,
-  Input,
   Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Col,
-  Row,
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
 import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory, { PaginationProvider, PaginationListStandalone } from 'react-bootstrap-table2-paginator';
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
-
+import paginationFactory from 'react-bootstrap-table2-paginator';
 
 class MinhasListasDeBloqueio extends Component {
   constructor(props) {
@@ -46,8 +32,6 @@ class MinhasListasDeBloqueio extends Component {
 
     this.nbloqueios = "2048";
     this.nlistas = "48";
-    // ...
-
   }
 
   handleInputChange(event) {
@@ -196,34 +180,6 @@ class MinhasListasDeBloqueio extends Component {
       }
   }];
 
-
-  // {
-  //   dataField: 'df1',
-  //   isDummyField: true,
-  //   text: 'Action 1',
-  //   formatter: (cellContent, row) => {
-  //     if (row.inStock) {
-  //       return (
-  //         <h5>
-  //           <span className="label label-success"> Available</span>
-  //         </h5>
-  //       );
-  //     }
-  //     return (
-  //       <h5>
-  //         <span className="label label-danger"> Backordered</span>
-  //       </h5>
-  //     );
-  //   }
-  // },
-
-  // const customTotal = (from, to, size) => (
-  //     <span className="react-bootstrap-table-pagination-total">
-  //         Mostrando {from} em {to} de {size} resultados
-  //     </span>
-  // );
-
-
   const options = {
 
       hideSizePerPage: true,
@@ -241,55 +197,22 @@ class MinhasListasDeBloqueio extends Component {
     return (
       <div className="animated fadeIn">
         <Card >
-          {/* <CardHeader>
-            <Row>
-            <Col md="3" xs="3" sm="12"><h5>Listas - {this.state.nlistas}</h5> </Col>
-            <Col md="6" xs="6" sm="12"></Col>
-            </Row>
-          </CardHeader> */}
+          <CardHeader />
           <CardBody>
           <BootstrapTable
-                                            keyField="id"
-                                            data={backlistList}
-                                            columns={columns}
-                                            striped
-                                            hover
-                                            condensed
-                                            //noDataIndication={<ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100} className='spinnerStyle' />}
-                                            pagination={paginationFactory(options)}
-                                            remote={true}
-                                            fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
-                                        />
-          {/* <Table responsive>
-                  <thead>
-                  <tr>
-                    <th className="text-left tbcol-30">Nome da Lista</th>
-                    <th className="text-let tbcol-50">Descrição</th>
-                    <th className="text-left tbcol-15">Quantidade</th>
-                    <th className="text-right tbcol-5"></th>
-                  </tr>
-                  </thead>
-                  <tbody>a
-                  {console.log(backlistList)}
-                  {!isLoadingBlacklistList ? (
-                  backlistList.map((l, key) => {
-                          const { id, name } = this.state;
-                          return (
-                            <tr key={key}>
-                              <td className="text-left">{l.name}</td>
-                              <td className="text-center">{l.list_description}</td>
-                              <td className="text-center">{l.quantidade}</td>
-                              <td className="text-right">
-                                <Button onClick={()=>this.fetchDeletarLista(l.id)} className="btn btn-danger btn-small"><i className="fa fa-trash"></i></Button>
-                              </td>
-                            </tr>
-                        )})
-                      ) : (
-                       <tr><td><h3>Carregando...</h3></td></tr> 
-                      )}
-                  </tbody>
-                </Table> */}
+              keyField="id"
+              data={backlistList}
+              columns={columns}
+              striped
+              hover
+              condensed
+              //noDataIndication={<ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100} className='spinnerStyle' />}
+              pagination={paginationFactory(options)}
+              remote={true}
+              fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
+          />
           </CardBody>
+          <CardFooter />
           </Card>
           </div>
     )
