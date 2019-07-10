@@ -2,13 +2,19 @@ import React from 'react';
 import {
     Card,
     CardBody,
-    Input
+    Input,
+    CardHeader
 } from "reactstrap";
 import axios from "axios";
 import { getToken } from "../../auth";
 import Swal from "sweetalert2";
 
-import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+// import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationFactory, { PaginationProvider, PaginationListStandalone } from 'react-bootstrap-table2-paginator';
+import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+
+
 import ReactLoading from 'react-loading';
 import Moment from 'moment';
 
@@ -25,7 +31,7 @@ class CategoriasDataTable extends React.Component {
             filter: '',
             filtro: '',
             first: '',
-            lastUpdate:'',
+            lastUpdate: '',
             last_page: 0
         };
 
@@ -34,8 +40,8 @@ class CategoriasDataTable extends React.Component {
 
     fetchCategorias(limit = 50, page = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
 
-        if(page >= this.state.last_page && this.state.last_page != 0){
-           page =  this.state.last_page
+        if (page >= this.state.last_page && this.state.last_page != 0) {
+            page = this.state.last_page
         }
 
         let url = process.env.REACT_APP_API_URL + `/categories?page=${page}&limit=${limit}`
@@ -68,11 +74,11 @@ class CategoriasDataTable extends React.Component {
                     totalDataSize: res.data.meta.total,
                     sizePerPage: res.data.meta.limit,
                     currentPage: res.data.meta.page,
-                    lastUpdate:res.data.meta.last_update,
+                    lastUpdate: res.data.meta.last_update,
                     last_page: res.data.meta.last_page
                 });
 
-                if(page >= this.state.last_page){
+                if (page >= this.state.last_page) {
                     this.setState({
                         totalDataSize: res.data.meta.total - res.data.meta.limit
                     });
@@ -100,9 +106,9 @@ class CategoriasDataTable extends React.Component {
     }
 
 
-    onFilterChange() {
-        var filter = this.state.filtro;
+    onFilterChange(value) {
 
+        var filter = value
         if (filter !== undefined) {
 
             this.state.filter = filter;
@@ -137,8 +143,6 @@ class CategoriasDataTable extends React.Component {
         });
     }
 
-
-
     render() {
         return (
             <CategoriasTableComp
@@ -149,9 +153,6 @@ class CategoriasDataTable extends React.Component {
                 onHandleChange={this.handleChange.bind(this)}
                 {...this.state}
             />
-
-
-
         );
     }
 
@@ -177,21 +178,124 @@ class CategoriasTableComp extends React.Component {
         );
     }
     render() {
+        const columns = [{
+            dataField: 'external_id',
+            text: 'ID',
+            sort: true
+        }, {
+            dataField: 'path',
+            text: 'Descrição',
+            sort: true
+        }, {
+            dataField: 'weight',
+            text: 'Peso',
+            sort: true,
+            style: { width: '80px' }
+        }, {
+            dataField: 'cubage',
+            text: 'Dimensão',
+            sort: true,
+            style: { width: '210px' }
 
+        }];
+
+
+
+
+        const customTotal = (from, to, size) => (
+            <span className="react-bootstrap-table-pagination-total">
+                Mostrando {from} em {to} de {size} resultados
+            </span>
+        );
+
+        // const options = {
+        //     custom:true,
+        //     paginationSize: 50,
+        //     pageStartIndex: 0,
+        //     // alwaysShowAllBtns: true, // Always show next and previous button
+        //     // withFirstAndLast: false, // Hide the going to First and Last page button
+        //      hideSizePerPage: true, // Hide the sizePerPage dropdown always
+        //     // hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
+        //     firstPageText: 'First',
+        //     prePageText: 'Back',
+        //     nextPageText: 'Next',
+        //     lastPageText: 'Last',
+        //     nextPageTitle: 'First page',
+        //     prePageTitle: 'Pre page',
+        //     firstPageTitle: 'Next page',
+        //     lastPageTitle: 'Last page',
+        //     showTotal: true,
+        //     paginationTotalRenderer: customTotal,
+
+        // };
+        const options = {
+
+            hideSizePerPage: true,
+            defaultSortName: 'name',
+            defaultSortOrder: 'desc',
+            sizePerPage: this.props.sizePerPage,
+            //   onPageChange: this.props.onPageChange,
+            sizePerPageList: [50],
+            page: this.props.currentPage,
+            onSizePerPageList: this.props.onSizePerPageList,
+            totalSize: this.props.totalDataSize,
+            onPageChange: (page, sizePerPage) => {
+                // console.log('Page change!!!');
+                // console.log('Newest size per page:' + sizePerPage);
+                // console.log('Newest page:' + page);
+
+                this.props.onPageChange(page, sizePerPage);
+            }
+        };
+
+        const MySearch = (props) => {
+            let input;
+            const handleClick = () => {
+                props.onSearch(input.value);
+                this.props.onFilterChange(input.value);
+            };
+
+            return (
+
+                <div className='input-group filtro'>
+                    <input
+                        className="col-md"
+                        ref={n => input = n}
+                        type="text"
+                        placeholder={'Pesquisar por descrição...'}
+                        onKeyPress={event => {
+                            if (event.key === 'Enter') {
+                                handleClick()
+                            }
+                        }}
+                    />
+
+                    <span className='it-group-btn'>
+                        <button
+                            className='btn btn-primary'
+                            type='button'
+
+                            onClick={handleClick}>
+                            Buscar
+                    </button>
+                    </span>
+                </div>
+            );
+        };
 
         return (
 
             <Card>
-                {/* <CardHeader>
-F
+                {/* <CardHeader className='cad-header'>
+             
                 </CardHeader> */}
                 <div>
+                    <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.props.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
 
-               
-                    <CardBody>
-                        <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.props.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
-                        <BootstrapTable data={this.props.data} remote={true} pagination={true} search={true} searchPlaceholder={'Filtrar por descrição...'}
-                            fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
+                    <CardBody className='table-content'>
+
+                        {/* <BootstrapTable data={this.props.data} remote={true} pagination={true} search={true} searchPlaceholder={'Filtrar por descrição...'}
+                            columns={columns} fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
 
                             options={{
                                 defaultSortName: 'name',
@@ -204,16 +308,49 @@ F
                                 onSortChange: this.props.onSortChange,
                                 searchField: this.createCustomSearchField,
                                 searchPanel: this.customFilter,
-                                noDataText:   <ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100}  className='spinnerStyle'/>
+                                noDataText: <ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100} className='spinnerStyle' />
 
                             }} striped hover>
 
-                            <TableHeaderColumn width='120' dataField='external_id' isKey={true} dataSort={true}>ID </TableHeaderColumn>
+                            {/* <TableHeaderColumn width='120' dataField='external_id' isKey={true} dataSort={true}>ID </TableHeaderColumn>
                             <TableHeaderColumn width='320' dataField='path' dataSort={true}>Descrição</TableHeaderColumn>
                             <TableHeaderColumn width='120' dataField='weight' dataSort={true}>Peso</TableHeaderColumn>
-                            <TableHeaderColumn width='120' dataField='cubage' dataSort={true}>Dimensão</TableHeaderColumn>
+                            <TableHeaderColumn width='120' dataField='cubage' dataSort={true}>Dimensão</TableHeaderColumn> 
 
-                        </BootstrapTable>
+                        </BootstrapTable> */}
+
+
+                        <ToolkitProvider
+                            keyField="id"
+                            data={this.props.data}
+                            columns={columns}
+                            search
+                        >
+                            {
+                                props => (
+                                    <div>
+
+                                        <MySearch {...props.searchProps} />
+                                        <br />
+                                        <BootstrapTable
+                                            keyField="id"
+                                            data={this.props.data}
+                                            columns={columns}
+                                            striped
+                                            hover
+                                            condensed
+                                            //noDataIndication={<ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100} className='spinnerStyle' />}
+                                            pagination={paginationFactory(options)}
+                                            remote={true}
+                                            fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
+                                        />
+                                    </div>
+                                )
+                            }
+                        </ToolkitProvider>
+
+
+
                     </CardBody>
                 </div>
             </Card>
