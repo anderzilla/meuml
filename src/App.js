@@ -81,6 +81,7 @@ class App extends Component {
     this.state = {
       warningTime: '',
       signoutTime: '',
+      isLoged:'',
     };
   }
 
@@ -142,9 +143,19 @@ class App extends Component {
   };
 
   destroy = () => {
-    
-    localStorage.setItem('@MeuML-Token', null) 
-    isAuthenticated()? (window.location.assign('#/login')) : console.log('Logido:'+isAuthenticated());
+    localStorage.setItem('@MeuML-Token', null)
+    //Método para evitar o redirecionamento para login sem sessão ou com sessão expirada
+    const cpath = window.location.href.split('#');
+    const cpathComposto = cpath[1].split('/');
+    if (cpathComposto[1] === 'cadastro'){
+      console.log('Cadastro de Usuário');
+    }else if(cpathComposto[1] === 'confirmarcadastro'){
+      console.log('Confirmação de Cadastro');
+    }else if(cpathComposto[1] === 'recuperarsenha'){
+      console.log('Recuperação de senha');     
+    }else{
+      window.location.assign('#/login');
+    }
   };
 
   render() {
