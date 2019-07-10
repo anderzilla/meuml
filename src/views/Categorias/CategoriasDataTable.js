@@ -9,11 +9,9 @@ import axios from "axios";
 import { getToken } from "../../auth";
 import Swal from "sweetalert2";
 
-// import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory, { PaginationProvider, PaginationListStandalone } from 'react-bootstrap-table2-paginator';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
-
 
 import ReactLoading from 'react-loading';
 import Moment from 'moment';
@@ -21,8 +19,6 @@ import Moment from 'moment';
 class CategoriasDataTable extends React.Component {
     constructor(props) {
         super(props);
-
-
         this.state = {
             data: [],
             totalDataSize: 0,
@@ -161,22 +157,6 @@ class CategoriasDataTable extends React.Component {
 
 class CategoriasTableComp extends React.Component {
 
-
-    customFilter = () => {
-        return (
-            <div className='input-group filtro'>
-                <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" placeholder={'Pesquisar por descrição...'} onChange={this.props.onHandleChange} />
-                <span className='it-group-btn'>
-                    <button
-                        className='btn btn-primary'
-                        type='button'
-                        onClick={this.props.onSearchChange}>
-                        Buscar
-                    </button>
-                </span>
-            </div>
-        );
-    }
     render() {
         const columns = [{
             dataField: 'external_id',
@@ -196,10 +176,7 @@ class CategoriasTableComp extends React.Component {
             text: 'Dimensão',
             sort: true,
             style: { width: '210px' }
-
         }];
-
-
 
 
         const customTotal = (from, to, size) => (
@@ -208,33 +185,13 @@ class CategoriasTableComp extends React.Component {
             </span>
         );
 
-        // const options = {
-        //     custom:true,
-        //     paginationSize: 50,
-        //     pageStartIndex: 0,
-        //     // alwaysShowAllBtns: true, // Always show next and previous button
-        //     // withFirstAndLast: false, // Hide the going to First and Last page button
-        //      hideSizePerPage: true, // Hide the sizePerPage dropdown always
-        //     // hidePageListOnlyOnePage: true, // Hide the pagination list when only one page
-        //     firstPageText: 'First',
-        //     prePageText: 'Back',
-        //     nextPageText: 'Next',
-        //     lastPageText: 'Last',
-        //     nextPageTitle: 'First page',
-        //     prePageTitle: 'Pre page',
-        //     firstPageTitle: 'Next page',
-        //     lastPageTitle: 'Last page',
-        //     showTotal: true,
-        //     paginationTotalRenderer: customTotal,
 
-        // };
         const options = {
 
             hideSizePerPage: true,
             defaultSortName: 'name',
             defaultSortOrder: 'desc',
             sizePerPage: this.props.sizePerPage,
-            //   onPageChange: this.props.onPageChange,
             sizePerPageList: [50],
             page: this.props.currentPage,
             onSizePerPageList: this.props.onSizePerPageList,
@@ -286,50 +243,17 @@ class CategoriasTableComp extends React.Component {
         return (
 
             <Card>
-                {/* <CardHeader className='cad-header'>
-             
-                </CardHeader> */}
                 <div>
                     <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.props.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
-
                     <CardBody className='table-content'>
-
-                        {/* <BootstrapTable data={this.props.data} remote={true} pagination={true} search={true} searchPlaceholder={'Filtrar por descrição...'}
-                            columns={columns} fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
-
-                            options={{
-                                defaultSortName: 'name',
-                                defaultSortOrder: 'desc',
-                                sizePerPage: this.props.sizePerPage,
-                                onPageChange: this.props.onPageChange,
-                                sizePerPageList: [50],
-                                page: this.props.currentPage,
-                                onSizePerPageList: this.props.onSizePerPageList,
-                                onSortChange: this.props.onSortChange,
-                                searchField: this.createCustomSearchField,
-                                searchPanel: this.customFilter,
-                                noDataText: <ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100} className='spinnerStyle' />
-
-                            }} striped hover>
-
-                            {/* <TableHeaderColumn width='120' dataField='external_id' isKey={true} dataSort={true}>ID </TableHeaderColumn>
-                            <TableHeaderColumn width='320' dataField='path' dataSort={true}>Descrição</TableHeaderColumn>
-                            <TableHeaderColumn width='120' dataField='weight' dataSort={true}>Peso</TableHeaderColumn>
-                            <TableHeaderColumn width='120' dataField='cubage' dataSort={true}>Dimensão</TableHeaderColumn> 
-
-                        </BootstrapTable> */}
-
-
                         <ToolkitProvider
                             keyField="id"
                             data={this.props.data}
                             columns={columns}
-                            search
-                        >
+                            search>
                             {
                                 props => (
                                     <div>
-
                                         <MySearch {...props.searchProps} />
                                         <br />
                                         <BootstrapTable
@@ -348,9 +272,6 @@ class CategoriasTableComp extends React.Component {
                                 )
                             }
                         </ToolkitProvider>
-
-
-
                     </CardBody>
                 </div>
             </Card>
