@@ -142,13 +142,9 @@ class App extends Component {
   };
 
   destroy = () => {
-    localStorage.setItem('@MeuML-Token', null)
-    if (this.props.location.pathname !== '/cadastro'){
-      window.location.assign('#/login');
-    }else{
-      console.log(' Continuando o cadastro!');
-    }
     
+    localStorage.setItem('@MeuML-Token', null) 
+    isAuthenticated()? (window.location.assign('#/login')) : console.log('Logido:'+isAuthenticated());
   };
 
   render() {
