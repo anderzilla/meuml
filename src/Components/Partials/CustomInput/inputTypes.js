@@ -20,14 +20,14 @@ export class InputCouple extends React.Component {
       <React.Fragment>
         <input
           type={this.props.mrType}
-          class="form-control"
+          className="form-control"
           placeholder={this.props.mrPlaceholder}
           aria-label={this.props.mrPlaceholder}
           aria-describedby="basic-addon1"
         />
         <input
           type={this.props.mrsType}
-          class="form-control"
+          className="form-control"
           placeholder={this.props.mrsPlaceholder}
           aria-label={this.props.mrsPlaceholder}
           aria-describedby="basic-addon1"
@@ -40,7 +40,7 @@ export class InputCouple extends React.Component {
 export class InputOptions extends React.Component {
   render() {
     return (
-      <select class="custom-select" id="inputGroupSelect01">
+      <select className="custom-select" id="inputGroupSelect01">
         {this.props.options.map(option => {
           return (
             <React.Fragment>
