@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import Breadcrumbs from './../Breadcrumbs/index';
+import ApiInvoker from './../buttons/ApiInvoker';
 
-import { Label, FormGroup, FormText, Input } from 'reactstrap';
+import Breadcrumbs from './../Breadcrumbs/index';
+import {
+  Label, FormGroup, Input, CardTitle,
+  CardBody, CardFooter, CardHeader } from 'reactstrap';
 
 export default class Form extends Component {
   constructor(props) {
@@ -30,21 +33,21 @@ export default class Form extends Component {
       let props = element.props || {};
 
       return(
-        <div key={key} className="form-group">
-          <label className="form-label"
+        <FormGroup key={key}>
+          <Label className="form-label"
             key={element.key+"label"}
             htmlFor={element.key}>
             {element.label}
-          </label>
-          <input {...props} 
+          </Label>
+          <Input {...props} 
             ref={(key)=> this[element.key] = key}
-            className="form-input"
+            className="form-input col-md-5"
             type={type}
             key={element.key+"input"}
             onChange={(e)=> this.onChange(e, key)}
           />
 
-        </div>
+        </FormGroup>
       );
     });
     return layoutBuild;
@@ -56,24 +59,31 @@ export default class Form extends Component {
       <div>
         <Breadcrumbs
           crumbs={this.props.crumbs}/>
-      <div className="card-header">
-        <h3>{title}</h3>
-        <form className="card-body" onSubmit={(form)=> this.onSubmit(form)}>
-          {this.renderForm()}
-          <div className="card-footer">
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        
+        <form onSubmit={(form)=> this.onSubmit(form)}>
+          <CardBody>{this.renderForm()}</CardBody>
+          <CardFooter>
             {
               (!this.props.url)?(
                 <button className="btn btn-primary" type="submit">
-                  Enviar
+                  {this.props.btnName}
                 </button>   
               ):(
-              <div></div>
+              <ApiInvoker 
+                url={this.props.url}
+                data={this.props.data}
+                http={this.props.http}
+                onSuccess={this.props.onSuccess}
+                className={this.props.btnClass}
+                >{this.props.btnName}
+              </ApiInvoker>
               )
             }
-          </div>
+          </CardFooter>
         </form>
-      </div>
-
+        </CardHeader>
       </div>
     );
   }
