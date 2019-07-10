@@ -83,7 +83,6 @@ class BloquearLista extends Component {
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-    //console.log(res);
     if (res.status === 200){
       const listaContas = [];
       const resContas = res.data.data;
@@ -97,13 +96,11 @@ class BloquearLista extends Component {
       });
       if(res.data.meta.total > 0){
         if(res.data.meta.total === 1) {        
-          console.log(this.state.arrayValue);
           this.setState({
             'arrayValue' : [{'value':res.data.data[0].id, 'label':res.data.data[0].name }],
             'accountId': res.data.data[0].id,
           });
-          console.log(this.state.arrayValue);
-          }
+        }
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
     }
@@ -117,8 +114,6 @@ class BloquearLista extends Component {
   }
 
   selectMultipleOption(value) {
-    console.count('onChange')
-    console.log("Val", value);
     this.setState({ arrayValue: value });
     //Prepara o array para ser manipulado
     const values = this.state;
@@ -160,7 +155,6 @@ class BloquearLista extends Component {
         },
         {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
         .then(res => {
-          //console.log(res.data);
           const status = res.data.status;
           this.setState({status});
           if (this.state.status === 'success'){

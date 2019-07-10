@@ -93,7 +93,6 @@ class Perguntas extends Component {
     axios.get(this.url,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-      console.log(res);
       if (res.status === 200){
 
         this.setState({
@@ -130,9 +129,7 @@ class Perguntas extends Component {
     axios.get(this.url,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-      console.log(res);
       if (res.status === 200){
-        console.log(res.data);
         this.setState({
           advertisings: res.data.data.advertisings,
           isLoading: false,
@@ -264,11 +261,8 @@ class Perguntas extends Component {
   }
 
   render() {
-    {console.log(this.state)}
     return (
-
         this.state.ressync === false ? (
-
           this.state.backend_error === false ? (
             this.state.not_has_accounts === false ? (
               <div className="animated fadeIn">
@@ -287,10 +281,10 @@ class Perguntas extends Component {
                           {!this.state.accounts.isLoadingAccounts ? (
                               this.state.accounts.map(c => {
 
-                                {if(this.state.accounts.length === 1){
+                                if(this.state.accounts.length === 1){
                                     var checked = this.state.accounts[0].name
-                                }}
-                                {if(checked === c.name){
+                                }
+                                if(checked === c.name){
                                   return (
                                       <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name} ({c.count_questions} perguntas sem resposta)</DropdownItem>
                                   )
@@ -298,7 +292,7 @@ class Perguntas extends Component {
                                   return (
                                       <DropdownItem onClick={() => this.fetchQuestions(c.id)}>{c.name} ({c.count_questions} perguntas sem resposta)</DropdownItem>
                                   )
-                                }}
+                                }
 
                               })
                           ) : (
@@ -317,7 +311,7 @@ class Perguntas extends Component {
                                       <Card className={"card"} {...this.state}>
                                         <CardBody>
                                           <div className="h1 text-muted text-right mb-2">
-                                            <img src={advertising.thumbnail} />
+                                            <img alt="Advertising Thumbnail" src={advertising.thumbnail} />
                                           </div>
                                           <div className={"h1 text-left"}>
                                             {advertising.item_id}

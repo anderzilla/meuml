@@ -4,7 +4,6 @@ import {getToken} from "../../auth";
 import Swal from "sweetalert2";
 import {Card, CardBody, CardHeader, } from "reactstrap";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
-import BootstrapTable from 'react-bootstrap-table-next';
 
 class Categorias extends Component {
 
@@ -29,7 +28,6 @@ class Categorias extends Component {
     axios.get(process.env.REACT_APP_API_URL + `/categories`,
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-      console.log(res);
       if (res.data.status === 'success'){
 
         this.table = res.data.data;

@@ -132,9 +132,7 @@ class Processos extends Component {
       this.state.tx1 = text;
       this.state.tx2 = '';
     }
-    
-    //console.log(newText);
-    //return newText;
+
   }
 
   componentDidMount() {

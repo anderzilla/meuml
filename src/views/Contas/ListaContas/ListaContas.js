@@ -34,7 +34,6 @@ class ListaContas extends Component {
     axios.get(process.env.REACT_APP_API_URL + `/accounts/` + account_id + '/sync',
         { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-      console.log(res);
       if (res.data.status === 'success'){
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'success', showConfirmButton: true});
       }else{
@@ -73,7 +72,6 @@ class ListaContas extends Component {
             {'name' : result.value},
             { headers: {"Authorization" : 'Bearer '+getToken()}},
         ).then(res => {
-          console.log(res);
           if (res.data.status === 'success'){
             document.getElementById('nomeConta-'+index).innerHTML = result.value;
           }else{

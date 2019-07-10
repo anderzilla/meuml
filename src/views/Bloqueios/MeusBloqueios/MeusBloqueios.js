@@ -113,7 +113,6 @@ class MeusBloqueios extends Component {
         nPagina: '',
       });
     }else{
-      console.log('contas:'+this.state.contas);
       this.fetchBlacklist(this.state.contas);
     }
   }
@@ -213,7 +212,6 @@ class MeusBloqueios extends Component {
   render() {
 
     const { isLoading, isLoadingAccounts, blacklist, error, accounts, selectedOption, contas, arrayValue, contasMarcadas, offset } = this.state;
-    console.log(blacklist)  
     return (
       <div className="animated fadeIn">
         <Card>

@@ -81,7 +81,6 @@ class MinhasListasDeBloqueio extends Component {
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-    //console.log(res);
     if (res.status === 200){
       this.setState({
         accounts: res.data.data,
@@ -133,7 +132,9 @@ class MinhasListasDeBloqueio extends Component {
       }else{
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
       }
-    }).catch(error => { console.log(error)});
+    }).catch(error => {
+      Swal.fire({html:'<p>'+error+'</p>', type: 'error', showConfirmButton: true});
+    });
   }
 
   handleSubmit(event) {
@@ -148,7 +149,6 @@ class MinhasListasDeBloqueio extends Component {
       }],
       {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
       .then(res => {
-        //console.log(res.data);
         const status = res.data.status;
         this.setState({status});
         if (this.state.status === 'success'){
@@ -162,7 +162,6 @@ class MinhasListasDeBloqueio extends Component {
         }
 
       }).catch((error) => {
-        console.log(error);
         !error.response ?
         (this.setState({tipoErro: error})) :
         (this.setState({tipoErro: error.response.data.message}))
@@ -236,10 +235,6 @@ class MinhasListasDeBloqueio extends Component {
       onSizePerPageList: this.props.onSizePerPageList,
       totalSize: this.props.totalDataSize,
       onPageChange: (page, sizePerPage) => {
-          // console.log('Page change!!!');
-          // console.log('Newest size per page:' + sizePerPage);
-          // console.log('Newest page:' + page);
-
           this.props.onPageChange(page, sizePerPage);
       }
   };
@@ -274,7 +269,7 @@ class MinhasListasDeBloqueio extends Component {
                     <th className="text-right tbcol-5"></th>
                   </tr>
                   </thead>
-                  <tbody>
+                  <tbody>a
                   {console.log(backlistList)}
                   {!isLoadingBlacklistList ? (
                   backlistList.map((l, key) => {

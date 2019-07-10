@@ -98,8 +98,6 @@ class BloquearEmMassa extends Component {
   }
 
   selectMultipleOption(value) {
-    console.count('onChange')
-    console.log("Val", value);
     this.setState({ arrayValue: value });
 
     const values = this.state;
@@ -248,7 +246,6 @@ class BloquearEmMassa extends Component {
       }else if(this.state.custom[1] === true){
       //APENAS BLOQUEAR A LISTA  
         //BLOQUEANDO OS IDS
-        console.log(this.state.listagemJSON);
         if (this.isEmpty(this.state.arrayValue)){
           this.setState({isLoadingCadastro: false});
           Swal.fire({html:'<p>Selecione uma conta para realizar os bloqueios!</p>', type: 'error', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});

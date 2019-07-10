@@ -1,19 +1,12 @@
 import React from 'react';
-import {
-    Card,
-    CardBody,
-    Input,
-    CardHeader
-} from "reactstrap";
+import { Card, CardBody } from "reactstrap";
 import axios from "axios";
 import { getToken } from "../../auth";
 import Swal from "sweetalert2";
 
 import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory, { PaginationProvider, PaginationListStandalone } from 'react-bootstrap-table2-paginator';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
-
-import ReactLoading from 'react-loading';
 import Moment from 'moment';
 
 class CategoriasDataTable extends React.Component {
@@ -197,10 +190,6 @@ class CategoriasTableComp extends React.Component {
             onSizePerPageList: this.props.onSizePerPageList,
             totalSize: this.props.totalDataSize,
             onPageChange: (page, sizePerPage) => {
-                // console.log('Page change!!!');
-                // console.log('Newest size per page:' + sizePerPage);
-                // console.log('Newest page:' + page);
-
                 this.props.onPageChange(page, sizePerPage);
             }
         };

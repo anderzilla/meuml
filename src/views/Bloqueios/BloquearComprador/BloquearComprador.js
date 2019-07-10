@@ -97,7 +97,6 @@ class BloquearComprador extends Component {
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-    console.log(res);
     if (res.status === 200){
       const listaContas = [];
       const resContas = res.data.data;
@@ -136,8 +135,6 @@ class BloquearComprador extends Component {
   }
 
   selectMultipleOption(value) {
-    console.count('onChange')
-    console.log("Val", value);
     this.setState({ arrayValue: value });
   }
 
@@ -147,7 +144,6 @@ class BloquearComprador extends Component {
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-    //console.log(res);
     if (res.status === 200){
       this.setState({
         motivos: res.data.data,
@@ -175,7 +171,6 @@ class BloquearComprador extends Component {
 
   handleChange = selectedOption => {
     this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
   };
   fetchBlacklist(accountId,accountName) {
     this.setState({accountId: accountId, accountName: accountName});
@@ -287,7 +282,6 @@ class BloquearComprador extends Component {
                 ) : (
                   <h3>Carregando...</h3>
                 )}
-                {console.log(this.state.arrayValue)}
                 </FormGroup>
                 <FormGroup>
                   <Label for="idUsusario">ID ou Apelido do comprador</Label>

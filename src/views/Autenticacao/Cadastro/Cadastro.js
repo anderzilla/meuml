@@ -87,7 +87,6 @@ class Cadastro extends Component {
         "password":this.state.password
       })
       .then(res => {
-        //console.log(res.data);
         const status = res.data.status;
         this.setState({status});
         if (this.state.status === 'success'){
