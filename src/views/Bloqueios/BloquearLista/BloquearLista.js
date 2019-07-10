@@ -34,7 +34,7 @@ class BloquearLista extends Component {
     this.toggleConta = this.toggleConta.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-        this.selectMultipleOption = this.selectMultipleOption.bind(this);
+    this.selectMultipleOption = this.selectMultipleOption.bind(this);
 
     this.state={
       accountName: '',
@@ -73,13 +73,8 @@ class BloquearLista extends Component {
     }));
   }
 
-  fetchBlacklist(accountId,accountName) {
-    this.setState({accountId: accountId, accountName: accountName});
-  }
-
   componentDidMount() {
     this.fetchAccounts();
-
   }
 
   fetchAccounts()
@@ -101,25 +96,23 @@ class BloquearLista extends Component {
         isLoadingAccounts: false
       });
       if(res.data.meta.total > 0){
-        this.fetchBlacklist(res.data.data[0].id);
-      }else{
-        Swal.fire({
-          title: '',
-          text: "Você precisa ter ao menos 1 conta!",
-          type: 'info',
-          showCancelButton: false,
-          confirmButtonColor: '#366B9D',
-          confirmButtonText: 'OK',
-          confirmButtonClass: 'btn btn-success',
-          buttonsStyling: true
-        }).then(function () {
-          window.location.href = "#/listacontas";
-        })
-      }
+        if(res.data.meta.total === 1) {        
+          console.log(this.state.arrayValue);
+          this.setState({
+            'arrayValue' : [{'value':res.data.data[0].id, 'label':res.data.data[0].name }],
+            'accountId': res.data.data[0].id,
+          });
+          console.log(this.state.arrayValue);
+          }
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
     }
-  }).catch(error => {
+  }
+  }).catch((error) => {     
+    !error.response ?
+    (this.setState({tipoErro: error})) :
+    (this.setState({tipoErro: error.response.data.message}))
+    Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
   });
   }
 
@@ -141,43 +134,56 @@ class BloquearLista extends Component {
     }
   }
 
+  isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+  }
+
   handleSubmit(event) {
     this.setState({isLoadingCadastro: true});
     event.preventDefault();
-    if (this.state.blackListName === ''){
-      Swal.fire({html:'<p>Preencha o nome da lista para bloqueá-la</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    if (this.isEmpty(this.state.arrayValue)){
+      this.setState({isLoadingCadastro: false});
+      Swal.fire({html:'<p>Selecione uma conta para realizar o bloqueio!</p>', type: 'error', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
     }else{
-      axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, {
-        "blacklist_name":this.state.blackListName, 
-        "accounts":this.state.accountId, 
-        "bids": !this.state.bids ? false : true,
-        "questions": !this.state.questions ? false : true
-      },
-      {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
-      .then(res => {
-        //console.log(res.data);
-        const status = res.data.status;
-        this.setState({status});
-        if (this.state.status === 'success'){
-          const message = res.data.message;
-          this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+      if (this.state.blackListName === ''){
+        Swal.fire({html:'<p>Preencha o nome da lista para bloqueá-la</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+      }else{
+        axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, {
+          "blacklist_name":this.state.blackListName, 
+          "accounts":this.state.accountId, 
+          "bids": !this.state.bids ? false : true,
+          "questions": !this.state.questions ? false : true
+        },
+        {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
+        .then(res => {
+          //console.log(res.data);
+          const status = res.data.status;
+          this.setState({status});
+          if (this.state.status === 'success'){
+            const message = res.data.message;
+            this.setState({message});
+            Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+            this.setState({isLoadingCadastro: false});
+            window.location.href = "#/minhaslistasdebloqueios";
+
+          }else{
+            const message = res.data.message;
+            this.setState({message});
+            Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
+          }
+
+        }).catch((error) => {
           this.setState({isLoadingCadastro: false});
-          window.location.href = "#/minhaslistasdebloqueios";
-
-        }else{
-          const message = res.data.message;
-          this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
-        }
-
-      }).catch((error) => {
-        console.log(error);
-        !error.response ?
-        (this.setState({tipoErro: error})) :
-        (this.setState({tipoErro: error.response.data.message}))
-        Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
+          !error.response ?
+          (this.setState({tipoErro: error})) :
+          (this.setState({tipoErro: error.response.data.message}))
+          Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+      });
+    }
   }
 
   }
@@ -191,9 +197,7 @@ class BloquearLista extends Component {
         <Col xs="12" sm="12" md="10" xl="8">
         <Card className="card-accent-primary">
         <Form name='novaLista' onSubmit={this.handleSubmit}>
-          {/* <CardHeader>
-            <h5>Bloquear Lista</h5>
-          </CardHeader> */}
+        <input type="hidden" value="autocompleteOff"/>
           <CardBody>
           <Row>
             <Col md="4" xs="12">
@@ -237,14 +241,16 @@ class BloquearLista extends Component {
                     onChange={this.handleInputChange}
                     value={this.state.blackListName} />
                 </FormGroup>
+                </Col>
+                <Col md="12" xs="12">
                 <Row>
-                  <Col md="6" xs="12">
+                  <Col md="4" xs="12">
                     <FormGroup>
                     <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="bids" value="1" onChange={this.handleInputChange}  />
                     <span className="textoSwitch"> Bloquear para compras</span>
                     </FormGroup>
                   </Col>
-                  <Col md="6" xs="12">
+                  <Col md="8" xs="12">
                     <FormGroup>
                     <AppSwitch className={'mx-1'} variant={'pill'} color={'danger'} name="questions" value="1" onChange={this.handleInputChange} />
                     <span className="textoSwitch">Bloquear para perguntas</span>

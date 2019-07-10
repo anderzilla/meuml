@@ -394,13 +394,12 @@ Label {
 //###############################
 .listaProcessos{
   border-radius: 0.25rem;
-  border-color: #d3eef6;
+  border-color: #cecece;
 }
 .divListaProcessos{
   padding: 0.25rem 1rem;
   color: #336573;
-  background-color: #e0f3f8;
-  border-color: #d3eef6;
+  border-color: #cecece;
 }
 .divListaProcessos a{
   color: #336573 !important;
@@ -415,6 +414,7 @@ Label {
 }
 .listaSubItem{
   margin-bottom: 0.5rem;
+  list-style-type: none;
 }
 .tituloProcessos{
   font-weight: bold;
@@ -425,6 +425,38 @@ Label {
 .headerListaProcessos{
   outline:none;
   color:#336573;
+}
+.redBall{
+  color:red;
+}
+.greenBall{
+  color:green;
+}
+.yellowBall{
+  color:goldenrod;
+}
+.greynBall{
+  color:grey;
+}
+.idApelido{
+  padding-bottom: 8px !important;
+}
+.space-top50{
+  margin-top: 50px !important;
+}
+.space-top20{
+  margin-top: 20px !important;
+}
+.padding-20{
+  padding:20px !important;
+}
+.textoJustificado{
+  text-justify: auto;
+}
+h1,h2{
+  font-family: "Open Sans",Arial,sans-serif;
+  color:#2f353a;
+  font-weight: bold;
 }
 
 

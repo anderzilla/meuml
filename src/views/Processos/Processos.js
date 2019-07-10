@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Card, CardHeader, CardBody, Collapse, Button, Col, Row} from 'reactstrap';
+import {Card, CardHeader, CardBody, Collapse, Button, Col,ListGroup, ListGroupItem, Row} from 'reactstrap';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import Moment from 'moment';
@@ -27,6 +27,12 @@ class Processos extends Component {
       timeout: 300,
       isLoading: true,
       sublista:'',
+      fim: '',
+      cria: '',
+      timeX: '',
+      numeros:'',
+      tx1:'',
+      tx2:'',
     };
     
     this.table = data.rows;
@@ -85,23 +91,50 @@ class Processos extends Component {
 }
 
   showData(data){
-    const cria = Moment(data.date_created).format('DD/MM/YYYY HH:mm');
-    const res = Moment(cria, 'DD/MM/YYYY HH:mm').startOf().fromNow();
-    const resdiaa = res.replace('a day', '1 dia');
+    this.state.cria = Moment(data.date_created).format('DD/MM/YYYY HH:mm');
+    this.state.fim = Moment(data.date_finished).format('DD/MM/YYYY HH:mm');
+    (this.state.fim !== null || this.state.fim !== '')? 
+      this.state.timeX = Moment(this.state.fim, 'DD/MM/YYYY HH:mm').startOf().fromNow():
+      this.state.timeX = Moment(this.state.cria, 'DD/MM/YYYY HH:mm').startOf().fromNow();
+    const res = Moment(this.state.timeX, 'DD/MM/YYYY HH:mm').startOf().fromNow();
+    const resdiaa = res.replace('a day', '1 dia').replace('in','');
     const resmesa = resdiaa.replace('a month', '1 mês');
     const resmeses = resmesa.replace('months', 'meses');
     const resmes = resmeses.replace('month', 'mes');
-    const resdia = resmes.replace('day', 'dia');
-    const reshora = resdia.replace('hour', 'hora').replace('Few seconds', 'alguns segundos');
+    const resdia = resmes.replace('day', 'dia').replace('an hour','1 hora').replace('a minute', '1 minuto');
+    const reshora = resdia.replace('hour', 'hora').replace('a few seconds', 'alguns segundos').replace('minute','minuto');
     
+    const tituloProcesso = data.tool_name.replace('Blacklist', 'Bloqueio')
+    
+    const andamento = (data.item_finished === null)? 0 : data.item_finished+'/'+ data.item_total;
+    const andamentoStatus = (data.item_finished === data.item_total)? 
+      ' processos executados a ' : 
+      ' processos executando a ';
     const final = reshora.replace('ago', 'atrás' );
     this.state.listaProcessos.push({
-      'titulo':data.tool_name,      
-      'andamento': (data.item_finished === null)? 0 : data.item_finished+' processos concluídos de '+ data.item_total, 
+      'titulo':tituloProcesso,      
+      'andamento': andamento + andamentoStatus, 
       'dataInicio':final,
-      'criacao': cria,
+      'criacao': this.state.cria,
+      'conclusao': this.state.fim,
       'subprocessos': data.process_items,
     });      
+  }
+
+  preFormatedext(text){
+    const thenum = text.replace( /^\D+/g, '');
+    !thenum? this.state.numeros ='': this.state.numeros = '#'+thenum.match(/\d+/)[0];
+    if(this.state.numeros !== ''){
+      const explode = text.split(this.state.numeros);
+      this.state.tx1 = explode[0];
+      this.state.tx2 = explode[1];
+    }else{
+      this.state.tx1 = text;
+      this.state.tx2 = '';
+    }
+    
+    //console.log(newText);
+    //return newText;
   }
 
   componentDidMount() {
@@ -128,21 +161,30 @@ class Processos extends Component {
                       
                       <Button block color="ghost-link" size="sm" className="text-left m-0 p-0 headerListaProcessos" onClick={() => this.toggleAccordion(k)} aria-expanded={this.state.accordion[k]} aria-controls={'collapse'+k}>
                         <h5 className="tituloProcessos">{p.titulo}</h5>
-                        <span>{p.andamento} iniciado em {p.dataInicio}</span>
+                        <span>{p.andamento} {p.dataInicio}</span>
                       </Button>
                       </Col>
                       <Col sm="6" md="6" className="text-right">
-                        <span className="m-0 p-0 text-right"><sup>iniciado em {p.criacao} <i className="fa fa-clock-o"></i></sup></span>
+                        <span className="m-0 p-0 text-right"><sup>{(p.conclusao !== null || p.conslusão !== '')? 'finalizado em '+p.conclusao+' ' : 'iniciado em '+p.criacao+' '}<i className="fa fa-clock-o"></i></sup></span>
                       </Col>
                       </Row>
                     </CardHeader>
                     <Collapse isOpen={this.state.accordion[k]} data-parent="#accordion" id={'collapse'+k} aria-labelledby={'heading'+k}>
                       <CardBody className="subItensProcessos">
-                        <ul className="listaSubItem" >
+                        <ListGroup className="listaSubItem" >
                           {p.subprocessos.map((d, k)=> {
-                            return (<li key={k}>{d.tool_name}</li>)
+                            this.preFormatedext(d.cause);
+                            const tituloSubItem = d.tool_name.replace('Blacklist', 'Bloqueio');
+                            return (
+                            <ListGroupItem key={k}>
+                              {(d.status === 0)? <i className="fa fa-circle redBall"></i> : ''}
+                              {(d.status === 1)? <i className="fa fa-circle greenBall"></i> : ''}
+                              {(d.status === 2)? <i className="fa fa-circle yellowBall"></i> : ''}
+                              {(d.status === 3)? <i className="fa fa-circle greyBall"></i> : ''}
+                              {(d.cause !== null)? <span> {this.state.tx1} <b>{this.state.numeros}</b> {this.state.tx2}</span> : ''}
+                            </ListGroupItem>)
                           })} 
-                        </ul>
+                        </ListGroup>
                       </CardBody>
                     </Collapse>
                   </Card>): ''

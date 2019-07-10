@@ -110,10 +110,9 @@ class BloquearComprador extends Component {
         isLoadingAccounts: false
       });
       if(res.data.meta.total > 0){
-        this.fetchBlacklist(res.data.data[0].id);
-
-        if(res.data.meta.total === 1) {
-          this.setState({ arrayValue: [{'value':res.data.data[0].id, 'label':res.data.data[0].name }] });
+        if(res.data.meta.total === 1) {        
+          this.state.arrayValue = [{'value':res.data.data[0].id, 'label':res.data.data[0].name }];
+          this.fetchBlacklist(res.data.data[0].id);
         }
       }else{
         Swal.fire({
@@ -187,6 +186,13 @@ class BloquearComprador extends Component {
   fetchTipoUser(tipo){
     this.setState({tipoUser: tipo, customer_id: ''});
   }
+  isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
   handleSubmit(event) {
 
     this.setState({isLoadingCadastro: true});
@@ -194,26 +200,26 @@ class BloquearComprador extends Component {
     this.setState({bloqueios: []});
     event.preventDefault();
     //customer_id
-    if (this.state.selectedOption === ''){
-      alert('Selecione uma conta para realizar o bloqueios!');
-    }else if(this.state.customer_id === '' ){
-      alert('Preencha o id ou usuário do comprador.');
-    }else if(this.state.motiveId === '' ){
-      alert('Defina o motivo do bloqueio.');
+    if (this.isEmpty(this.state.arrayValue)){
+      this.setState({isLoadingCadastro: false});
+      Swal.fire({html:'<p>Selecione uma conta para realizar o bloqueio!</p>', type: 'error', showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
     }else{
-
-
-      this.state.arrayValue.map((s, k) => {
-        const { value, name } = this.state;
-        this.state.bloqueios.push({
-          "account_id": s.value,
-  	      "bids": !this.state.bids ? false : true,
-  	      "customer_id": this.state.customer_id,
-  	      "motive_description": this.state.motivoBloqueio,
-  	      "motive_id": this.state.motiveId,
-          "questions": !this.state.questions ? false : true,
-         });
-      })
+      if(this.state.customer_id === '' ){
+        alert('Preencha o id ou usuário do comprador.');
+      }else if(this.state.motiveId === '' ){
+        alert('Defina o motivo do bloqueio.');
+      }else{
+        this.state.arrayValue.map((s, k) => {
+          const { value, name } = this.state;
+          this.state.bloqueios.push({
+            "account_id": s.value,
+            "bids": !this.state.bids ? false : true,
+            "customer_id": this.state.customer_id,
+            "motive_description": this.state.motivoBloqueio,
+            "motive_id": this.state.motiveId,
+            "questions": !this.state.questions ? false : true,
+          });
+        })
 
       axios.post(process.env.REACT_APP_API_URL + `/blacklist`, this.state.bloqueios,
       {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}},)
@@ -239,6 +245,7 @@ class BloquearComprador extends Component {
         (this.setState({tipoErro: error.response.data.message}))
         Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
     });
+    }
   }
   }
   render() {
@@ -250,7 +257,7 @@ class BloquearComprador extends Component {
           <Col xs="12" sm="12" md="12" xl="8">
             <Card className="card-accent-primary">
             <Form onSubmit={this.handleSubmit} name='bloquearcomprador'>
-             
+            <input type="hidden" value="autocompleteOff"/> 
               <CardBody>
               <Row>
               <Col xs="12" sm="6" md="6">
@@ -280,12 +287,13 @@ class BloquearComprador extends Component {
                 ) : (
                   <h3>Carregando...</h3>
                 )}
+                {console.log(this.state.arrayValue)}
                 </FormGroup>
                 <FormGroup>
-                  <Label for="idUsusario">ID ou Usuário do comprador</Label>
-                  <InputGroup>
+                  <Label for="idUsusario">ID ou Apelido do comprador</Label>
+                  <InputGroup className="idApelido">
                     <InputGroupAddon addonType="prepend">
-                    <ButtonDropdown direction="up" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
+                    <ButtonDropdown direction="right" className="dropTipoComprador" isOpen={this.state.first} toggle={() => { this.setState({ first: !this.state.first }); }}>
                       <DropdownToggle caret color="primary" size="md">
                         {!this.state.tipoUser ? ('Selecione') : this.state.tipoUser}
                       </DropdownToggle>

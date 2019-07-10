@@ -72,17 +72,17 @@ class MeusBloqueios extends Component {
         isLoadingAccounts: false
       });
 
-      if(res.data.data.length > 0){
-        this.fetchBlacklist(res.data.data[0].id);
+      if(res.data.meta.total > 0){
+        //this.fetchBlacklist(res.data.data[0].id);
 
-        if(listaContas.length === 1) {
-          this.setState({ arrayValue: [{'value':res.data.data[0].id, 'label':res.data.data[0].name }] });
+        if(res.data.meta.total === 1) {
+          this.fetchBlacklist(res.data.data[0].id);
+          this.state.arrayValue = [{'value':res.data.data[0].id, 'label':res.data.data[0].name }];
         }
-      }
-
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
     }
+  }
   }).catch(error => {
   });
   }
@@ -113,6 +113,7 @@ class MeusBloqueios extends Component {
         nPagina: '',
       });
     }else{
+      console.log('contas:'+this.state.contas);
       this.fetchBlacklist(this.state.contas);
     }
   }
@@ -121,7 +122,6 @@ class MeusBloqueios extends Component {
   handlePageChange(pageNumber) {
     !pageNumber ? this.setState({activePage:'1'}) : this.setState({activePage: pageNumber});
     this.fetchBlacklist(this.state.contas, pageNumber);
-    //this.props.history.push('/meusbloqueios?offset='+this.state.offset+'&limit=50');
   }
 
   handleInputChange(event) {
@@ -140,7 +140,6 @@ class MeusBloqueios extends Component {
     axios.get(this.url,
       { headers: {"Authorization" : 'Bearer '+getToken()}},
     ).then(res => {
-    console.log('motivos:'+res);
     if (res.status === 200){
       const listaMotivos = [];
       const resMotivos = res.data.data;
@@ -148,7 +147,6 @@ class MeusBloqueios extends Component {
         const { id, name } = this.state;
         listaMotivos.push({'id':m.id, 'name':m.name });
       })
-
       this.setState({
         motivos: listaMotivos,
       });
