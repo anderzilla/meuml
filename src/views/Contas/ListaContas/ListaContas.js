@@ -16,6 +16,7 @@ class ListaContas extends Component {
       isLoading: true,
       total: 0,
       fotoConta: fotoPadrao,
+      noContas: false,
     };
     this.openAuth = this.openAuth.bind(this);
   }
@@ -55,6 +56,7 @@ class ListaContas extends Component {
         }});
       }else{
         Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+        this.fetchAccounts();
       }
     }).catch(error => {
       Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
@@ -97,6 +99,11 @@ class ListaContas extends Component {
                 contas: res.data.data,
                 isLoading: false,
               });
+            }else{
+              this.setState({
+                noContas: true,
+                isLoading: false,
+              });
             } 
           } else {
             this.setState({
@@ -129,6 +136,7 @@ class ListaContas extends Component {
         </Row>
         <Row>
           {!isLoading ? (
+            (this.state.noContas ? (<div className="alert alert-info fade show">Nenhuma conta cadastrada!</div>) :
             contas.map((c, k)=> {
               const { username, name, email, id } = this.state;
                 return (
@@ -180,6 +188,7 @@ class ListaContas extends Component {
                     </Col>
                 );
               })
+            )
           ) :          
           (
           <div className="center">
