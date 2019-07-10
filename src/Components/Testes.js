@@ -1,9 +1,9 @@
-import React from 'react';
-import Checkbox from './Partials/Checkbox';
-import Inputflix from './Partials/Input';
-import Radioflix from './Partials/Radio';
+import React, { Component } from 'react';
+import Form from './Form';
+import BtnGroup from './buttons/ButtonGroup';
+import ApiInvoker from './buttons/ApiInvoker';
 
-export default class Testes extends React.Component {
+export default class Testes extends Component {
   constructor(props) {
     super(props);
 
@@ -12,45 +12,53 @@ export default class Testes extends React.Component {
     }
   }
 
-  isChecked(value) {
-    if(value === this.state.checkedValue) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  onclick(which) {
-    console.log(which);
+  onSubmit = (model) => {
+    alert(JSON.stringify(model));
+    this.setState({
+      data: [model]
+    })
   }
 
   render() {
-    const config = [
-      { name: 'radio', id: 'radio1', value: 'radio1', label: 'Radio Value 1' },
-      { name: 'radio', id: 'radio2', value: 'radio2', label: 'Radio Value 2' },
-      { name: 'radio', id: 'radio3', value: 'radio3', label: 'Radio Value 3' }
-    ]
-
     return (
       <div>
-        <Checkbox
-          value="checkboxComponent"
-          disabled={false}
-        >Este é um Componente checkbox
-        </Checkbox>
-        <Inputflix
-          className=""
-          placeholder="Este é um placeholder"
-          width="5"
-          size="sm"
-          valid=""
-          invalid=""
-          tooltip="This is a Tooltip"
-          autoFocus={true} />
-        <Radioflix
-          config={config}
-        />
+        <div className="mb-3">
+          <BtnGroup className="vertical-button-group">
+            <ApiInvoker url="" className="dropdown-item" http="" data="">Botão 1</ApiInvoker>
+            <ApiInvoker url="" className="dropdown-item" http="" data="">Botão 2</ApiInvoker>
+            <ApiInvoker url="" className="dropdown-item" http="" data="">Botão 3</ApiInvoker>
+          </BtnGroup>
+        </div>
+        <div className="mb-3 mt-3">
+          <BtnGroup className="horizontal-button-group">
+            <ApiInvoker url="" className="btn btn-secondary" http="" data="">Botão 1</ApiInvoker>
+            <ApiInvoker url="" className="btn btn-secondary" http="" data="">Botão 2</ApiInvoker>
+            <ApiInvoker url="" className="btn btn-secondary" http="" data="">Botão 3</ApiInvoker>
+          </BtnGroup>
+        </div>
+
+
+        <Form
+          className="form"
+          title="Cadastro"
+          crumbs={[{title:'Início', link:'/inicio'} ,{title:'Testes'}]}
+          layout={[
+            {key: "name", label: "Nome", props: {required: true}},
+            {key: "address", label: "Endereço", type:"text"},
+            {key: "age", label: "Idade", type: "number"},
+            {key: "email", label: "Email"},
+          ]}
+          url="parara"
+          btnClass="btn btn-danger"
+          btnName="Salvar"
+          onSubmit={(layout)=> this.onSubmit(layout)}
+          />
+
+        <pre style={{width:"300px"}}>
+        {JSON.stringify(this.state.data)}
+        </pre>
       </div>
     );
   }
 }
+
