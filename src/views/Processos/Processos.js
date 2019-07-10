@@ -33,6 +33,7 @@ class Processos extends Component {
       numeros:'',
       tx1:'',
       tx2:'',
+      noProcessos: false,
     };
     
     this.table = data.rows;
@@ -65,16 +66,15 @@ class Processos extends Component {
     ).then(res => {
     if (res.status === 200){
       const resProcessos = res.data.data;
-      resProcessos.map(p => {
-        this.showData(p);
-        this.state.accordion.push(false);
-      })
-      this.setState({
-        processos: this.state.listaProcessos,
-        isLoadingProcessos: false,
-
-      });
-
+        resProcessos.map(p => {
+          this.showData(p);
+          this.state.accordion.push(false);
+        })
+        this.setState({
+          processos: this.state.listaProcessos,
+          isLoadingProcessos: false,
+        });
+        console.log(this.state.listaProcessos);
     }else{
       Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
     }
@@ -93,7 +93,7 @@ class Processos extends Component {
   showData(data){
     this.state.cria = Moment(data.date_created).format('DD/MM/YYYY HH:mm');
     this.state.fim = Moment(data.date_finished).format('DD/MM/YYYY HH:mm');
-    (this.state.fim !== null || this.state.fim !== '')? 
+    (this.state.fim !== null || this.state.fim !== '' || this.state.fim !== 'invalid date')? 
       this.state.timeX = Moment(this.state.fim, 'DD/MM/YYYY HH:mm').startOf().fromNow():
       this.state.timeX = Moment(this.state.cria, 'DD/MM/YYYY HH:mm').startOf().fromNow();
     const res = Moment(this.state.timeX, 'DD/MM/YYYY HH:mm').startOf().fromNow();
@@ -111,6 +111,7 @@ class Processos extends Component {
       ' processos executados a ' : 
       ' processos executando a ';
     const final = reshora.replace('ago', 'atrás' );
+    !this.isEmpty(data.process_items)?
     this.state.listaProcessos.push({
       'titulo':tituloProcesso,      
       'andamento': andamento + andamentoStatus, 
@@ -118,7 +119,7 @@ class Processos extends Component {
       'criacao': this.state.cria,
       'conclusao': this.state.fim,
       'subprocessos': data.process_items,
-    });      
+    }): console.log();      
   }
 
   preFormatedext(text){
@@ -149,9 +150,12 @@ class Processos extends Component {
             <h5>Processos</h5>
           </CardHeader> */}
           <CardBody>
+          
           {!isLoadingProcessos ? (
             <div id="accordion">
-              {processos.map((p, k)=> {
+              {this.isEmpty(processos)?
+              (<div className="alert alert-info fade show">Nenhum Processo encontrado!</div>):
+                processos.map((p, k)=> {
                 return (
                   (!this.isEmpty(p.subprocessos))?
                   (<Card className="mb-0 listaProcessos " key={k}>
@@ -187,11 +191,12 @@ class Processos extends Component {
                         </ListGroup>
                       </CardBody>
                     </Collapse>
-                  </Card>): ''
+                  </Card>
+                  ): ''
                   );
                 } )
               }
-            </div>
+            </div> 
             ) : (<ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100}  className='spinnerStyle'/>)}
           </CardBody>
         </Card>
