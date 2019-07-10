@@ -133,12 +133,6 @@ class App extends Component {
 
     var ms = moment(expireToken).diff(dataFim)
  
-   if(ms <= 0)
-   {
-    console.log('Você será desconectado por inatividade no sistema.');
-    this.destroy();
- 
-   }
   };
 
   destroy = () => {
