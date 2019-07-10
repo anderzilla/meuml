@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import api from '../../../services/api';
 
 import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button } from 'reactstrap';
-import DropDownMenu from '../../Buttons/Dropdown/DropDownMenu';
-import DropDownItem from '../../Buttons/Dropdown/DropDownItem';
-
 import fotoPadrao from '../../../assets/img/avatars/user.svg';
 import ReactLoading from 'react-loading';
 import Swal from 'sweetalert2';
+import ApiInvoker from './../../../components/buttons/ApiInvoker';
+import ButtonGroup from './../../../components/buttons/ButtonGroup';
 
 class ListaContas extends Component {
   constructor(props) {
@@ -82,26 +81,26 @@ class ListaContas extends Component {
                           <span id={'nomeConta-'+index}>{acc.name}</span>
                           
                           <div className="float-right">
-                              <DropDownMenu className="primary">
-                                <DropDownItem
+                              <ButtonGroup className="primary">
+                                <ApiInvoker
                                   url={'/accounts/' + acc.id}
-                                  method="put"
+                                  http="put"
                                   onSuccess="Renomeado com sucesso!"
                                   >Renomear
-                                </DropDownItem>
-                                <DropDownItem
+                                </ApiInvoker>
+                                <ApiInvoker
                                   url={'/accounts/' + acc.id + '/sync'}
-                                  method="get"
+                                  http="get"
                                   onSuccess="Contas sincronizadas."
                                   >Sincronizar
-                                </DropDownItem>
-                                <DropDownItem
+                                </ApiInvoker>
+                                <ApiInvoker
                                   url={'/accounts/' + acc.id}
-                                  method="delete"
+                                  http="delete"
                                   onSuccess={`Conta ${acc.name} deletada com sucesso!`}
                                   >Excluir
-                                </DropDownItem>
-                              </DropDownMenu>
+                                </ApiInvoker>
+                              </ButtonGroup>
                           </div>
                         </CardHeader>
                         <CardBody>
