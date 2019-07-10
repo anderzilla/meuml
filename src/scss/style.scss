@@ -263,8 +263,15 @@ Label {
 .labelAtualiza{
   position: absolute;
   margin-top: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  margin-left: 2%;
 }
 
+.table-content{
+  padding-top: 40px !important;
+  margin-bottom: 10px;
+}
 // Resolve o problema dos indicadores de ordenação do Bootstrap Table
 
 

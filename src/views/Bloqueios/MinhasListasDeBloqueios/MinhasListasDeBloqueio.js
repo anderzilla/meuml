@@ -21,6 +21,10 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import {getToken} from '../../../auth';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationFactory, { PaginationProvider, PaginationListStandalone } from 'react-bootstrap-table2-paginator';
+import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+
 
 class MinhasListasDeBloqueio extends Component {
   constructor(props) {
@@ -170,10 +174,78 @@ class MinhasListasDeBloqueio extends Component {
 
   render() {
     const { isLoading, isLoadingAccounts, isLoadingBlacklistList, backlistList, error, accounts} = this.state;
+    const columns = [{
+      dataField: 'name',
+      text: 'Nome da Lista',
+      sort: true
+  }, {
+      dataField: 'list_description',
+      text: 'Descrição',
+      sort: true
+  }, {
+      dataField: 'quantidade',
+      text: 'Quantidade',
+      sort: true
+  },{
+      dataField: 'df1',
+      isDummyField: true,
+      text: ' ',
+      formatter: (cellContent, row) => {
+        return(
+          <Button onClick={()=>this.fetchDeletarLista(row.id)} className="btn btn-danger btn-small"><i className="fa fa-trash"></i></Button>
+        )
+      }
+  }];
 
+
+  // {
+  //   dataField: 'df1',
+  //   isDummyField: true,
+  //   text: 'Action 1',
+  //   formatter: (cellContent, row) => {
+  //     if (row.inStock) {
+  //       return (
+  //         <h5>
+  //           <span className="label label-success"> Available</span>
+  //         </h5>
+  //       );
+  //     }
+  //     return (
+  //       <h5>
+  //         <span className="label label-danger"> Backordered</span>
+  //       </h5>
+  //     );
+  //   }
+  // },
+
+  // const customTotal = (from, to, size) => (
+  //     <span className="react-bootstrap-table-pagination-total">
+  //         Mostrando {from} em {to} de {size} resultados
+  //     </span>
+  // );
+
+
+  const options = {
+
+      hideSizePerPage: true,
+      defaultSortName: 'name',
+      defaultSortOrder: 'desc',
+      sizePerPage: this.props.sizePerPage,
+      sizePerPageList: [50],
+      page: this.props.currentPage,
+      onSizePerPageList: this.props.onSizePerPageList,
+      totalSize: this.props.totalDataSize,
+      onPageChange: (page, sizePerPage) => {
+          // console.log('Page change!!!');
+          // console.log('Newest size per page:' + sizePerPage);
+          // console.log('Newest page:' + page);
+
+          this.props.onPageChange(page, sizePerPage);
+      }
+  };
     return (
       <div className="animated fadeIn">
-        <Card className="card-accent-primary">
+        <Card >
           {/* <CardHeader>
             <Row>
             <Col md="3" xs="3" sm="12"><h5>Listas - {this.state.nlistas}</h5> </Col>
@@ -181,7 +253,19 @@ class MinhasListasDeBloqueio extends Component {
             </Row>
           </CardHeader> */}
           <CardBody>
-          <Table responsive>
+          <BootstrapTable
+                                            keyField="id"
+                                            data={backlistList}
+                                            columns={columns}
+                                            striped
+                                            hover
+                                            condensed
+                                            //noDataIndication={<ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100} className='spinnerStyle' />}
+                                            pagination={paginationFactory(options)}
+                                            remote={true}
+                                            fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
+                                        />
+          {/* <Table responsive>
                   <thead>
                   <tr>
                     <th className="text-left tbcol-30">Nome da Lista</th>
@@ -209,7 +293,7 @@ class MinhasListasDeBloqueio extends Component {
                        <tr><td><h3>Carregando...</h3></td></tr> 
                       )}
                   </tbody>
-                </Table>
+                </Table> */}
           </CardBody>
           </Card>
           </div>

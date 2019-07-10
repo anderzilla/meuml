@@ -4,7 +4,7 @@ import {getToken} from "../../auth";
 import Swal from "sweetalert2";
 import {Card, CardBody, CardHeader, } from "reactstrap";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
-
+import BootstrapTable from 'react-bootstrap-table-next';
 
 class Categorias extends Component {
 
