@@ -88,9 +88,6 @@ class Categorias extends React.Component {
     handleTableChange = (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit }) => {
         console.log('filters',filters);
 
-        if(page < 0){
-            page -= 1;
-        }
 
         if(this.isEmpty(filters)){
             filters = ''
@@ -125,6 +122,7 @@ class Categorias extends React.Component {
         }
 
         url += '&sortOrder=' + sortOrder + '&sortName=' + sortField
+
 
         axios.get(url,
             { headers: { "Authorization": 'Bearer ' + getToken() } },
