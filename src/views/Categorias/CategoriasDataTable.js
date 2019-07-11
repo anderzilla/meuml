@@ -2,33 +2,40 @@ import React from 'react';
 import {
     Card,
     CardBody,
+    CardFooter,
+
     Input,
-    CardHeader
+    CardHeader,
+    Table
 } from "reactstrap";
 import axios from "axios";
 import { getToken } from "../../auth";
 import Swal from "sweetalert2";
 
-import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory, { PaginationProvider, PaginationListStandalone } from 'react-bootstrap-table2-paginator';
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
-
+import Pagination from "react-js-pagination";
 import ReactLoading from 'react-loading';
 import Moment from 'moment';
 
 class CategoriasDataTable extends React.Component {
     constructor(props) {
         super(props);
+
+        this.handlePageChange = this.handlePageChange.bind(this);
+
+
         this.state = {
             data: [],
+            sizePerPage: 50,
             totalDataSize: 0,
             sizePerPage: 50,
-            currentPage: 1,
+            activePage: 1,
             filter: '',
             filtro: '',
             first: '',
             lastUpdate: '',
-            last_page: 0
+            last_page: 0,
+            isLoading: true,
+            total: ''
         };
 
         this.fetchCategorias();
@@ -37,7 +44,7 @@ class CategoriasDataTable extends React.Component {
     fetchCategorias(limit = 50, page = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
 
         if (page >= this.state.last_page && this.state.last_page != 0) {
-            page = this.state.last_page
+            page = this.state.last_page 
         }
 
         let url = process.env.REACT_APP_API_URL + `/categories?page=${page}&limit=${limit}`
@@ -64,25 +71,28 @@ class CategoriasDataTable extends React.Component {
             { headers: { "Authorization": 'Bearer ' + getToken() } },
         ).then(res => {
             if (res.data.status === 'success') {
-
+                console.log("data", res.data.data)
                 this.setState({
                     data: res.data.data,
-                    totalDataSize: res.data.meta.total,
+                    totalDataSize: res.data.meta.total - 1,
                     sizePerPage: res.data.meta.limit,
                     currentPage: res.data.meta.page,
                     lastUpdate: res.data.meta.last_update,
-                    last_page: res.data.meta.last_page
+                    last_page: res.data.meta.last_page -1,
+                    isLoading: false,
                 });
 
                 if (page >= this.state.last_page) {
                     this.setState({
-                        totalDataSize: res.data.meta.total - res.data.meta.limit
+                        totalDataSize: res.data.meta.total - res.data.meta.limit,
+                        isLoading: false
                     });
                 }
 
             } else {
                 Swal.fire({ html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true });
             }
+
         }).catch(error => {
             Swal.fire({
                 html: '<p>' + error.response.data.message + '</p>',
@@ -120,7 +130,6 @@ class CategoriasDataTable extends React.Component {
         this.page = page;
         this.sizePerPage = sizePerPage;
         this.fetchCategorias(sizePerPage, page)
-
     }
 
     onSortChange(sortName = 'id', sortOrder = 'ASC') {
@@ -139,144 +148,97 @@ class CategoriasDataTable extends React.Component {
         });
     }
 
-    render() {
-        return (
-            <CategoriasTableComp
-                onFilterChange={this.onFilterChange.bind(this)}
-                onSearchChange={this.onFilterChange.bind(this)}
-                onPageChange={this.onPageChange.bind(this)}
-                onSortChange={this.onSortChange.bind(this)}
-                onHandleChange={this.handleChange.bind(this)}
-                {...this.state}
-            />
-        );
+
+
+    handlePageChange(pageNumber) {
+        !pageNumber ? this.setState({ activePage: '1' }) : this.setState({ activePage: pageNumber });
+        this.onPageChange(pageNumber, 50);
     }
 
-
-}
-
-class CategoriasTableComp extends React.Component {
-
     render() {
-        const columns = [{
-            dataField: 'external_id',
-            text: 'ID',
-            sort: true
-        }, {
-            dataField: 'path',
-            text: 'Descrição',
-            sort: true
-        }, {
-            dataField: 'weight',
-            text: 'Peso',
-            sort: true,
-            style: { width: '80px' }
-        }, {
-            dataField: 'cubage',
-            text: 'Dimensão',
-            sort: true,
-            style: { width: '210px' }
-        }];
-
-
-        const customTotal = (from, to, size) => (
-            <span className="react-bootstrap-table-pagination-total">
-                Mostrando {from} em {to} de {size} resultados
-            </span>
-        );
-
-
-        const options = {
-
-            hideSizePerPage: true,
-            defaultSortName: 'name',
-            defaultSortOrder: 'desc',
-            sizePerPage: this.props.sizePerPage,
-            sizePerPageList: [50],
-            page: this.props.currentPage,
-            onSizePerPageList: this.props.onSizePerPageList,
-            totalSize: this.props.totalDataSize,
-            onPageChange: (page, sizePerPage) => {
-                // console.log('Page change!!!');
-                // console.log('Newest size per page:' + sizePerPage);
-                // console.log('Newest page:' + page);
-
-                this.props.onPageChange(page, sizePerPage);
-            }
-        };
-
-        const MySearch = (props) => {
-            let input;
-            const handleClick = () => {
-                props.onSearch(input.value);
-                this.props.onFilterChange(input.value);
-            };
-
-            return (
-
-                <div className='input-group filtro'>
-                    <input
-                        className="col-md"
-                        ref={n => input = n}
-                        type="text"
-                        placeholder={'Pesquisar por descrição...'}
-                        onKeyPress={event => {
-                            if (event.key === 'Enter') {
-                                handleClick()
-                            }
-                        }}
-                    />
-
-                    <span className='it-group-btn'>
-                        <button
-                            className='btn btn-primary'
-                            type='button'
-
-                            onClick={handleClick}>
-                            Buscar
-                    </button>
-                    </span>
-                </div>
-            );
-        };
+        const { isLoading, accounts, selectedOption, contas, arrayValue, contasMarcadas, offset } = this.state.data;
+        const lista = this.state.data
+        const dados = this.state
 
         return (
+            // <CategoriasTableComp
+            //     onFilterChange={this.onFilterChange.bind(this)}
+            //     onSearchChange={this.onFilterChange.bind(this)}
+            //     onPageChange={this.onPageChange.bind(this)}
+            //     onSortChange={this.onSortChange.bind(this)}
+            //     onHandleChange={this.handleChange.bind(this)}
+            //     {...this.state}
+            // />
+            <div className="animated fadeIn">
+                <Card>
+                    {/* <div> */}
 
-            <Card>
-                <div>
-                    <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.props.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
+                    <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.state.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
                     <CardBody className='table-content'>
-                        <ToolkitProvider
-                            keyField="id"
-                            data={this.props.data}
-                            columns={columns}
-                            search>
-                            {
-                                props => (
-                                    <div>
-                                        <MySearch {...props.searchProps} />
-                                        <br />
-                                        <BootstrapTable
-                                            keyField="id"
-                                            data={this.props.data}
-                                            columns={columns}
-                                            striped
-                                            hover
-                                            condensed
-                                            //noDataIndication={<ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100} className='spinnerStyle' />}
-                                            pagination={paginationFactory(options)}
-                                            remote={true}
-                                            fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
-                                        />
-                                    </div>
-                                )
-                            }
-                        </ToolkitProvider>
+
+                        <Table responsive className="table table-responsive-sm table-bordered table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th className="tbcol-10 text-center" >ID</th>
+                                    <th className="tbcol-50 text-center">Descrição</th>
+                                    <th className="tbcol-20 text-center">Peso</th>
+                                    <th className="tbcol-20 text-center">Dimensão</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+
+                                    (
+                                        !isLoading ? (
+                                            this.state.data.map((cat) => {
+                                                return (
+                                                    <tr key={cat.id}>
+                                                        <td> {cat.external_id}</td>
+                                                        <td className="text-center">
+                                                            {cat.path}
+                                                        </td>
+                                                        <td className="text-center">
+                                                            {cat.weight}
+                                                        </td>
+                                                        <td className="text-center">
+                                                            {cat.cubage}
+                                                        </td>
+
+                                                    </tr>
+                                                );
+                                            })
+                                        ) : (
+                                                <ReactLoading type={'spinningBubbles'} color={'#054785'} height={50} width={50} className='spinnerStyle' />
+                                            )
+                                    )
+                                }
+                            </tbody>
+                        </Table>
+
                     </CardBody>
-                </div>
-            </Card>
+                    <CardFooter className=" align-content-center ">
+                        <Pagination
+                            activePage={this.state.activePage}
+                            itemsCountPerPage={this.state.sizePerPage}
+                            totalItemsCount={(this.state.totalDataSize)}
+                            pageRangeDisplayed={5}
+                            onChange={this.handlePageChange}
+                            itemClass="btn btn-md btn-outline-info"
+                            activeClass="btn btn-md btn-info"
+                            innerClass="btn-group"
+                            activeLinkClass="text-white"
+                        />
+                    </CardFooter>
+
+                </Card>
+            </div>
+
         );
+
     }
+
+
 }
+
 
 export default CategoriasDataTable;
