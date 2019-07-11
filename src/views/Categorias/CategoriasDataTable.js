@@ -136,11 +136,11 @@ class Categorias extends React.Component {
                 let diss = total / limit;
                 let spl = diss.toString().split('.');
                 if(spl.length > 1){
-
-                    var restoDivisao = (((res.data.meta.total) * 100) % res.data.meta.pages) / 100
-
-                    var meta_total = res.data.meta.total - restoDivisao
-
+                    var resto = res.data.meta.total % res.data.meta.limit
+                    console.log('restoDivisao',  resto )
+                    console.log('res.data.meta.total ', res.data.meta.total )
+                    var meta_total = res.data.meta.total - resto;
+                    console.log('meta_total',meta_total)
                 }
 
 
