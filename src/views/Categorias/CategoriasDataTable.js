@@ -131,20 +131,10 @@ class Categorias extends React.Component {
 
                 let total = res.data.meta.total;
                 let limit = res.data.meta.limit;
-                let diss = total / limit;
-                let spl = diss.toString().split('.');
-                if(spl.length > 1){
-                    var resto = res.data.meta.total % res.data.meta.limit
-                    console.log('restoDivisao',  resto )
-                    console.log('res.data.meta.total ', res.data.meta.total )
-                    var meta_total = res.data.meta.total - resto;
-                    console.log('meta_total',meta_total)
-                }
-
 
                 this.setState({
                     data: res.data.data,
-                    totalSize: meta_total,
+                    totalSize: total,
                     sizePerPage: res.data.meta.limit,
                     page: res.data.meta.page,
                     lastUpdate: res.data.meta.last_update,
