@@ -19,10 +19,12 @@ class Login extends Component {
       message: '',
       status: '',
       tipoErro: '',
-      expiresin:''
+      expiresin:'',
+      noClick: false,
     };
 
-   
+    this.disableButtom = this.disableButtom.bind(this);
+    
 
     this.submitInput = React.createRef();
     this.focusSubmitInput = this.focusSubmitInput.bind(this);
@@ -41,8 +43,8 @@ class Login extends Component {
     });
   }
   handleSubmit(event) {
-
-    event.preventDefault();
+    
+    if (this.state.noClick === true){
     //Constantes para serem utilizadas na montagem dos dados do usuário no sistema
     const USER_ID = "@MeuML-UserId";
     const USER_NAME = "@MeuML-UserName";
@@ -81,10 +83,18 @@ class Login extends Component {
       });
       }
     }).catch(error => {
+        this.state.noClick = false;
         !error.response.data.errors.email? this.setState({tipoErro: ''}) : this.setState({tipoErro: error.response.data.errors.email});
         !error.response.data.errors.password? this.setState({erroPass: ''}) : this.setState({erroPass: error.response.data.errors.password});
         Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro+ this.state.erroPass +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
   });
+  }
+  }
+
+  disableButtom(){
+    this.state.noClick = true;
+    console.log(this.state.noClick);
+    this.handleSubmit();
   }
 
   focusSubmitInput() {
@@ -113,7 +123,7 @@ class Login extends Component {
                 </Card>
                 <Card className="col-md-6 col-xm-12">
                   <CardBody>
-                    <Form onSubmit={this.handleSubmit}>
+                    <Form>
                       <h2 className="tituloLogin">Acesse sua conta</h2>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
@@ -133,7 +143,7 @@ class Login extends Component {
                       </InputGroup>
                       <Row>
                         <Col xs="5" className="text-right ">
-                          <Input type="submit" value="Entrar" className="btn btn-square btn-block btn-primary active" />
+                          <Button disabled={this.state.noClick} onClick={this.disableButtom} className="btn btn-square btn-block btn-primary active">Entrar</Button>
                         </Col>
                         <Col xs="7" className="text-right ">
                         <Link to="/recuperarsenha">
