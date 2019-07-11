@@ -70,7 +70,7 @@ class Categorias extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            page: 1,
+            page: 0,
             data: [],
             totalSize: 0,
             sizePerPage: 50
