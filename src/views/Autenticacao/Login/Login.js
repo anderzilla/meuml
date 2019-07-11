@@ -43,8 +43,6 @@ class Login extends Component {
     });
   }
   handleSubmit(event) {
-    
-    if (this.state.noClick === true){
     //Constantes para serem utilizadas na montagem dos dados do usuário no sistema
     const USER_ID = "@MeuML-UserId";
     const USER_NAME = "@MeuML-UserName";
@@ -89,7 +87,6 @@ class Login extends Component {
         Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro+ this.state.erroPass +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
   });
   }
-  }
 
   disableButtom(){
     this.state.noClick = true;
@@ -100,7 +97,7 @@ class Login extends Component {
   focusSubmitInput() {
     // Explicitly focus the text input using the raw DOM API
     // Note: we're accessing "current" to get the DOM node
-    this.submitInput.current.focus();
+    //this.submitInput.current.focus();
   }
 
   render() {
@@ -123,7 +120,7 @@ class Login extends Component {
                 </Card>
                 <Card className="col-md-6 col-xm-12">
                   <CardBody>
-                    <Form>
+                    <Form onSubmit={()=>this.handleSubmit()}>
                       <h2 className="tituloLogin">Acesse sua conta</h2>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
@@ -143,7 +140,7 @@ class Login extends Component {
                       </InputGroup>
                       <Row>
                         <Col xs="5" className="text-right ">
-                          <Button disabled={this.state.noClick} onClick={this.disableButtom} className="btn btn-square btn-block btn-primary active">Entrar</Button>
+                          <Input type="submit" value="Entrar" className="btn btn-square btn-block btn-primary active" />
                         </Col>
                         <Col xs="7" className="text-right ">
                         <Link to="/recuperarsenha">
