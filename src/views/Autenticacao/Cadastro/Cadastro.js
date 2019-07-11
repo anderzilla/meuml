@@ -93,7 +93,7 @@ class Cadastro extends Component {
         if (this.state.status === 'success'){
           const message = res.data.message;
           this.setState({message});
-          Swal.fire({html:'<p>'+this.state.message+'</p><p>Enviamos o link de confirmação para o email informado, verifique o recebimento para concluir o cadastro.</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
+          Swal.fire({html:'<p>Enviamos o link de confirmação para o email informado, verifique o recebimento para concluir o cadastro.</p>', type: "info", showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
           this.setState({
             isLoadingCadastro: false,
       
