@@ -103,10 +103,10 @@ class Categorias extends React.Component {
         }
 
         let url = process.env.REACT_APP_API_URL + `/categories?page=${page}&limit=${sizePerPage}`
-/*
-        if (this.state.filter !== '') {
-            url += `&filter=` + this.state.filter
-        }*/
+        /*
+                if (this.state.filter !== '') {
+                    url += `&filter=` + this.state.filter
+                }*/
 
         if (filters !== '') {
             url += `&filter=` + filters
@@ -136,13 +136,18 @@ class Categorias extends React.Component {
                     let comp = limit / 10;
                     if(u_dot > 4){
                         let mult = comp * u_dot;
-                        res.data.meta.total = res.data.meta.total - mult
+                        let calc = total - mult
+                        if(calc < res.data.meta.total){
+                            var meta_total = calc
+                        }else{
+                            var meta_total = res.data.meta.total;
+                        }
                     }
                 }
 
                 this.setState({
                     data: res.data.data,
-                    totalSize: res.data.meta.total,
+                    totalSize: meta_total,
                     sizePerPage: res.data.meta.limit,
                     page: res.data.meta.page,
                     lastUpdate: res.data.meta.last_update,
