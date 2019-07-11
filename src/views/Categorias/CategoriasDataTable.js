@@ -1,75 +1,150 @@
-import React from 'react';
-import {
-    Card,
-    CardBody,
-    Input,
-    CardHeader
-} from "reactstrap";
+
+import React, { Component } from 'react';
 import axios from "axios";
-import { getToken } from "../../auth";
+import {getToken} from "../../auth";
 import Swal from "sweetalert2";
+import {Card, CardBody, CardHeader, } from "reactstrap";
+
+
 
 import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory, { PaginationProvider, PaginationListStandalone } from 'react-bootstrap-table2-paginator';
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import cellEditFactory from 'react-bootstrap-table2-editor';
+import filterFactory, { textFilter, Comparator } from 'react-bootstrap-table2-filter';
+// ...
 
-import ReactLoading from 'react-loading';
-import Moment from 'moment';
+const columns = [{
+    dataField: 'external_id',
+    text: 'ID',
+    sort: true
+}, {
+    dataField: 'path',
+    text: 'Categoria',
+    filter: textFilter(),
+    sort: true
+}, {
+    dataField: 'weight',
+    text: 'Peso',
+    sort: true
+}, {
+    dataField: 'cubage',
+    text: 'Dimensão',
+    sort: true
+}];
 
-class CategoriasDataTable extends React.Component {
+
+const defaultSorted = [{
+    dataField: 'external_id',
+    order: 'desc'
+}];
+
+const cellEditProps = {
+    mode: 'click'
+};
+
+const RemoteAll = ({ data, page, sizePerPage, onTableChange, totalSize }) => (
+    <div>
+        <BootstrapTable
+            remote
+            keyField="id"
+            data={ data }
+            columns={ columns }
+            defaultSorted={ defaultSorted }
+            filter={ filterFactory() }
+            pagination={ paginationFactory({ page, sizePerPage, totalSize }) }
+            onTableChange={ onTableChange }
+        />
+    </div>
+);
+/*
+RemoteAll.propTypes = {
+    data: PropTypes.array.isRequired,
+    page: PropTypes.number.isRequired,
+    totalSize: PropTypes.number.isRequired,
+    sizePerPage: PropTypes.number.isRequired,
+    onTableChange: PropTypes.func.isRequired
+};
+*/
+
+class Categorias extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            page: 1,
             data: [],
-            totalDataSize: 0,
-            sizePerPage: 50,
-            currentPage: 1,
-            filter: '',
-            filtro: '',
-            first: '',
-            lastUpdate: '',
-            last_page: 0
+            totalSize: 0,
+            sizePerPage: 50
         };
-
-        this.fetchCategorias();
+        this.handleTableChange = this.handleTableChange.bind(this);
+    }
+    isEmpty = (obj) => {
+        for(var key in obj) {
+            if(obj.hasOwnProperty(key))
+                return false;
+        }
+        return true;
     }
 
-    fetchCategorias(limit = 50, page = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
+    handleTableChange = (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit }) => {
+        console.log('filters',filters);
+
+        if(this.isEmpty(filters)){
+            filters = ''
+        }else{
+            if(filters.path !== undefined){
+                filters = filters.path.filterVal;
+            }else{
+                filters = ''
+            }
+        }
 
         if (page >= this.state.last_page && this.state.last_page != 0) {
             page = this.state.last_page
         }
 
-        let url = process.env.REACT_APP_API_URL + `/categories?page=${page}&limit=${limit}`
-
+        let url = process.env.REACT_APP_API_URL + `/categories?page=${page}&limit=${sizePerPage}`
+/*
         if (this.state.filter !== '') {
             url += `&filter=` + this.state.filter
-        }
+        }*/
 
-        if (filter !== '') {
-            url += `&filter=` + filter
+        if (filters !== '') {
+            url += `&filter=` + filters
         }
 
         if (this.state.sortName !== 'id' && this.state.sortName !== undefined) {
-            sortName = this.state.sortName;
+            sortField = this.state.sortName;
         }
 
         if (this.state.sortOrder !== 'ASC' && this.state.sortOrder !== undefined) {
             sortOrder = this.state.sortOrder
         }
 
-        url += '&sortOrder=' + sortOrder + '&sortName=' + sortName
+        url += '&sortOrder=' + sortOrder + '&sortName=' + sortField
 
         axios.get(url,
             { headers: { "Authorization": 'Bearer ' + getToken() } },
         ).then(res => {
             if (res.data.status === 'success') {
 
+                let total = res.data.meta.total;
+                let limit = res.data.meta.limit;
+                let diss = total / limit;
+                let spl = diss.toString().split('.');
+                if(spl.length > 1){
+                    let u_dot = parseInt(spl[1]);
+                    let comp = limit / 10;
+                    if(u_dot > 4){
+                        let mult = comp * u_dot;
+                        res.data.meta.total = res.data.meta.total - mult
+                    }
+                }
+
                 this.setState({
                     data: res.data.data,
-                    totalDataSize: res.data.meta.total,
+                    totalSize: res.data.meta.total,
                     sizePerPage: res.data.meta.limit,
-                    currentPage: res.data.meta.page,
+                    page: res.data.meta.page,
                     lastUpdate: res.data.meta.last_update,
                     last_page: res.data.meta.last_page
                 });
@@ -92,191 +167,21 @@ class CategoriasDataTable extends React.Component {
                 cancelButtonText: 'Fechar'
             });
         });
-    }
-
-    filterText(targetVal, filterVal) {
-        if (targetVal.toString().toLowerCase().indexOf(filterVal) === -1) {
-            return false;
-        }
         return true;
     }
 
-
-    onFilterChange(value) {
-
-        var filter = value
-        if (filter !== undefined) {
-
-            this.state.filter = filter;
-            this.fetchCategorias(this.state.sizePerPage, this.state.currentPage, filter)
-        } else {
-            this.state.filter = '';
-            this.fetchCategorias(this.state.sizePerPage, this.state.currentPage)
-        }
-
-    }
-
-    onPageChange(page, sizePerPage) {
-        this.page = page;
-        this.sizePerPage = sizePerPage;
-        this.fetchCategorias(sizePerPage, page)
-
-    }
-
-    onSortChange(sortName = 'id', sortOrder = 'ASC') {
-        this.state.sortName = sortName;
-        this.state.sortOrder = sortOrder;
-        this.fetchCategorias(this.state.sizePerPage, this.state.currentPage, this.state.filter, sortName, sortOrder)
-
-    }
-
-    handleChange(event) {
-
-        var pesquisa = {}
-        pesquisa = event.target.value
-        this.setState({
-            filtro: pesquisa
-        });
-    }
-
     render() {
+        const { data, sizePerPage, page, totalSize} = this.state;
         return (
-            <CategoriasTableComp
-                onFilterChange={this.onFilterChange.bind(this)}
-                onSearchChange={this.onFilterChange.bind(this)}
-                onPageChange={this.onPageChange.bind(this)}
-                onSortChange={this.onSortChange.bind(this)}
-                onHandleChange={this.handleChange.bind(this)}
-                {...this.state}
+            <RemoteAll
+                data={ data }
+                page={ page }
+                sizePerPage={ sizePerPage }
+                totalSize={ totalSize }
+                onTableChange={ this.handleTableChange }
             />
         );
     }
-
-
 }
 
-class CategoriasTableComp extends React.Component {
-
-    render() {
-        const columns = [{
-            dataField: 'external_id',
-            text: 'ID',
-            sort: true
-        }, {
-            dataField: 'path',
-            text: 'Descrição',
-            sort: true
-        }, {
-            dataField: 'weight',
-            text: 'Peso',
-            sort: true,
-            style: { width: '80px' }
-        }, {
-            dataField: 'cubage',
-            text: 'Dimensão',
-            sort: true,
-            style: { width: '210px' }
-        }];
-
-
-        const customTotal = (from, to, size) => (
-            <span className="react-bootstrap-table-pagination-total">
-                Mostrando {from} em {to} de {size} resultados
-            </span>
-        );
-
-
-        const options = {
-
-            hideSizePerPage: true,
-            defaultSortName: 'name',
-            defaultSortOrder: 'desc',
-            sizePerPage: this.props.sizePerPage,
-            sizePerPageList: [50],
-            page: this.props.currentPage,
-            onSizePerPageList: this.props.onSizePerPageList,
-            totalSize: this.props.totalDataSize,
-            onPageChange: (page, sizePerPage) => {
-                // console.log('Page change!!!');
-                // console.log('Newest size per page:' + sizePerPage);
-                // console.log('Newest page:' + page);
-
-                this.props.onPageChange(page, sizePerPage);
-            }
-        };
-
-        const MySearch = (props) => {
-            let input;
-            const handleClick = () => {
-                props.onSearch(input.value);
-                this.props.onFilterChange(input.value);
-            };
-
-            return (
-
-                <div className='input-group filtro'>
-                    <input
-                        className="col-md"
-                        ref={n => input = n}
-                        type="text"
-                        placeholder={'Pesquisar por descrição...'}
-                        onKeyPress={event => {
-                            if (event.key === 'Enter') {
-                                handleClick()
-                            }
-                        }}
-                    />
-
-                    <span className='it-group-btn'>
-                        <button
-                            className='btn btn-primary'
-                            type='button'
-
-                            onClick={handleClick}>
-                            Buscar
-                    </button>
-                    </span>
-                </div>
-            );
-        };
-
-        return (
-
-            <Card>
-                <div>
-                    <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.props.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
-                    <CardBody className='table-content'>
-                        <ToolkitProvider
-                            keyField="id"
-                            data={this.props.data}
-                            columns={columns}
-                            search>
-                            {
-                                props => (
-                                    <div>
-                                        <MySearch {...props.searchProps} />
-                                        <br />
-                                        <BootstrapTable
-                                            keyField="id"
-                                            data={this.props.data}
-                                            columns={columns}
-                                            striped
-                                            hover
-                                            condensed
-                                            //noDataIndication={<ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100} className='spinnerStyle' />}
-                                            pagination={paginationFactory(options)}
-                                            remote={true}
-                                            fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
-                                        />
-                                    </div>
-                                )
-                            }
-                        </ToolkitProvider>
-                    </CardBody>
-                </div>
-            </Card>
-        );
-    }
-}
-
-export default CategoriasDataTable;
+export default Categorias;
