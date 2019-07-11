@@ -70,7 +70,7 @@ class Categorias extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            page: 0,
+            page: 1,
             data: [],
             totalSize: 0,
             sizePerPage: 50
@@ -87,6 +87,10 @@ class Categorias extends React.Component {
 
     handleTableChange = (type, { page, sizePerPage, filters, sortField, sortOrder, cellEdit }) => {
         console.log('filters',filters);
+
+        if(page < 0){
+            page -= 1;
+        }
 
         if(this.isEmpty(filters)){
             filters = ''
@@ -132,18 +136,13 @@ class Categorias extends React.Component {
                 let diss = total / limit;
                 let spl = diss.toString().split('.');
                 if(spl.length > 1){
-                    let u_dot = parseInt(spl[1]);
-                    let comp = limit / 10;
-                    if(u_dot > 5){
-                        let mult = comp * u_dot;
-                        let calc = total - mult
-                        if(calc < res.data.meta.total){
-                            var meta_total = calc
-                        }else{
-                            var meta_total = res.data.meta.total;
-                        }
-                    }
+
+                    var restoDivisao = (((res.data.meta.total) * 100) % res.data.meta.pages) / 100
+
+                    var meta_total = res.data.meta.total - restoDivisao
+
                 }
+
 
                 this.setState({
                     data: res.data.data,
