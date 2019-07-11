@@ -134,7 +134,7 @@ class Categorias extends React.Component {
                 if(spl.length > 1){
                     let u_dot = parseInt(spl[1]);
                     let comp = limit / 10;
-                    if(u_dot > 4){
+                    if(u_dot > 5){
                         let mult = comp * u_dot;
                         let calc = total - mult
                         if(calc < res.data.meta.total){
