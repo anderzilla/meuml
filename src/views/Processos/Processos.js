@@ -92,17 +92,18 @@ class Processos extends Component {
 
   showData(data){
     this.state.cria = Moment(data.date_created).format('DD/MM/YYYY HH:mm');
-    this.state.fim = Moment(data.date_finished).format('DD/MM/YYYY HH:mm');
-    (this.state.fim !== null || this.state.fim !== '' || this.state.fim !== 'invalid date')? 
-      this.state.timeX = Moment(this.state.fim, 'DD/MM/YYYY HH:mm').startOf().fromNow():
-      this.state.timeX = Moment(this.state.cria, 'DD/MM/YYYY HH:mm').startOf().fromNow();
-    const res = Moment(this.state.timeX, 'DD/MM/YYYY HH:mm').startOf().fromNow();
+    (data.date_finished === null)? this.state.fim = data.date_finished :this.state.fim = Moment(data.date_finished).format('DD/MM/YYYY HH:mm');
+    (data.date_finished === null)? 
+      this.state.timeX = Moment(this.state.cria, 'DD/MM/YYYY HH:mm').startOf().fromNow():
+      this.state.timeX = Moment(this.state.fim, 'DD/MM/YYYY HH:mm').startOf().fromNow();
+      console.log(this.state.fim);
+    const res = this.state.timeX;
     const resdiaa = res.replace('a day', '1 dia').replace('in','');
     const resmesa = resdiaa.replace('a month', '1 mês');
-    const resmeses = resmesa.replace('months', 'meses');
-    const resmes = resmeses.replace('month', 'mes');
-    const resdia = resmes.replace('day', 'dia').replace('an hour','1 hora').replace('a minute', '1 minuto');
-    const reshora = resdia.replace('hour', 'hora').replace('a few seconds', 'alguns segundos').replace('minute','minuto');
+    const resmeses = resmesa.replace('months', 'meses').replace('minute','minuto');
+    const resmes = resmeses.replace('month', 'mes').replace('a mute', '1 minuto');
+    const resdia = resmes.replace('day', 'dia').replace('an hour','1 hora');
+    const reshora = resdia.replace('hour', 'hora').replace('a few seconds', 'alguns segundos').replace('mutes', 'minutos');
     
     const tituloProcesso = data.tool_name.replace('Blacklist', 'Bloqueio')
     
@@ -169,7 +170,7 @@ class Processos extends Component {
                       </Button>
                       </Col>
                       <Col sm="6" md="6" className="text-right">
-                        <span className="m-0 p-0 text-right"><sup>{(p.conclusao !== null || p.conslusão !== '')? 'finalizado em '+p.conclusao+' ' : 'iniciado em '+p.criacao+' '}<i className="fa fa-clock-o"></i></sup></span>
+                        <span className="m-0 p-0 text-right"><sup>{(p.conclusao === null || p.conslusão === 'Invalid date')? 'iniciado em '+p.criacao+' ' :'finalizado em '+p.conclusao+' ' }<i className="fa fa-clock-o"></i></sup></span>
                       </Col>
                       </Row>
                     </CardHeader>
