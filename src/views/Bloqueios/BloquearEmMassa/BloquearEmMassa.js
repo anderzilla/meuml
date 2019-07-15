@@ -223,8 +223,9 @@ class BloquearEmMassa extends Component {
 
   concluirOperacao() {
     if (this.state.lista === "") {
+      this.setState({ isLoadingCadastro: false });
       Swal.fire({
-        html: "<p>É necessário preencher a lista antes de Concluir!</p>",
+        html: "<p>É necessário preencher a Listagem antes de Concluir!</p>",
         type: "error",
         showCloseButton: false,
         showConfirmButton: true,
@@ -234,22 +235,25 @@ class BloquearEmMassa extends Component {
       this.setState({ isLoadingCadastro: true });
       this.setState({ bloqueios: [] });
       if (this.state.listagem === "") {
+        this.setState({ isLoadingCadastro: false });
         Swal.fire({
-          html: "<p>Preencha o campo Lista antes de Salvar!</p>",
+          html: "<p>Preencha o campo Nome da Lista antes de Salvar!</p>",
           type: "error",
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: "Fechar"
         });
       } else if (this.state.nomeLista === "" && this.state.custom[0] === true) {
+        this.setState({ isLoadingCadastro: false });
         Swal.fire({
-          html: "<p>Preencha o campo Lista antes de Salvar!</p>",
+          html: "<p>Preencha o campo Nome da Lista antes de Salvar!</p>",
           type: "error",
           showConfirmButton: false,
           showCancelButton: true,
           cancelButtonText: "Fechar"
         });
       } else if (this.state.nomeLista === "" && this.state.custom[2] === true) {
+        this.setState({ isLoadingCadastro: false });
         Swal.fire({
           html: "<p>Preencha o nome da Lista antes de Salvar.</p>",
           type: "error",
@@ -261,6 +265,7 @@ class BloquearEmMassa extends Component {
         this.state.arrayValue === "" &&
         this.state.custom[1] === true
       ) {
+        this.setState({ isLoadingCadastro: false });
         Swal.fire({
           html: "<p>Escolha uma conta para qual a lista  será bloqueada.</p>",
           type: "error",
@@ -272,6 +277,7 @@ class BloquearEmMassa extends Component {
         this.state.arrayValue === "" &&
         this.state.custom[2] === true
       ) {
+        this.setState({ isLoadingCadastro: false });
         Swal.fire({
           html: "<p>PEscolha uma conta para qual a lista  será bloqueada.</p>",
           type: "error",
@@ -284,6 +290,7 @@ class BloquearEmMassa extends Component {
         this.state.bids === "" &&
         this.state.custom[1] === true
       ) {
+        this.setState({ isLoadingCadastro: false });
         Swal.fire({
           html: "<p>Escolha uma opção de bloqueio antes de salvar.</p>",
           type: "error",
@@ -296,6 +303,7 @@ class BloquearEmMassa extends Component {
         this.state.bids === "" &&
         this.state.custom[2] === true
       ) {
+        this.setState({ isLoadingCadastro: false });
         Swal.fire({
           html: "<p>Escolha uma opção de bloqueio antes de salvar.</p>",
           type: "error",

@@ -171,13 +171,14 @@ class BloquearComprador extends Component {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-
     this.setState({
-      [name]: value
+      [name]: value,
+      isLoadingCadastro: false
     });
   }
 
   handleChange = selectedOption => {
+    this.setState({ isLoadingCadastro: false });
     this.setState({ selectedOption });
   };
   fetchBlacklist(accountId, accountName) {
@@ -216,9 +217,23 @@ class BloquearComprador extends Component {
       });
     } else {
       if (this.state.customer_id === "") {
-        alert("Preencha o id ou usuário do comprador.");
+        this.setState({ isLoadingCadastro: false });
+        Swal.fire({
+          html: "<p>Preencha o id ou usuário do comprador.</p>",
+          type: "error",
+          showCloseButton: false,
+          showConfirmButton: true,
+          textConfirmButton: "OK"
+        });
       } else if (this.state.motiveId === "") {
-        alert("Defina o motivo do bloqueio.");
+        this.setState({ isLoadingCadastro: false });
+        Swal.fire({
+          html: "<p>Defina o motivo do bloqueio.</p>",
+          type: "error",
+          showCloseButton: false,
+          showConfirmButton: true,
+          textConfirmButton: "OK"
+        });
       } else {
         this.state.arrayValue.map((s, k) => {
           const { value, name } = this.state;
@@ -270,6 +285,7 @@ class BloquearComprador extends Component {
             }
           })
           .catch(error => {
+            this.setState({ isLoadingCadastro: false });
             !error.response
               ? this.setState({ tipoErro: error })
               : this.setState({ tipoErro: error.response.data.message });
@@ -322,6 +338,7 @@ class BloquearComprador extends Component {
                             valueKey="value"
                             labelKey="label"
                             multiple={true}
+                            required
                             includeSelectAll={true}
                             includeFilter={true}
                             dropdownHeight={600}
