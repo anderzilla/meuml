@@ -144,7 +144,8 @@ class BloquearEmMassa extends Component {
     const name = target.name;
 
     this.setState({
-      [name]: value
+      [name]: value,
+      isLoadingCadastro: false,
     });
   }
 
@@ -363,12 +364,14 @@ class BloquearEmMassa extends Component {
 
             }).catch((error) => {
               this.setState({isLoadingCadastro: false});
+                this.state.isLoadingCadastro = false;
                 !error.response ?
                 (this.setState({tipoErro: error})) :
                 (this.setState({tipoErro: error.response.data.message}))
                 Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
             });
           }).catch((error) => {     
+            this.setState({isLoadingCadastro: false});
             !error.response ?
             (this.setState({tipoErro: error})) :
             (this.setState({tipoErro: error.response.data.message}))
