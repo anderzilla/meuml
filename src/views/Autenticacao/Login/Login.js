@@ -23,9 +23,6 @@ class Login extends Component {
       noClick: false,
     };
 
-    this.disableButtom = this.disableButtom.bind(this);
-    
-
     this.submitInput = React.createRef();
     this.focusSubmitInput = this.focusSubmitInput.bind(this);
 
@@ -43,8 +40,7 @@ class Login extends Component {
     });
   }
   handleSubmit(event) {
-    
-    if (this.state.noClick === true){
+    event.preventDefault();
     //Constantes para serem utilizadas na montagem dos dados do usuário no sistema
     const USER_ID = "@MeuML-UserId";
     const USER_NAME = "@MeuML-UserName";
@@ -88,13 +84,7 @@ class Login extends Component {
         !error.response.data.errors.password? this.setState({erroPass: ''}) : this.setState({erroPass: error.response.data.errors.password});
         Swal.fire({html:'<p>'+ error.response.data.message+'<br />'+ this.state.tipoErro+ this.state.erroPass +'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
   });
-  }
-  }
-
-  disableButtom(){
-    this.state.noClick = true;
-    console.log(this.state.noClick);
-    this.handleSubmit();
+  
   }
 
   focusSubmitInput() {
@@ -123,7 +113,7 @@ class Login extends Component {
                 </Card>
                 <Card className="col-md-6 col-xm-12">
                   <CardBody>
-                    <Form>
+                    <Form onSubmit={this.handleSubmit}>
                       <h2 className="tituloLogin">Acesse sua conta</h2>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
@@ -143,7 +133,7 @@ class Login extends Component {
                       </InputGroup>
                       <Row>
                         <Col xs="5" className="text-right ">
-                          <Button disabled={this.state.noClick} onClick={this.disableButtom} className="btn btn-square btn-block btn-primary active">Entrar</Button>
+                        <Input type="submit" value="Entrar" className="btn btn-block btn-primary active" />
                         </Col>
                         <Col xs="7" className="text-right ">
                         <Link to="/recuperarsenha">
