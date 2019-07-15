@@ -196,7 +196,7 @@ class BloquearLista extends Component {
         <Row>
         <Col xs="12" sm="12" md="10" xl="8">
         <Card className="card-accent-primary">
-        <Form name='novaLista' onSubmit={this.handleSubmit}>
+        <Form name='novaLista' onSubmit={this.handleSubmit} autocomplete="off">
         <input type="hidden" value="autocompleteOff"/>
           <CardBody>
           <Row>
@@ -238,6 +238,7 @@ class BloquearLista extends Component {
                     autoComplete="given-name"
                     autoFocus={true}
                     required
+                    autocomplete="off"
                     onChange={this.handleInputChange}
                     value={this.state.blackListName} />
                 </FormGroup>
