@@ -256,7 +256,7 @@ class BloquearComprador extends Component {
         <Row>
           <Col xs="12" sm="12" md="12" xl="8">
             <Card className="card-accent-primary">
-            <Form onSubmit={this.handleSubmit} name='bloquearcomprador'>
+            <Form onSubmit={this.handleSubmit} name='bloquearcomprador' autocomplete="off">
             <input type="hidden" value="autocompleteOff"/> 
               <CardBody>
               <Row>
@@ -311,6 +311,7 @@ class BloquearComprador extends Component {
                     autoFocus={true}
                     color="outline-dark"
                     required
+                    autocomplete="off"
                     onChange={this.handleInputChange}
                     value={this.state.customer_id}
                     onChange={(event) => {

@@ -441,7 +441,7 @@ class BloquearEmMassa extends Component {
                 autoComplete="given-name"
                 autoFocus={true}
                 color="outline-dark"
-                
+                autocomplete="off"
                />
               </FormGroup>
               <FormGroup>
@@ -506,7 +506,7 @@ class BloquearEmMassa extends Component {
                 autoComplete="given-name"
                 autoFocus={true}
                 color="outline-dark"
-                
+                autocomplete="off"
                />
               </FormGroup>
               <FormGroup>
