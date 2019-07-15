@@ -1,5 +1,4 @@
-
-import moment from 'moment';
+import Moment from 'moment';
 export const TOKEN_KEY = "@MeuML-Token";
 export const TOKEN_EXPIRE_IN = "@MeuML-Token-expire";
 export const USER_ID = "@MeuML-UserId";
@@ -10,17 +9,17 @@ export const API = "https://api.app2.meuml.com";
 
 export const isAuthenticated = () => {
 
-    const expireToken = localStorage.getItem("@MeuML-Token-expire");
-    const dataFim = moment().format("DD/MM/YYYY HH:mm")
-    const ms = moment(expireToken).diff(dataFim)
-
-    if(ms > 0)
+    const expireToken = Moment(localStorage.getItem("@MeuML-Token-expire")).format("DD/MM/YYYY HH:mm");
+    const dataFim = Moment().format("DD/MM/YYYY HH:mm");
+    if(expireToken > dataFim)
     {
       if(localStorage.getItem(TOKEN_KEY) !== null){
+        console.log(localStorage.getItem(TOKEN_KEY));
         return true
       }
 
     }else{
+      console.log("false"+localStorage.getItem(TOKEN_KEY));
     return false
     }
 

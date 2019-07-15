@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import {login} from '../../../auth';
+import {login, TOKEN_KEY, TOKEN_EXPIRE_IN, isAuthenticated} from '../../../auth';
 
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 import moment  from 'moment';
@@ -41,11 +41,6 @@ class Login extends Component {
   }
   handleSubmit(event) {
     event.preventDefault();
-    //Constantes para serem utilizadas na montagem dos dados do usuário no sistema
-    const USER_ID = "@MeuML-UserId";
-    const USER_NAME = "@MeuML-UserName";
-    const USER_EMAIL = "@MeuML-UserEmail";
-    const USER_SELLER_ID = "@MeuML-UserSellerId";
     //Realiza o login testando os dados do usuário no servidor
     axios.post(process.env.REACT_APP_API_URL + `/auth/login`, {
       "email":this.state.email,
@@ -64,10 +59,14 @@ class Login extends Component {
         const expiresin = res.data.data.expiresin;
         this.setState({expiresin})
 
-        login(this.state.token,moment(res.data.data.expires_in).format('DD/MM/YYYY HH:MM'));
-
-        //Redireciona para a tela inicial do sistema DASHBOARD
-        this.props.history.push("/");
+        login(this.state.token,this.state.expiresin);
+        localStorage.setItem(TOKEN_KEY, this.state.token);
+        localStorage.setItem(TOKEN_EXPIRE_IN, res.data.data.expires_in);
+        //console.log(this.state.token);
+        //console.log(localStorage.getItem(TOKEN_KEY));
+        isAuthenticated()? console.log("logado"): console.log("nao logado");
+        //Redireciona para a tela inicial do sistema Início
+        window.location.assign('#/');
       }else{
         const message = res.data.message;
         this.setState({message});
