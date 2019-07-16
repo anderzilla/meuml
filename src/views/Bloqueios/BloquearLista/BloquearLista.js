@@ -106,9 +106,16 @@ class BloquearLista extends Component {
             }
           } else {
             Swal.fire({
-              html: "<p>" + res.data.message + "</p>",
-              type: "error",
-              showConfirmButton: true
+              title: "",
+              text: "Você precisa ter ao menos 1 conta!",
+              type: "info",
+              showCancelButton: false,
+              confirmButtonColor: "#366B9D",
+              confirmButtonText: "OK",
+              confirmButtonClass: "btn btn-success",
+              buttonsStyling: true
+            }).then(function() {
+              window.location.href = "#/listacontas";
             });
           }
         }

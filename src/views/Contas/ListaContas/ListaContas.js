@@ -16,7 +16,7 @@ class ListaContas extends Component {
       isLoading: true,
       total: 0,
       fotoConta: fotoPadrao,
-      noContas: false,
+      noContas: true,
     };
     this.openAuth = this.openAuth.bind(this);
   }
@@ -96,6 +96,7 @@ class ListaContas extends Component {
             const message = res.data.message;
             if (res.data.meta.total !== 0) {
               this.setState({
+                noContas: false,
                 contas: res.data.data,
                 isLoading: false,
               });
@@ -107,6 +108,7 @@ class ListaContas extends Component {
             } 
           } else {
             this.setState({
+              noContas: true,
               isLoading: false
             });
           }
