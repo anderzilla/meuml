@@ -106,10 +106,18 @@ class BloquearEmMassa extends Component {
               });
             }
           } else {
+            this.setState({ salvar: true });
             Swal.fire({
-              html: "<p>" + res.data.message + "</p>",
-              type: "error",
-              showConfirmButton: true
+              title: "",
+              text: "Você precisa ter ao menos 1 conta!",
+              type: "info",
+              showCancelButton: false,
+              confirmButtonColor: "#366B9D",
+              confirmButtonText: "OK",
+              confirmButtonClass: "btn btn-success",
+              buttonsStyling: true
+            }).then(function() {
+              window.location.href = "#/listacontas";
             });
           }
         }
@@ -357,6 +365,7 @@ class BloquearEmMassa extends Component {
                   window.location.href = "#/minhaslistasdebloqueios";
                 })
                 .catch(error => {
+                  this.setState({ isLoadingCadastro: false });
                   !error.response
                     ? this.setState({ tipoErro: error })
                     : this.setState({ tipoErro: error.response.data.message });
@@ -370,6 +379,7 @@ class BloquearEmMassa extends Component {
                 });
             })
             .catch(error => {
+              this.setState({ isLoadingCadastro: false });
               !error.response
                 ? this.setState({ tipoErro: error })
                 : this.setState({ tipoErro: error.response.data.message });
@@ -437,6 +447,7 @@ class BloquearEmMassa extends Component {
                   // this.props.history.push("/meusbloqueios");
                   window.location.href = "#/meusbloqueios";
                 } else {
+                  this.setState({ isLoadingCadastro: false });
                   const message = res.data.message;
                   this.setState({ message });
                   Swal.fire({
