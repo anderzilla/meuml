@@ -94,7 +94,8 @@ class BloquearEmMassa extends Component {
           });
           this.setState({
             accounts: listaContas,
-            isLoadingAccounts: false
+            isLoadingAccounts: false,
+            accountTotal: res.data.meta.total
           });
           if (res.data.meta.total > 0) {
             if (res.data.meta.total === 1) {
@@ -102,7 +103,8 @@ class BloquearEmMassa extends Component {
                 arrayValue: [
                   { value: res.data.data[0].id, label: res.data.data[0].name }
                 ],
-                accountId: res.data.data[0].id
+                accountId: [res.data.data[0].id],
+                accountTotal: res.data.meta.total
               });
             }
           } else {
@@ -126,8 +128,6 @@ class BloquearEmMassa extends Component {
   }
 
   selectMultipleOption(value) {
-    console.count("onChange");
-    console.log("Val", value);
     this.setState({ arrayValue: value });
 
     const values = this.state;
@@ -394,7 +394,7 @@ class BloquearEmMassa extends Component {
         } else if (this.state.custom[1] === true) {
           //APENAS BLOQUEAR A LISTA
           //BLOQUEANDO OS IDS
-          console.log(this.state.listagemJSON);
+
           if (this.isEmpty(this.state.arrayValue)) {
             this.setState({ isLoadingCadastro: false });
             Swal.fire({
@@ -409,6 +409,7 @@ class BloquearEmMassa extends Component {
               const { value, name } = this.state;
               this.state.listagem.map((cid, x) => {
                 const { customer_id } = this.state;
+
                 this.state.bloqueios.push({
                   account_id: s.value,
                   bids: !this.state.bids ? false : true,
