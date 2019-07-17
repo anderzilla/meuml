@@ -74,9 +74,8 @@ class Login extends Component {
           this.setState({ token });
           const user_id = res.data.user_id;
           this.setState({ user_id });
-          const expiresin = res.data.data.expiresin;
+          const expiresin = res.data.data.expires_in;
           this.setState({ expiresin });
-
           login(this.state.token, this.state.expiresin);
           window.location.assign("#/");
         } else {
