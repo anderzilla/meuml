@@ -257,6 +257,8 @@ Label {
 
 .filtro{
   margin-bottom: 10px;
+  width: 50%;
+  float: right;
 }
 
 
@@ -269,7 +271,7 @@ Label {
 }
 
 .table-content{
-  padding-top: 40px !important;
+  padding-top: 0px !important;
   margin-bottom: 10px;
 }
 // Resolve o problema dos indicadores de ordenação do Bootstrap Table
@@ -295,6 +297,22 @@ Label {
 .center{
   width: 100%;
   text-align: center;
+}
+
+.order-column{
+  cursor: pointer;
+}
+.card-header {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0 !important;
+  background-color: #fff;
+  border-bottom: 1px solid #fff;
+}
+.card-footer {
+  padding: 0.75rem 1.25rem;
+  background-color: #fff;
+  border-top: 1px solid #fff;
+  text-align: right;
 }
 //################################################################
 //COMPONENTE DATATABLE PARA BLOQUEIO EM Massa
