@@ -85,6 +85,8 @@ class CategoriasDataTable extends React.Component {
                     last_page: res.data.meta.last_page
                 });
 
+                this.saveStorage(res.data.meta.page);
+
                 if (this.state.page >= this.state.last_page) {
                     this.setState({
                         totalDataSize: res.data.meta.total - res.data.meta.limit
@@ -117,17 +119,19 @@ class CategoriasDataTable extends React.Component {
 
 
     onFilterChange() {
-        this.saveStorage();
         var page = this.state.page
-        this.fetchCategorias(page)
+        this.saveStorage(1);
+        this.fetchCategorias(1)
+     
     }
 
     onPageChange(page) {
         this.setState({
             page: page
         });
-        this.saveStorage();
-        this.fetchCategorias(page)
+        this.saveStorage(page);
+        this.fetchCategorias(page);
+       
 
     }
 
@@ -141,9 +145,9 @@ class CategoriasDataTable extends React.Component {
         console.log('filtro', this.state.filter)
     }
 
-    saveStorage() {
+    saveStorage(page) {
         var data = {
-            page: this.state.page,
+            page: page,
             sortName: this.state.sortName,
             sortOrder: this.state.sortOrder,
             filter: this.state.filter
@@ -156,12 +160,12 @@ class CategoriasDataTable extends React.Component {
         var data = JSON.parse(localStorage.getItem('filtro-categorias'))
         console.log(data);
 
-        this.setState({
-            page: data.page,
-            sortName:data.sortName,
-            sortOrder: data.sortOrder,
-            filter: data.filter
-        });
+        // this.setState({
+            this.state.page= data.page;
+            this.state.sortName=data.sortName;
+            this.state.sortOrder= data.sortOrder;
+            this.state.filter= data.filter;
+        // });
         this.forceUpdate();
         console.log('page',this.state.page)
         console.log('sortName',this.state.sortName)
@@ -188,19 +192,20 @@ class CategoriasDataTable extends React.Component {
         var sortOrder_ = this.state.sortOrder;
 
         if (sortOrder_ === 'ASC') {
-            sortOrder_ = 'DESC'
+            this.state.sortOrder = 'DESC'
         } else {
-            sortOrder_ = 'ASC'
+           this.state.sortOrder = 'ASC'
         }
-
-        this.setState({
-            sortName: key,
-            sortOrder: sortOrder_
-        });
+this.state.sortName = key;
+        // this.setState({
+        //     sortName: key,
+        //     sortOrder: sortOrder_
+        // });
 
         var page = this.state.page
-        this.saveStorage();
-        this.fetchCategorias(page)
+       
+        this.fetchCategorias(page);
+        this.saveStorage(page);
        
 
     }
@@ -214,7 +219,7 @@ class CategoriasDataTable extends React.Component {
                     <CardHeader>
                         <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.state.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
                         <div className='input-group filtro'>
-                            <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" value={this.state.filter} placeholder={'Pesquisar por descrição...'} onChange={this.handleChange} />
+                            <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" value={this.state.filter} placeholder={'Pesquisar por descrição...'} onClick={()=>this.onFilterChange()} onChange={this.handleChange} />
                             <span className='it-group-btn'>
                                 <button
                                     className='btn btn-primary'
