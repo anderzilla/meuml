@@ -43,8 +43,8 @@ class CategoriasDataTable extends React.Component {
             sortOrder: 'ASC',
         };
 
-         this.getStorage();
-       // this.fetchCategorias();
+        this.getStorage();
+        // this.fetchCategorias();
     }
 
 
@@ -58,7 +58,7 @@ class CategoriasDataTable extends React.Component {
 
     fetchCategorias(page = 1) {
 
-       
+
 
         let url = process.env.REACT_APP_API_URL + `/categories?page=${page}&limit=${this.state.sizePerPage}`
 
@@ -93,7 +93,7 @@ class CategoriasDataTable extends React.Component {
                     });
                 }
 
-              
+
 
             } else {
                 Swal.fire({ html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true });
@@ -122,7 +122,7 @@ class CategoriasDataTable extends React.Component {
         var page = this.state.page
         this.saveStorage(1);
         this.fetchCategorias(1)
-     
+
     }
 
     onPageChange(page) {
@@ -131,7 +131,7 @@ class CategoriasDataTable extends React.Component {
         });
         this.saveStorage(page);
         this.fetchCategorias(page);
-       
+
 
     }
 
@@ -161,17 +161,23 @@ class CategoriasDataTable extends React.Component {
         console.log(data);
 
         // this.setState({
-            this.state.page= data.page;
-            this.state.sortName=data.sortName;
-            this.state.sortOrder= data.sortOrder;
-            this.state.filter= data.filter;
+        if (localStorage.getItem('filtro-categorias') != null) {
+            this.state.page = data.page;
+            this.state.sortName = data.sortName;
+            this.state.sortOrder = data.sortOrder;
+            this.state.filter = data.filter;
+            this.fetchCategorias(data.page);
+        }else{
+            this.fetchCategorias(1);
+        }
+
         // });
-        this.forceUpdate();
-        console.log('page',this.state.page)
-        console.log('sortName',this.state.sortName)
-        console.log('sortOrder',this.state.sortOrder)
-        console.log('filter',this.state.filter)
-        this.fetchCategorias(data.page);
+        //this.forceUpdate();
+        console.log('page', this.state.page)
+        console.log('sortName', this.state.sortName)
+        console.log('sortOrder', this.state.sortOrder)
+        console.log('filter', this.state.filter)
+       
     }
 
     handlePageChange(pageNumber) {
@@ -194,19 +200,19 @@ class CategoriasDataTable extends React.Component {
         if (sortOrder_ === 'ASC') {
             this.state.sortOrder = 'DESC'
         } else {
-           this.state.sortOrder = 'ASC'
+            this.state.sortOrder = 'ASC'
         }
-this.state.sortName = key;
+        this.state.sortName = key;
         // this.setState({
         //     sortName: key,
         //     sortOrder: sortOrder_
         // });
 
         var page = this.state.page
-       
+
         this.fetchCategorias(page);
         this.saveStorage(page);
-       
+
 
     }
 
@@ -219,7 +225,7 @@ this.state.sortName = key;
                     <CardHeader>
                         <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.state.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
                         <div className='input-group filtro'>
-                            <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" value={this.state.filter} placeholder={'Pesquisar por descrição...'} onClick={()=>this.onFilterChange()} onChange={this.handleChange} />
+                            <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" value={this.state.filter} placeholder={'Pesquisar por descrição...'} onChange={this.handleChange} onClick={this.onFilterChange} />
                             <span className='it-group-btn'>
                                 <button
                                     className='btn btn-primary'
