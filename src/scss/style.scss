@@ -257,14 +257,23 @@ Label {
 
 .filtro{
   margin-bottom: 10px;
+  width: 50%;
+  float: right;
 }
 
 
 .labelAtualiza{
   position: absolute;
   margin-top: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  margin-left: 2%;
 }
 
+.table-content{
+  padding-top: 0px !important;
+  margin-bottom: 10px;
+}
 // Resolve o problema dos indicadores de ordenação do Bootstrap Table
 
 
@@ -288,6 +297,22 @@ Label {
 .center{
   width: 100%;
   text-align: center;
+}
+
+.order-column{
+  cursor: pointer;
+}
+.card-header {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0 !important;
+  background-color: #fff;
+  border-bottom: 1px solid #fff;
+}
+.card-footer {
+  padding: 0.75rem 1.25rem;
+  background-color: #fff;
+  border-top: 1px solid #fff;
+  text-align: right;
 }
 //################################################################
 //COMPONENTE DATATABLE PARA BLOQUEIO EM Massa
@@ -387,13 +412,12 @@ Label {
 //###############################
 .listaProcessos{
   border-radius: 0.25rem;
-  border-color: #d3eef6;
+  border-color: #cecece;
 }
 .divListaProcessos{
   padding: 0.25rem 1rem;
   color: #336573;
-  background-color: #e0f3f8;
-  border-color: #d3eef6;
+  border-color: #cecece;
 }
 .divListaProcessos a{
   color: #336573 !important;
@@ -425,6 +449,32 @@ Label {
 }
 .greenBall{
   color:green;
+}
+.yellowBall{
+  color:goldenrod;
+}
+.greynBall{
+  color:grey;
+}
+.idApelido{
+  padding-bottom: 8px !important;
+}
+.space-top50{
+  margin-top: 50px !important;
+}
+.space-top20{
+  margin-top: 20px !important;
+}
+.padding-20{
+  padding:20px !important;
+}
+.textoJustificado{
+  text-justify: auto;
+}
+h1,h2{
+  font-family: "Open Sans",Arial,sans-serif;
+  color:#2f353a;
+  font-weight: bold;
 }
 
 

@@ -81,6 +81,7 @@ class App extends Component {
     this.state = {
       warningTime: '',
       signoutTime: '',
+      isLoged:'',
     };
   }
 
@@ -127,7 +128,9 @@ class App extends Component {
   };
 
   logout = () => {
-    const expireToken = localStorage.getItem("@MeuML-Token-expire");
+    const expt = localStorage.getItem("@MeuML-Token-expire")
+    if (expt !== null){
+    const expireToken = moment(expt).format("DD/MM/YYYY HH:mm");
     const dataIni = moment('02/07/2019 15:26')
     const dataFim = moment().format("DD/MM/YYYY HH:mm")
 
@@ -139,11 +142,28 @@ class App extends Component {
     this.destroy();
  
    }
+  }else{
+    console.log('Você será desconectado por inatividade no sistema.');
+    this.destroy();
+  }
   };
 
   destroy = () => {
     localStorage.setItem('@MeuML-Token', null)
-    window.location.assign('#/login');
+    //Método para evitar o redirecionamento para login sem sessão ou com sessão expirada
+    const cpath = window.location.href.split('#');
+    const cpathComposto = cpath[1].split('/');
+    if (cpathComposto[1] === 'cadastro'){
+      console.log('Cadastro de Usuário');
+    }else if(cpathComposto[1] === 'confirmarcadastro'){
+      console.log('Confirmação de Cadastro');
+    }else if(cpathComposto[1] === 'alterarsenha'){
+      console.log('Alteração de Senha');
+    }else if(cpathComposto[1] === 'recuperarsenha'){
+      console.log('Recuperação de senha');     
+    }else{
+      window.location.assign('#/login');
+    }
   };
 
   render() {

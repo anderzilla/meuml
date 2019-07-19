@@ -103,7 +103,7 @@ class AlterarSenha extends Component {
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="fa fa-at"></i>
+                            <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input type="password" name="password"  value={this.state.password} onChange={this.handleInputChange} id="password" placeholder="Senha" autoComplete="password" required/>
@@ -111,7 +111,7 @@ class AlterarSenha extends Component {
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
-                            <i className="fa fa-at"></i>
+                            <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input type="password" name="password2"  value={this.state.password2} onChange={this.handleInputChange} id="password2" placeholder="Repita a Senha" autoComplete="password2" required/>

@@ -37,23 +37,41 @@ class ListaContas extends Component {
                 isLoading: false,
               });
               console.log(this.state)
-            } 
           } else {
             this.setState({
+              noContas: true,
               isLoading: false
             });
           }
-        }).catch((error) => {
-          !error.response ?
-          (this.setState({tipoErro: error})) :
-          (this.setState({tipoErro: error.response.data.message}))
-          Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+        
+        } else {
+          this.setState({
+            noContas: true,
+            isLoading: false
+          });
+        }
+      })
+      .catch(error => {
+        !error.response
+          ? this.setState({ tipoErro: error })
+          : this.setState({ tipoErro: error.response.data.message });
+        Swal.fire({
+          html: "<p>" + this.state.tipoErro + "<br /></p>",
+          type: "error",
+          showConfirmButton: false,
+          showCancelButton: true,
+          cancelButtonText: "Fechar"
         });
+      });
+    
   }
 
-  openAuth()
-  {
-    window.open('#/contas/adicionar', 'SomeAuthentication', 'width=972,height=660,modal=yes,alwaysRaised=yes')
+  openAuth() {
+    window.open(
+      "#/contas/adicionar",
+      "SomeAuthentication",
+      "width=972,height=660,modal=yes,alwaysRaised=yes"
+    );
   }
 
   render() {
@@ -127,18 +145,22 @@ class ListaContas extends Component {
                           <h5 className="text-success valores">{acc.count_advertisings}</h5>
                           </Col>
                         </Row>
-                        </CardFooter>
-                      </Card>
-                    </Col>
+                      </CardFooter>
+                    </Card>
+                  </Col>
                 );
               })
-          ) :          
-          (
-          <div className="center">
-                <ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100}  className='spinnerStyle'/>
-          </div>
+          ) : (
+            <div className="center">
+              <ReactLoading
+                type={"spinningBubbles"}
+                color={"#054785"}
+                height={100}
+                width={100}
+                className="spinnerStyle"
+              />
+            </div>
           )}
-        
         </Row>
       </div>
     );

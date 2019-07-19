@@ -3,7 +3,37 @@ import axios from "axios";
 import {getToken} from "../../auth";
 import Swal from "sweetalert2";
 import {Card, CardBody, CardHeader, } from "reactstrap";
-import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
+
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import paginationFactory from 'react-bootstrap-table2-paginator'
+
+
+const columns = [{
+  dataField: 'id',
+  text: 'Product ID',
+}, {
+  dataField: 'name',
+  text: 'Product Name',
+  filter: textFilter()
+}, {
+  dataField: 'price',
+  text: 'Product Price',
+  filter: textFilter()
+}];
+
+const RemoteTable = props => (
+    <div>
+      <BootstrapTable
+          remote={ { sort: true } }
+          keyField="id"
+          data={ props.data }
+          pagination={ paginationFactory({ page, sizePerPage, totalSize }) }
+          columns={ columns }
+          onTableChange={ props.fetchCategories }
+      />
+    </div>
+);
 
 
 class Categorias extends Component {
@@ -11,7 +41,9 @@ class Categorias extends Component {
 
   constructor(props) {
     super(props);
-    this.products = this.fetchCategories();
+
+    this.fetchCategories();
+
     this.state = {
       data: [],
       totalDataSize: 0,
@@ -24,69 +56,64 @@ class Categorias extends Component {
     this.fetchCategories();
   }
 
-  fetchCategories() {
+  fetchCategorias(limit = 50, offset = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
 
-    axios.get(process.env.REACT_APP_API_URL + `/categories`,
-        { headers: {"Authorization" : 'Bearer '+getToken()}},
+    let url = process.env.REACT_APP_API_URL + `/categories?offset=${offset}&limit=${limit}`
+
+    if( this.state.filter !== ''){
+      url += `&filter=`+this.state.filter
+    }
+
+    if(filter !== ''){
+      url += `&filter=`+filter
+    }
+
+    if(this.state.sortName !== 'id' && this.state.sortName !== undefined){
+      sortName = this.state.sortName;
+    }
+
+    if(this.state.sortOrder !== 'ASC' && this.state.sortOrder !== undefined){
+      sortOrder = this.state.sortOrder
+    }
+
+    url += '&sortOrder=' + sortOrder + '&sortName=' + sortName
+
+    axios.get(url,
+        {headers: {"Authorization": 'Bearer ' + getToken()}},
     ).then(res => {
-      console.log(res);
-      if (res.data.status === 'success'){
-
-        this.table = res.data.data;
-        this.options = {
-          sortIndicator: true,
-          hideSizePerPage: true,
-          paginationSize: res.data.meta.pages,
-          hidePageListOnlyOnePage: true,
-          clearSearch: true,
-          alwaysShowAllBtns: false,
-          withFirstAndLast: false,
-          sizePerPage: 50,
-          paginationShowsTotal: true
-        }
-
+      if (res.data.status === 'success') {
 
         this.setState({
-          categorias: res.data.data,
-          isLoading: false,
-          total: res.data.meta.total
+          data: res.data.data,
+          totalDataSize: res.data.meta.total,
+          sizePerPage: res.data.meta.limit,
+          currentPage: res.data.meta.page
         });
 
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+      } else {
+        Swal.fire({html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true});
       }
     }).catch(error => {
-      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+      Swal.fire({
+        html: '<p>' + error.response.data.message + '</p>',
+        type: 'error',
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: 'Fechar'
+      });
     });
   }
 
   render() {
-
-
-    const { isLoading, categorias, error } = this.state;
-
     return (
-
-        <div className="animated fadeIn">
-          <Card>
-            <CardHeader>
-              <h4>Categorias - ({this.state.total}) </h4>
-            </CardHeader>
-
-            <CardBody>
-              <BootstrapTable data={this.table} version="4" striped hover pagination search options={this.options}>
-                <TableHeaderColumn isKey dataField="external_id" dataSort>ID</TableHeaderColumn>
-                <TableHeaderColumn dataField="path">Descrição</TableHeaderColumn>
-                <TableHeaderColumn dataField="weight" dataSort>Peso</TableHeaderColumn>
-                <TableHeaderColumn dataField="dimension" dataSort>Dimensão</TableHeaderColumn>
-              </BootstrapTable>
-            </CardBody>
-
-          </Card>
-
-        </div>
+        <RemoteTable
+            data={ this.state.data }
+            onTableChange={ this.fetchCategories }
+        />
     );
   }
 }
+
+
 
 export default Categorias;

@@ -2,81 +2,98 @@ import React from 'react';
 import {
     Card,
     CardBody,
-    Input
+    CardFooter,
+    Input,
+    CardHeader,
+    Table
 } from "reactstrap";
 import axios from "axios";
 import { getToken } from "../../auth";
 import Swal from "sweetalert2";
 
-import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import Pagination from "react-js-pagination";
 import ReactLoading from 'react-loading';
-import Moment from 'moment';
+// import Moment from 'moment';
 
 class CategoriasDataTable extends React.Component {
     constructor(props) {
         super(props);
 
+        this.handlePageChange = this.handlePageChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.onFilterChange = this.onFilterChange.bind(this);
+
+        this.compareBy.bind(this);
+        this.sortBy.bind(this);
 
         this.state = {
             data: [],
-            totalDataSize: 0,
             sizePerPage: 50,
-            currentPage: 1,
+            totalSize: 0,
+            sizePerPage: 50,
+            page: '',
             filter: '',
             filtro: '',
             first: '',
-            lastUpdate:'',
-            last_page: 0
+            lastUpdate: '',
+            last_page: 0,
+            isLoading: true,
+            total: '',
+            sortName: 'id',
+            sortOrder: 'ASC',
         };
 
-        this.fetchCategorias();
+        this.getStorage();
+        // this.fetchCategorias();
     }
 
-    fetchCategorias(limit = 50, page = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
 
-        if(page >= this.state.last_page && this.state.last_page != 0){
-           page =  this.state.last_page
+    isEmpty = (obj) => {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key))
+                return false;
         }
+        return true;
+    }
 
-        let url = process.env.REACT_APP_API_URL + `/categories?page=${page}&limit=${limit}`
+    fetchCategorias(page = 1) {
+
+
+
+        let url = process.env.REACT_APP_API_URL + `/categories?page=${page}&limit=${this.state.sizePerPage}`
 
         if (this.state.filter !== '') {
             url += `&filter=` + this.state.filter
         }
 
-        if (filter !== '') {
-            url += `&filter=` + filter
-        }
-
-        if (this.state.sortName !== 'id' && this.state.sortName !== undefined) {
-            sortName = this.state.sortName;
-        }
-
-        if (this.state.sortOrder !== 'ASC' && this.state.sortOrder !== undefined) {
-            sortOrder = this.state.sortOrder
-        }
-
-        url += '&sortOrder=' + sortOrder + '&sortName=' + sortName
+        url += '&sortOrder=' + this.state.sortOrder + '&sortName=' + this.state.sortName
 
         axios.get(url,
             { headers: { "Authorization": 'Bearer ' + getToken() } },
         ).then(res => {
             if (res.data.status === 'success') {
 
+                let total = res.data.meta.total;
+                let limit = res.data.meta.limit;
+
                 this.setState({
                     data: res.data.data,
-                    totalDataSize: res.data.meta.total,
+                    totalSize: total,
                     sizePerPage: res.data.meta.limit,
-                    currentPage: res.data.meta.page,
-                    lastUpdate:res.data.meta.last_update,
+                    page: res.data.meta.page,
+                    lastUpdate: res.data.meta.last_update,
                     last_page: res.data.meta.last_page
                 });
 
-                if(page >= this.state.last_page){
+                this.saveStorage(res.data.meta.page);
+
+                if (this.state.page >= this.state.last_page) {
                     this.setState({
                         totalDataSize: res.data.meta.total - res.data.meta.limit
                     });
                 }
+
+
 
             } else {
                 Swal.fire({ html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true });
@@ -90,6 +107,7 @@ class CategoriasDataTable extends React.Component {
                 cancelButtonText: 'Fechar'
             });
         });
+        return true;
     }
 
     filterText(targetVal, filterVal) {
@@ -101,30 +119,19 @@ class CategoriasDataTable extends React.Component {
 
 
     onFilterChange() {
-        var filter = this.state.filtro;
-
-        if (filter !== undefined) {
-
-            this.state.filter = filter;
-            this.fetchCategorias(this.state.sizePerPage, this.state.currentPage, filter)
-        } else {
-            this.state.filter = '';
-            this.fetchCategorias(this.state.sizePerPage, this.state.currentPage)
-        }
+        var page = this.state.page
+        this.saveStorage(1);
+        this.fetchCategorias(1)
 
     }
 
-    onPageChange(page, sizePerPage) {
-        this.page = page;
-        this.sizePerPage = sizePerPage;
-        this.fetchCategorias(sizePerPage, page)
+    onPageChange(page) {
+        this.setState({
+            page: page
+        });
+        this.saveStorage(page);
+        this.fetchCategorias(page);
 
-    }
-
-    onSortChange(sortName = 'id', sortOrder = 'ASC') {
-        this.state.sortName = sortName;
-        this.state.sortOrder = sortOrder;
-        this.fetchCategorias(this.state.sizePerPage, this.state.currentPage, this.state.filter, sortName, sortOrder)
 
     }
 
@@ -133,90 +140,155 @@ class CategoriasDataTable extends React.Component {
         var pesquisa = {}
         pesquisa = event.target.value
         this.setState({
-            filtro: pesquisa
+            filter: pesquisa
         });
+        console.log('filtro', this.state.filter)
     }
 
+    saveStorage(page) {
+        var data = {
+            page: page,
+            sortName: this.state.sortName,
+            sortOrder: this.state.sortOrder,
+            filter: this.state.filter
+        }
+        localStorage.setItem('filtro-categorias', JSON.stringify(data));
+    }
 
+    getStorage() {
+        console.log(localStorage.getItem('filtro-categorias'));
+        var data = JSON.parse(localStorage.getItem('filtro-categorias'))
+        console.log(data);
+
+        // this.setState({
+        if (localStorage.getItem('filtro-categorias') != null) {
+            this.state.page = data.page;
+            this.state.sortName = data.sortName;
+            this.state.sortOrder = data.sortOrder;
+            this.state.filter = data.filter;
+            this.fetchCategorias(data.page);
+        }else{
+            this.fetchCategorias(1);
+        }
+
+        // });
+        //this.forceUpdate();
+        console.log('page', this.state.page)
+        console.log('sortName', this.state.sortName)
+        console.log('sortOrder', this.state.sortOrder)
+        console.log('filter', this.state.filter)
+       
+    }
+
+    handlePageChange(pageNumber) {
+
+        this.onPageChange(pageNumber);
+    }
+
+    compareBy(key) {
+        return function (a, b) {
+            if (a[key] < b[key]) return -1;
+            if (a[key] > b[key]) return 1;
+            return 0;
+        };
+    }
+
+    sortBy(key) {
+
+        var sortOrder_ = this.state.sortOrder;
+
+        if (sortOrder_ === 'ASC') {
+            this.state.sortOrder = 'DESC'
+        } else {
+            this.state.sortOrder = 'ASC'
+        }
+        this.state.sortName = key;
+        // this.setState({
+        //     sortName: key,
+        //     sortOrder: sortOrder_
+        // });
+
+        var page = this.state.page
+
+        this.fetchCategorias(page);
+        this.saveStorage(page);
+
+
+    }
 
     render() {
-        return (
-            <CategoriasTableComp
-                onFilterChange={this.onFilterChange.bind(this)}
-                onSearchChange={this.onFilterChange.bind(this)}
-                onPageChange={this.onPageChange.bind(this)}
-                onSortChange={this.onSortChange.bind(this)}
-                onHandleChange={this.handleChange.bind(this)}
-                {...this.state}
-            />
-
-
-
-        );
-    }
-
-
-}
-
-class CategoriasTableComp extends React.Component {
-
-
-    customFilter = () => {
-        return (
-            <div className='input-group filtro'>
-                <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" placeholder={'Pesquisar por descrição...'} onChange={this.props.onHandleChange} />
-                <span className='it-group-btn'>
-                    <button
-                        className='btn btn-primary'
-                        type='button'
-                        onClick={this.props.onSearchChange}>
-                        Buscar
-                    </button>
-                </span>
-            </div>
-        );
-    }
-    render() {
-
+        const { isLoading } = this.state.data;
 
         return (
-
-            <Card>
-                {/* <CardHeader>
-F
-                </CardHeader> */}
-                <div>
-
-               
-                    <CardBody>
-                        <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.props.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
-                        <BootstrapTable data={this.props.data} remote={true} pagination={true} search={true} searchPlaceholder={'Filtrar por descrição...'}
-                            fetchInfo={{ dataTotalSize: this.props.totalDataSize }}
-
-                            options={{
-                                defaultSortName: 'name',
-                                defaultSortOrder: 'desc',
-                                sizePerPage: this.props.sizePerPage,
-                                onPageChange: this.props.onPageChange,
-                                sizePerPageList: [50],
-                                page: this.props.currentPage,
-                                onSizePerPageList: this.props.onSizePerPageList,
-                                onSortChange: this.props.onSortChange,
-                                searchField: this.createCustomSearchField,
-                                searchPanel: this.customFilter,
-                                noDataText:   <ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100}  className='spinnerStyle'/>
-
-                            }} striped hover>
-
-                            <TableHeaderColumn width='120' dataField='external_id' isKey={true} dataSort={true}>ID </TableHeaderColumn>
-                            <TableHeaderColumn width='320' dataField='path' dataSort={true}>Descrição</TableHeaderColumn>
-                            <TableHeaderColumn width='120' dataField='weight' dataSort={true}>Peso</TableHeaderColumn>
-                            <TableHeaderColumn width='120' dataField='cubage' dataSort={true}>Dimensão</TableHeaderColumn>
-
-                        </BootstrapTable>
+            <div className="animated fadeIn">
+                <Card>
+                    <CardHeader>
+                        {/* <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.state.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6> */}
+                        <div className='input-group filtro'>
+                            <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" value={this.state.filter} placeholder={'Pesquisar por descrição...'} onChange={this.handleChange} onClick={this.onFilterChange} />
+                            <span className='it-group-btn'>
+                                <button
+                                    className='btn btn-primary'
+                                    type='button'
+                                    onClick={this.onFilterChange}>
+                                    Buscar
+                                </button>
+                            </span>
+                        </div>
+                    </CardHeader>
+                    <CardBody className='table-content'>
+                        <Table responsive className="table table-responsive-sm table-bordered table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th className="tbcol-10 text-center order-column" onClick={() => this.sortBy('id')} >ID<span className="order"><span className="dropdown"><span className="caret"></span></span><span className="dropup"><span className="caret"></span></span></span></th>
+                                    <th className="tbcol-50 text-center order-column" onClick={() => this.sortBy('path')} >Descrição<span className="order"><span className="dropdown"><span className="caret"></span></span><span className="dropup"><span className="caret"></span></span></span></th>
+                                    <th className="tbcol-20 text-center order-column" onClick={() => this.sortBy('weight')} >Peso<span className="order"><span className="dropdown"><span className="caret"></span></span><span className="dropup"><span className="caret"></span></span></span></th>
+                                    <th className="tbcol-20 text-center order-column" onClick={() => this.sortBy('cubage')} >Dimensão<span className="order"><span className="dropdown"><span className="caret"></span></span><span className="dropup"><span className="caret"></span></span></span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    (
+                                        !isLoading ? (
+                                            this.state.data.map((cat) => {
+                                                return (
+                                                    <tr key={cat.id}>
+                                                        <td> {cat.external_id}</td>
+                                                        <td className="text-center">
+                                                            {cat.path}
+                                                        </td>
+                                                        <td className="text-center">
+                                                            {cat.weight}
+                                                        </td>
+                                                        <td className="text-center">
+                                                            {cat.cubage}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })
+                                        ) : (
+                                                <ReactLoading type={'spinningBubbles'} color={'#054785'} height={50} width={50} className='spinnerStyle' />
+                                            )
+                                    )
+                                }
+                            </tbody>
+                        </Table>
                     </CardBody>
-                </div>
-            </Card>
+                    <CardFooter>
+                        <Pagination
+                            activePage={this.state.page}
+                            itemsCountPerPage={this.state.sizePerPage}
+                            totalItemsCount={(this.state.totalSize)}
+                            pageRangeDisplayed={5}
+                            onChange={this.handlePageChange}
+                            itemClass="btn btn-md btn-outline-info"
+                            activeClass="btn btn-md btn-info"
+                            innerClass="btn-group"
+                            activeLinkClass="text-white"
+                        />
+                    </CardFooter>
+                </Card>
+            </div>
         );
     }
 }
