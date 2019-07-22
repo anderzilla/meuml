@@ -18,8 +18,6 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import {
   login,
-  TOKEN_KEY,
-  TOKEN_EXPIRE_IN,
   isAuthenticated
 } from "../../../auth";
 
