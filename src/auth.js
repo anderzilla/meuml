@@ -9,13 +9,20 @@ export const API = "https://api.app2.meuml.com";
 
 export const isAuthenticated = () => {
   if (localStorage.getItem("@MeuML-Token-expire") !== null) {
-    const expireToken = Moment(
-      localStorage.getItem("@MeuML-Token-expire")
-    ).format("DD/MM/YYYY HH:mm");
-    const dataFim = Moment().format("DD/MM/YYYY HH:mm");
-    if (expireToken > dataFim) {
-      if (localStorage.getItem(TOKEN_KEY) !== null) {
-        return true;
+    if (
+      Moment(localStorage.getItem("@MeuML-Token-expire")).format("DD") ===
+      Moment().format("DD")
+    ) {
+      const expireToken = Moment(
+        localStorage.getItem("@MeuML-Token-expire")
+      ).format("DD/MM/YYYY HH:mm");
+      const dataFim = Moment().format("DD/MM/YYYY HH:mm");
+      if (expireToken > dataFim) {
+        if (localStorage.getItem(TOKEN_KEY) !== null) {
+          return true;
+        }
+      } else {
+        return false;
       }
     } else {
       return false;
