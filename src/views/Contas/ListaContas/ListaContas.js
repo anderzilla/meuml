@@ -20,36 +20,27 @@ class ListaContas extends Component {
       newName: null,
       total: 0,
     };
-    
-    this.openAuth = this.openAuth.bind(this);
   }
 
   componentDidMount() {
     this.fetchAccounts();
   }
 
-  fetchAccounts = async () => {
-    try {
-      const res = await api.get('/accounts');
-      if(res.status === 200) {
-        this.setState({
-          accounts: res.data.data,
-          total: res.data.meta.total,
-          isLoading: false
-        });
-      } else Swal.fire({html: res.data.message, type: 'warning', showCloseButton: true});
-    }catch { Swal.fire({html: 'Erro ao carregar contas.', type: "error", showCloseButton: true}); }
-  }
-
-  openAuth() {
-    window.open(
-      "#/contas/adicionar",
-      "SomeAuthentication",
-      "width=972,height=660,modal=yes,alwaysRaised=yes"
-    );
+  fetchAccounts() {
+    api.get('/accounts').then(res => {
+      let accounts = res.data.data.map(acc => {return acc});
+      const total = res.data.meta.total;
+      this.setState({
+        accounts: accounts,
+        total: total,
+        isLoading: false
+      });
+      console.log(this.state)
+    });
   }
 
   render() {
+    console.log(this.state.accounts)
     return (
       <div className="animated fadeIn">
         <Row>
@@ -63,72 +54,7 @@ class ListaContas extends Component {
         </Row>
 
         <Row>
-          {this.state.isLoading === false && this.state.total > 0 ? (
-            this.state.accounts.map((acc, index)=> {
-                return (
-                    <Col xs="12" sm="4" md="3" key={acc.id} className="CardConta">
-                      <Card className="card-accent-primary">
-                        <CardHeader>
-                          <span id={'nomeConta-'+index}>{acc.name}</span>
-                          
-                          <div className="float-right">
-                              <ButtonGroup className="vertical-button-group">
-                                <ApiInvoker className="dropdown-item"
-                                  http="put"
-                                  data={this.state.data}
-                                  url={`/accounts/${acc.id}`}
-                                  question="Informe o nome desajado"
-                                  >Renomear
-                                </ApiInvoker>
-                                <ApiInvoker className="dropdown-item"
-                                  http="get"
-                                  data={null}
-                                  url={`/accounts/${acc.id}/sync`}
-                                  question={null}
-                                  onSuccess="Contas sincronizadas."
-                                  >Sincronizar
-                                </ApiInvoker>
-                                <ApiInvoker className="dropdown-item"
-                                  http="delete"
-                                  data={null}
-                                  url={`/accounts/${acc.id}`}
-                                  question={`Você tem certeza que deseja deletar a conta "${acc.name}"`}
-                                  onSuccess={`Conta ${acc.name} deletada com sucesso!`}
-                                  >Excluir
-                                </ApiInvoker>
-                              </ButtonGroup>
-                          </div>
-                        </CardHeader>
-                        <CardBody>
-                          <div className="imgConta">
-                          <img src={!acc.external_data.thumbnail ? this.state.fotoConta  : acc.external_data.thumbnail.picture_url } title={acc.external_name} className="img-full70 align-content-center" alt="Loja Teste"></img>
-                          </div>
-                          <div className="text-primary text-center nomeDuasLinhas" title={acc.external_name}>{acc.external_name}</div>
-                          <div className="text-left">
-                            <p className="labelCard"><i className="fa fa-envelope"></i> E-mail:</p>
-                            {acc.external_data.email}<br/>
-                            <p className="labelCard"><i className="fa fa-user"></i> Usuário:</p>
-                            {acc.external_data.nickname}<br/>
-                          </div>
-                          
-                        </CardBody>
-                        <CardFooter>
-                        <Row>
-                          <Col md="6" sm="12">
-                          <h5 className="tituloVendas">Vendas</h5>
-                          <h5 className="text-success valores">{acc.external_data.seller_reputation.metrics.sales.completed}</h5>
-                          </Col>
-                          <Col md="6" sm="12">
-                          <h5 className="tituloAnuncios">Anúncios</h5>
-                          <h5 className="text-success valores">{acc.count_advertisings}</h5>
-                          </Col>
-                        </Row>
-                      </CardFooter>
-                    </Card>
-                  </Col>
-                );
-              })
-          ) : (
+          {this.state.isLoading === true && this.state.total <= 0 ? (
             <div className="center">
               <ReactLoading
                 type={"spinningBubbles"}
@@ -137,7 +63,67 @@ class ListaContas extends Component {
                 width={100}
                 className="spinnerStyle"
               />
-            </div>
+            </div>) : (
+            this.state.accounts.map((acc, index)=> {
+              return (
+                  <Col xs="12" sm="4" md="3" key={acc.id} className="CardConta">
+                    <Card className="card-accent-primary">
+                      <CardHeader>
+                        <span id={'nomeConta-'+index}>{acc.name}</span>
+                        
+                        <div className="float-right">
+                            <ButtonGroup className="vertical-button-group">
+                              <ApiInvoker className="dropdown-item"
+                                http="put"
+                                url={`/accounts/${acc.id}`}
+                                question="Informe o nome desajado"
+                                >Renomear
+                              </ApiInvoker>
+                              <ApiInvoker className="dropdown-item"
+                                http="get"
+                                url={`/accounts/${acc.id}/sync`}
+
+                                >Sincronizar
+                              </ApiInvoker>
+                              <ApiInvoker className="dropdown-item"
+                                http="delete"
+                                url={`/accounts/${acc.id}`}
+                                question={`Você tem certeza que deseja deletar a conta "${acc.name}"`}
+                                onSuccess={`Conta ${acc.name} deletada com sucesso!`}
+                                >Excluir
+                              </ApiInvoker>
+                            </ButtonGroup>
+                        </div>
+                      </CardHeader>
+                      <CardBody>
+                        <div className="imgConta">
+                        <img src={!acc.external_data.thumbnail ? this.state.fotoConta  : acc.external_data.thumbnail.picture_url } title={acc.external_name} className="img-full70 align-content-center" alt="Loja Teste"></img>
+                        </div>
+                        <div className="text-primary text-center nomeDuasLinhas" title={acc.external_name}>{acc.external_name}</div>
+                        <div className="text-left">
+                          <p className="labelCard"><i className="fa fa-envelope"></i> E-mail:</p>
+                          {acc.external_data.email}<br/>
+                          <p className="labelCard"><i className="fa fa-user"></i> Usuário:</p>
+                          {acc.external_data.nickname}<br/>
+                        </div>
+                        
+                      </CardBody>
+                      <CardFooter>
+                      <Row>
+                        <Col md="6" sm="12">
+                        <h5 className="tituloVendas">Vendas</h5>
+                        <h5 className="text-success valores">{acc.external_data.seller_reputation.metrics.sales.completed}</h5>
+                        </Col>
+                        <Col md="6" sm="12">
+                        <h5 className="tituloAnuncios">Anúncios</h5>
+                        <h5 className="text-success valores">{acc.count_advertisings}</h5>
+                        </Col>
+                      </Row>
+                    </CardFooter>
+                  </Card>
+                </Col>
+              );
+            })
           )}
         </Row>
       </div>
