@@ -75,10 +75,9 @@ class ListaContas extends Component {
                               <ButtonGroup className="vertical-button-group">
                                 <ApiInvoker className="dropdown-item"
                                   http="put"
-                                  data={null}
+                                  data={this.state.data}
                                   url={`/accounts/${acc.id}`}
                                   question="Informe o nome desajado"
-                                  onSuccess="Renomeado com sucesso!"
                                   >Renomear
                                 </ApiInvoker>
                                 <ApiInvoker className="dropdown-item"

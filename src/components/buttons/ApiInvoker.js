@@ -10,7 +10,7 @@ class ApiInvoker extends Component {
             url: null,
             data: null,
             http: null,
-            onSuccess: null,
+            question: null,
         };
         this.callback = this.callback.bind(this);
         this.httpValidation = this.httpValidation.bind(this);
@@ -38,8 +38,8 @@ class ApiInvoker extends Component {
             confirmButtonText: "Salvar",
           });
 
-          return res.value;
-        } else return false
+          return res;
+        } else return false;
       }catch(err) { Swal.fire({title: err, type:"error", showCloseButton: true}) };
     }
 
@@ -47,25 +47,56 @@ class ApiInvoker extends Component {
         try {
             const httpValidation = await this.httpValidation(this.props.http);
             const questions = await this.anyQuestions(this.props.question);
+            
             if(httpValidation !== false) {
-              const { url, data, http, onSuccess, question } = this.props;
-              await this.setState({ url, data, http, onSuccess, question });
-              if(questions !== false) { await this.setState({ data: questions }); }
-              else {
-                if(this.props.data !== null) {
-                  await this.setState({ data: this.props.data }); 
-                } else await this.setState({ data: null })
+              const { url, data, http, question } = this.props;
+              this.setState({ url, data, http, question });
+              
+              if(questions !== false && questions !== '') { 
+                this.state.data = questions; 
+                console.log(this.state)
+                await this.callApi();
               }
-              await this.callApi();
+              else {
+                if(this.props.data !== null && this.props.data !== undefined) {
+                  this.setState({ data: this.props.data });
+                  await this.callApi();
+                } 
+                else {
+                  this.setState({ data: null });
+                  await this.callApi();
+                };
+              };
+              
+            } else {
+              this.setState({
+                url: null,
+                data: null,
+                http: null,
+                question: null            
+              });
+
+              Swal.fire({
+                html: 'Protocolo HTTP inválido.',
+                type: 'warning',
+                showCloseButton: true
+              });
             }
-        } catch(err) {}//swalShout(err, 'error');}
+        } catch {
+          Swal.fire({
+            html:`<p>Erro interno.</p>`,
+            type: 'error',
+            showCloseButton: true
+          });
+        }
     };
 
     callApi = async () => {
-      if(this.state.http === 'get') await apiGet(this.state.url, this.state.onSuccess);
-      else if(this.state.http === 'delete') await apiDelete(this.state.url, this.state.onSuccess);
-      else if(this.state.http === 'put') await apiPut(this.state.url, this.state.data, this.state.onSuccess, this.state.question);
-      else if(this.state.http === 'post') await apiPost(this.state.url, this.state.data, this.state.onSuccess, this.state.question);
+      console.log(this.state);
+      if(this.state.http === 'get') await apiGet(this.state.url);
+      else if(this.state.http === 'delete') apiDelete(this.state.url, this.state.onSuccess);
+      else if(this.state.http === 'put') await apiPut(this.state.url, this.state.data);
+      else if(this.state.http === 'post') apiPost(this.state.url, this.state.data, this.state.onSuccess, this.state.question);
     }
 
   render() {
