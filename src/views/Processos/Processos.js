@@ -15,7 +15,6 @@ import Swal from "sweetalert2";
 import Moment from "moment";
 import ReactLoading from "react-loading";
 import { getToken } from "../../auth";
-import data from "./_data";
 class Processos extends Component {
   constructor(props) {
     super(props);
@@ -46,7 +45,6 @@ class Processos extends Component {
       noProcessos: false
     };
 
-    this.table = data.rows;
     this.options = {
       sortIndicator: true,
       hideSizePerPage: true,
@@ -82,7 +80,6 @@ class Processos extends Component {
             processos: this.state.listaProcessos,
             isLoadingProcessos: false
           });
-          console.log(this.state.listaProcessos);
         } else {
           Swal.fire({
             html: "<p>" + res.data.message + "</p>",
