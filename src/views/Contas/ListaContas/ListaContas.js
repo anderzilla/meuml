@@ -56,8 +56,8 @@ class ListaContas extends Component {
         { headers: { Authorization: "Bearer " + getToken() } }
       )
       .then(res => {
-        console.log(res);
         if (res.data.status === "success") {
+          this.state.statusMsg = 'ok';
           Swal.fire({
             html: "<p>" + res.data.message + "</p>",
             type: "success",
@@ -89,6 +89,7 @@ class ListaContas extends Component {
       })
       .then(res => {
         if (res.data.status === "success") {
+          this.state.statusMsg = 'ok';
           Swal.fire({
             html: "<p>" + res.data.message + "</p>",
             type: "success",
@@ -98,6 +99,7 @@ class ListaContas extends Component {
             }
           });
         } else {
+          this.state.statusMsg = 'ok';
           Swal.fire({
             html: "<p>" + res.data.message + "</p>",
             type: "error",
@@ -132,10 +134,9 @@ class ListaContas extends Component {
             { headers: { Authorization: "Bearer " + getToken() } }
           )
           .then(res => {
-            console.log(res);
             if (res.data.status === "success") {
-              document.getElementById("nomeConta-" + index).innerHTML =
-                result.value;
+              this.state.statusMsg = 'ok';
+              document.getElementById("nomeConta-" + index).innerHTML = result.value;
             } else {
               Swal.fire({
                 html: "<p>" + res.data.message + "</p>",
@@ -164,7 +165,7 @@ class ListaContas extends Component {
       showCancelButton: true,
       cancelButtonText: "Fechar"
       });
-    }else if(this.state.statusMsg === 'success'){
+    }else if(this.state.statusMsg === 'addsuccess'){
       Swal.fire({
         html: "<p>Conta do Mercado Livre Adicionada com sucesso!<br /></p>",
         type: "success",

@@ -32,7 +32,7 @@ class CallBack extends Component {
                 doIt: 2
               })
               if (res.data.status === 'success') {
-                this.props.history.push('/listacontas?status='+res.data.status);
+                this.props.history.push('/listacontas?status=add'+res.data.status);
                 window.location.reload();
               } else {
                 this.props.history.push('/listacontas?status='+res.data.status);
