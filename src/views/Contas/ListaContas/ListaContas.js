@@ -166,13 +166,13 @@ class ListaContas extends Component {
       });
     }else if(this.state.statusMsg === 'success'){
       Swal.fire({
-        html: "<p>Conta do Mercado Livre pertence a outro usuário<br /></p>",
+        html: "<p>Conta do Mercado Livre Adicionada com sucesso!<br /></p>",
         type: "success",
         showConfirmButton: true,
         showCancelButton: false,
         confirmButtonText: "OK"
         });
-    }else if(this.state.statusMsg === 'lista'){
+    }else if(this.state.statusMsg === 'lista' || this.state.statusMsg === 'ok'){
       this.state.statusMsg = 'ok';
     }else{
       Swal.fire({
