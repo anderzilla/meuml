@@ -156,6 +156,34 @@ class ListaContas extends Component {
   }
 
   fetchAccounts() {
+    if (this.state.statusMsg === '400'){
+      Swal.fire({
+      html: "<p>Conta do Mercado Livre pertence a outro usuário<br /></p>",
+      type: "error",
+      showConfirmButton: false,
+      showCancelButton: true,
+      cancelButtonText: "Fechar"
+      });
+    }else if(this.state.statusMsg === 'success'){
+      Swal.fire({
+        html: "<p>Conta do Mercado Livre pertence a outro usuário<br /></p>",
+        type: "success",
+        showConfirmButton: true,
+        showCancelButton: false,
+        confirmButtonText: "OK"
+        });
+    }else if(this.state.statusMsg === 'lista'){
+      this.state.statusMsg = 'ok';
+    }else{
+      Swal.fire({
+        html: "<p>"+this.state.statusMsg+"<br /></p>",
+        type: "error",
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: "Fechar"
+        });
+    }
+
     axios
       .get(process.env.REACT_APP_API_URL + `/accounts`, {
         headers: { Authorization: "Bearer " + getToken() }
@@ -206,34 +234,6 @@ class ListaContas extends Component {
 
   render() {
     const { isLoading, contas, error } = this.state;
-
-    if (this.state.statusMsg === '400'){
-      Swal.fire({
-      html: "<p>Conta do Mercado Livre pertence a outro usuário<br /></p>",
-      type: "error",
-      showConfirmButton: false,
-      showCancelButton: true,
-      cancelButtonText: "Fechar"
-      });
-    }else if(this.state.statusMsg === 'success'){
-      Swal.fire({
-        html: "<p>Conta do Mercado Livre pertence a outro usuário<br /></p>",
-        type: "success",
-        showConfirmButton: true,
-        showCancelButton: false,
-        confirmButtonText: "OK"
-        });
-    }else if(this.state.statusMsg === 'lista'){
-      console.log('lista');
-    }else{
-      Swal.fire({
-        html: "<p>"+this.state.statusMsg+"<br /></p>",
-        type: "error",
-        showConfirmButton: false,
-        showCancelButton: true,
-        cancelButtonText: "Fechar"
-        });
-    }
 
     return (
       <div className="animated fadeIn">
