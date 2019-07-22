@@ -29,7 +29,8 @@ class ListaContas extends Component {
       isLoading: true,
       total: 0,
       fotoConta: fotoPadrao,
-      noContas: true
+      noContas: true,
+      errorMsg:window.location.href.split('?')[1].split('=')[1],
     };
     this.openAuth = this.openAuth.bind(this);
   }
@@ -203,6 +204,7 @@ class ListaContas extends Component {
 
   render() {
     const { isLoading, contas, error } = this.state;
+    console.log(this.state.errorMsg);
 
     return (
       <div className="animated fadeIn">
