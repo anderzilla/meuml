@@ -99,7 +99,7 @@ class MeusBloqueios extends Component {
               confirmButtonClass: "btn btn-success",
               buttonsStyling: true
             }).then(function() {
-              window.location.href = "#/listacontas";
+              window.location.href = "#/listacontas?status=lista";
             });
           }
         }

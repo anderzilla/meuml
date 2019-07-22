@@ -30,9 +30,11 @@ class ListaContas extends Component {
       total: 0,
       fotoConta: fotoPadrao,
       noContas: true,
-      
+      statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('=')[1], 
     };
     this.openAuth = this.openAuth.bind(this);
+
+    
   }
   //motor do dropdown
   toggle(i) {
@@ -204,7 +206,7 @@ class ListaContas extends Component {
 
   render() {
     const { isLoading, contas, error } = this.state;
-   
+   console.log(this.state.statusMsg);
 
     return (
       <div className="animated fadeIn">
