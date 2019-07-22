@@ -1,30 +1,11 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardGroup,
-  Col,
-  Container,
-  Form,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  Row
-} from "reactstrap";
-import Swal from "sweetalert2";
-import axios from "axios";
-import {
-  login,
-  TOKEN_KEY,
-  TOKEN_EXPIRE_IN,
-  isAuthenticated
-} from "../../../auth";
-
-import logo from "../../../assets/img/brand/MeuML-logo2.png";
-import moment from "moment";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import Swal from 'sweetalert2';
+import {login} from '../../../auth';
+import logo from '../../../assets/img/brand/MeuML-logo2.png'
+import moment  from 'moment';
+import api from '../../../services/api';
 
 class Login extends Component {
   constructor(props) {
@@ -59,61 +40,60 @@ class Login extends Component {
   handleSubmit(event) {
     event.preventDefault();
     //Realiza o login testando os dados do usuário no servidor
-    axios
-      .post(process.env.REACT_APP_API_URL + `/auth/login`, {
-        email: this.state.email,
-        password: this.state.password
-      })
-      .then(res => {
-        const status = res.data.status;
-        this.setState({ status });
-        if (this.state.status === "success") {
-          const message = res.data.message;
-          this.setState({ message });
-          const token = res.data.data.jwt;
-          this.setState({ token });
-          const user_id = res.data.user_id;
-          this.setState({ user_id });
-          const expiresin = res.data.data.expires_in;
-          this.setState({ expiresin });
-          login(this.state.token, this.state.expiresin);
-          window.location.assign("#/");
-        } else {
-          const message = res.data.message;
-          this.setState({ message });
-          Swal.fire({
-            html: "<p>" + this.state.message + "</p>",
-            type: "error",
-            showConfirmButton: true,
-            onClose: () => {
-              this.props.history.push("/login");
-              window.location.reload();
-            }
-          });
+    api.post(`/auth/login`, {
+      "email":this.state.email,
+      "password":this.state.password
+    })
+    .then(res => {
+      const status = res.data.status;
+      this.setState({status});
+      if (this.state.status === 'success'){
+        const message = res.data.message;
+        this.setState({message});
+        const token = res.data.data.jwt;
+        this.setState({token});
+        const user_id = res.data.user_id;
+        this.setState({user_id});
+        const expiresin = res.data.data.expiresin;
+        this.setState({expiresin})
+
+        login(this.state.token,moment(res.data.data.expires_in).format('DD/MM/YYYY HH:MM'));
+
+        //Redireciona para a tela inicial do sistema DASHBOARD
+        this.props.history.push("/");
+      }else{
+        const message = res.data.message;
+        this.setState({message});
+        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true,
+        onClose: () => {
+          this.props.history.push('/login');
+          window.location.reload();
         }
       })
-      .catch(error => {
-        this.state.noClick = false;
-        !error.response.data.errors.email
-          ? this.setState({ tipoErro: "" })
-          : this.setState({ tipoErro: error.response.data.errors.email });
-        !error.response.data.errors.password
-          ? this.setState({ erroPass: "" })
-          : this.setState({ erroPass: error.response.data.errors.password });
-        Swal.fire({
-          html:
-            "<p>" +
-            error.response.data.message +
-            "<br />" +
-            this.state.tipoErro +
-            this.state.erroPass +
-            "</p>",
-          type: "error",
-          showConfirmButton: false,
-          showCancelButton: true,
-          cancelButtonText: "Fechar"
+        .catch(error => {
+          this.state.noClick = false;
+          !error.response.data.errors.email
+            ? this.setState({ tipoErro: "" })
+            : this.setState({ tipoErro: error.response.data.errors.email });
+          !error.response.data.errors.password
+            ? this.setState({ erroPass: "" })
+            : this.setState({ erroPass: error.response.data.errors.password });
+          Swal.fire({
+            html:
+              "<p>" +
+              error.response.data.message +
+              "<br />" +
+              this.state.tipoErro +
+              this.state.erroPass +
+              "</p>",
+            type: "error",
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: "Fechar"
+          });
         });
-      });
+      }
+    });
   }
 
   focusSubmitInput() {

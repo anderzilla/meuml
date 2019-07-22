@@ -6,6 +6,7 @@ import logo from '../../../assets/img/brand/MeuML-logo2.png';
 import { AppSwitch } from '@coreui/react';
 import axios from 'axios';
 import ReactLoading from 'react-loading';
+import api from '../../../services/api';
 
 
 class Cadastro extends Component {
@@ -81,7 +82,7 @@ class Cadastro extends Component {
     /*}else if (this.state.termos === '' ){
       alert('Aceite os termos de uso!' + this.state.termos);*/
     }else{
-      axios.post(process.env.REACT_APP_API_URL + `/user`, {
+      api.post(`/user`, {
         "email":this.state.email,
         "name":this.state.userName,
         "password":this.state.password

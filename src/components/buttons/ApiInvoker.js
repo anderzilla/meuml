@@ -1,83 +1,72 @@
 import React, { Component } from 'react';
 import { apiGet, apiPost, apiPut, apiDelete } from './api-lexicon';
-import swalShout from '../../helpers/swalShout';
+import Swal from 'sweetalert2';
 
 class ApiInvoker extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            url: '',
+            url: null,
             data: null,
-            http: '',
-            onSuccess: '',
-            hasChanged: false
-        }
+            http: null,
+            onSuccess: null,
+        };
+        this.callback = this.callback.bind(this);
+        this.httpValidation = this.httpValidation.bind(this);
     }
 
-    callback(props) {
-        if(props.http === 'get' || props.http === 'delete') {
-            this.setState({
-                url: props.url, // Delete parameters must be passed through URL
-                data: null,
-                http: props.http,
-                onSuccess: props.onSuccess,
-                hasChanged: true
-            });
-
-            this.apiHandler(props.http);
-
-        }
-
-        else if(props.http === 'post') {
-            this.setState({
-                url: props.url,
-                data: props.data,
-                http: props.http,
-                onSuccess: props.onSuccess,
-                hasChanged: true
-            });
-
-            this.apiHandler('post');
-
-        }
-
-        else if(props.http === 'put') {
-            this.setState({
-                url: props.url,
-                data: props.data,
-                http: props.http,
-                onSuccess: props.onSuccess,
-                hasChanged: true
-            });
-
-            this.apiHandler('put');
-
+    httpValidation = () => {
+        const { http } = this.props;
+        if(http === 'get' || http === 'post' || http === 'put' || http === 'delete'){
+          return true;
         } else {
-            swalShout(`Método HTTP (${props.http}) inválido`);
-        }
+          Swal.fire({html:`<p>Método HTTP (${this.props.http}) inválido</p>`, type: "error", showCloseButton:true});
+          return false;
+        };
     };
 
-    async apiHandler(req) {
-        const { url, data, onSuccess, hasChanged } = this.state;
-        if(hasChanged) {
-            if(req === 'get') {
-                apiGet(url, onSuccess);
-            }
+    anyQuestions = async (question) => {
+      try {
+        if(question !== undefined && question !== null && question !== '') {
+          const {value: res} = await Swal.fire({
+            title: question,
+            input: "text",
+            type: "question",
+            showConfirmButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Salvar",
+          });
 
-            else if(req === 'post') {
-                apiPost(url, data, onSuccess);
-            }
+          return res.value;
+        } else return false
+      }catch(err) { Swal.fire({title: err, type:"error", showCloseButton: true}) };
+    }
 
-            else if(req === 'put') {
-                apiPut(url, data, onSuccess);
+    callback = async () => {
+        try {
+            const httpValidation = await this.httpValidation(this.props.http);
+            const questions = await this.anyQuestions(this.props.question);
+            if(httpValidation !== false) {
+              const { url, data, http, onSuccess, question } = this.props;
+              await this.setState({ url, data, http, onSuccess, question });
+              if(questions !== false) { await this.setState({ data: questions }); }
+              else {
+                if(this.props.data !== null) {
+                  await this.setState({ data: this.props.data }); 
+                } else await this.setState({ data: null })
+              }
+              await this.callApi();
             }
-
-            else if(req === 'delete') {
-                apiDelete(url, onSuccess)
-            }
-        }
+        } catch(err) {}//swalShout(err, 'error');}
     };
+
+    callApi = async () => {
+      if(this.state.http === 'get') await apiGet(this.state.url, this.state.onSuccess);
+      else if(this.state.http === 'delete') await apiDelete(this.state.url, this.state.onSuccess);
+      else if(this.state.http === 'put') await apiPut(this.state.url, this.state.data, this.state.onSuccess, this.state.question);
+      else if(this.state.http === 'post') await apiPost(this.state.url, this.state.data, this.state.onSuccess, this.state.question);
+    }
 
   render() {
     return(
@@ -88,7 +77,7 @@ class ApiInvoker extends Component {
           http={this.props.http}
           onSuccess={this.props.onSuccess}
           question={this.props.question}
-          onClick={ ()=> this.callback(this.props) }
+          onClick={ ()=> this.callback() }
           >{this.props.children}
         </button>
     );

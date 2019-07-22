@@ -1,16 +1,15 @@
 import axios from "axios";
-import { getToken } from "./auth";
+const setAuthHeader = async () => {
+  try {
+    const token = await localStorage.getItem('@MeuML-Token');
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } catch(error) {
+    console.log(error);
+  };
+};
 
-const api = axios.create({
-  baseURL: "https://api.app2.meuml.com"
-});
+setAuthHeader();
 
-api.interceptors.request.use(async config => {
-  const token = getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+const api = axios.create({ baseURL: process.env.REACT_APP_API_URL });
 
 export default api;

@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
 import api from '../../../services/api';
 
-import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button } from 'reactstrap';
-import fotoPadrao from '../../../assets/img/avatars/user.svg';
 import ReactLoading from 'react-loading';
-import Swal from 'sweetalert2';
+import fotoPadrao from '../../../assets/img/avatars/user.svg';
 import ApiInvoker from './../../../components/buttons/ApiInvoker';
 import ButtonGroup from './../../../components/buttons/ButtonGroup';
+import {Card, CardBody, CardFooter, CardHeader, Col, Row, Button } from 'reactstrap';
+import Swal from 'sweetalert2';
 
 class ListaContas extends Component {
   constructor(props) {
     super(props);
     
     this.state = {
-      isLoading: true,
-      total: 0,
       fotoConta: fotoPadrao,
-      newName: '',
+      accounts: [],
       account_id: null,
+      isLoading: true,
+      newName: null,
+      total: 0,
     };
     
     this.openAuth = this.openAuth.bind(this);
@@ -27,43 +28,17 @@ class ListaContas extends Component {
     this.fetchAccounts();
   }
 
-  fetchAccounts() {
-    api.get('/accounts')
-        .then(res => {
-          if (res.data.status === 'success') {
-            if (res.data.meta.total !== 0) {
-              this.setState({
-                contas: res.data.data,
-                isLoading: false,
-              });
-              console.log(this.state)
-          } else {
-            this.setState({
-              noContas: true,
-              isLoading: false
-            });
-          }
-        
-        } else {
-          this.setState({
-            noContas: true,
-            isLoading: false
-          });
-        }
-      })
-      .catch(error => {
-        !error.response
-          ? this.setState({ tipoErro: error })
-          : this.setState({ tipoErro: error.response.data.message });
-        Swal.fire({
-          html: "<p>" + this.state.tipoErro + "<br /></p>",
-          type: "error",
-          showConfirmButton: false,
-          showCancelButton: true,
-          cancelButtonText: "Fechar"
+  fetchAccounts = async () => {
+    try {
+      const res = await api.get('/accounts');
+      if(res.status === 200) {
+        this.setState({
+          accounts: res.data.data,
+          total: res.data.meta.total,
+          isLoading: false
         });
-      });
-    
+      } else Swal.fire({html: res.data.message, type: 'warning', showCloseButton: true});
+    }catch { Swal.fire({html: 'Erro ao carregar contas.', type: "error", showCloseButton: true}); }
   }
 
   openAuth() {
@@ -75,8 +50,6 @@ class ListaContas extends Component {
   }
 
   render() {
-    const { isLoading, contas } = this.state;
-
     return (
       <div className="animated fadeIn">
         <Row>
@@ -90,8 +63,8 @@ class ListaContas extends Component {
         </Row>
 
         <Row>
-          {!isLoading ? (
-            contas.map((acc, index)=> {
+          {this.state.isLoading === false && this.state.total > 0 ? (
+            this.state.accounts.map((acc, index)=> {
                 return (
                     <Col xs="12" sm="4" md="3" key={acc.id} className="CardConta">
                       <Card className="card-accent-primary">
@@ -99,22 +72,28 @@ class ListaContas extends Component {
                           <span id={'nomeConta-'+index}>{acc.name}</span>
                           
                           <div className="float-right">
-                              <ButtonGroup className="primary">
-                                <ApiInvoker
-                                  url={'/accounts/' + acc.id}
+                              <ButtonGroup className="vertical-button-group">
+                                <ApiInvoker className="dropdown-item"
                                   http="put"
+                                  data={null}
+                                  url={`/accounts/${acc.id}`}
+                                  question="Informe o nome desajado"
                                   onSuccess="Renomeado com sucesso!"
                                   >Renomear
                                 </ApiInvoker>
-                                <ApiInvoker
-                                  url={'/accounts/' + acc.id + '/sync'}
+                                <ApiInvoker className="dropdown-item"
                                   http="get"
+                                  data={null}
+                                  url={`/accounts/${acc.id}/sync`}
+                                  question={null}
                                   onSuccess="Contas sincronizadas."
                                   >Sincronizar
                                 </ApiInvoker>
-                                <ApiInvoker
-                                  url={'/accounts/' + acc.id}
+                                <ApiInvoker className="dropdown-item"
                                   http="delete"
+                                  data={null}
+                                  url={`/accounts/${acc.id}`}
+                                  question={`Você tem certeza que deseja deletar a conta "${acc.name}"`}
                                   onSuccess={`Conta ${acc.name} deletada com sucesso!`}
                                   >Excluir
                                 </ApiInvoker>
