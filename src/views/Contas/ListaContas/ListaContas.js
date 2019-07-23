@@ -30,8 +30,8 @@ class ListaContas extends Component {
       total: 0,
       fotoConta: fotoPadrao,
       noContas: true,
-      statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('&')[0].split('='),
-      errorMsg:  !window.location.href.split('?')[1].split('=')[1]? null : window.location.href.split('?')[1].split('&')[1].split('='),
+      statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('&')[0].split('=')[1],
+      errorMsg:  !window.location.href.split('?')[1].split('=')[1]? null : window.location.href.split('?')[1].split('&')[1].split('=')[1],
     };
     this.openAuth = this.openAuth.bind(this);
 
