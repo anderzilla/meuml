@@ -1,126 +1,97 @@
 import React, { Component } from 'react';
 import api from '../../services/api';
-import { BtnGroup, Item } from '../../components/buttons/ButtonGroup';
+
 import Swal from "sweetalert2";
-import {
-  Button,
-  Card,
-  Col,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  ButtonGroup,
-  ButtonDropdown,
-  DropdownToggle, DropdownMenu, DropdownItem, Row,
-  Input,
-} from "reactstrap";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
+import Carton from '../../components/Card';
+import { BtnGroup, Item, DropDown } from '../../components/buttons/ButtonGroup';
 
 class Perguntas extends Component {
-
-
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
     this.state = {
-      dropdownOpen: new Array(2).fill(false),
-      advertisings: [],
       accounts: [],
+      advertisings: [],
+      totalOfAcc: 0,
+      totalOfAds: 0,
       isLoading: true,
-      isLoadingAccounts: true,
-      total: 0,
-      answer:'',
-      not_has_accounts: false,
-      backend_error: false,
-      ressync: false
+      loadingAcc: true,
     };
 
-
-    this.success = this.success.bind(this);
-    this.error = this.error.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
 
-  handleClick() {
-    this.sendAnswer()
-  }
-
-  show_alert(type, text){
-    if(type === 'success'){
-      this.success(text)
-    }
-    if(type === 'error'){
-      this.error(text)
-    }
-  }
-
-  success(text) {
-    // default type
-    return toast.success(text, {
-      position: toast.POSITION.BOTTOM_RIGHT
-    });
-  }
-
-  error(text) {
-    // add type: 'error' to options
-    return toast.error(text);
+  handleClick(id) {
+    this.fetchQuestions(id);
   }
 
   componentDidMount() {
     this.fetchAccounts()
   }
 
-  fetchAccounts()
-  {
-
-    this.url = `/accounts?extra_fields=unanswered_questions`;
-    api.get(this.url).then(res => {
-      if (res.status === 200){
-        this.setState({
-          accounts: res.data.data,
-          isLoadingAccounts: false
-        });
-        if(res.data.data.length > 0){
-          this.fetchQuestions(res.data.data[0].id)
-        }else{
-          this.setState({not_has_accounts: true});
-        }
-        this.setState({
-          ressync: false
-        })
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-      }
-    }).catch(error => {
-      this.setState({
-        backend_error: true
+  fetchAccounts = async () => {
+    try {
+      const url = `/accounts?extra_fields=unanswered_questions`;
+      const res = await api.get(url);
+      let accounts = [];
+      if(res.data.status === 'success') {
+        if(res.data.data.length > 0) {
+          await res.data.data.forEach(acc => {
+            accounts.push({
+              id: acc.id,
+              name: acc.name,
+              key: acc.name + acc.id,
+              ads: acc.count_advertisings,
+              questions: acc.count_questions,
+            });
+          });
+          await this.setState({
+            accounts: accounts,
+            isLoading: false,
+            loadingAcc: false,
+            totalOfAcc: accounts.length
+          });
+          console.log(this.state)
+        } else Swal.fire({ html: 'Você precisa ter ao menos uma conta cadastrada.', type: 'warning', showCloseButton: true });
+      } else Swal.fire({ html: `<p>${res.data.message}</p>`, type: res.data.status, showCloseButton: true });
+    } catch {
+      Swal.fire({
+        html: 'Ops, algo deu errado!',
+        type: 'error',
+        showCloseButton: true
       });
-    });
+      this.props.history.push('/#/contas');
+    }
   }
 
-  fetchQuestions(account_id) {
-    this.setState({
-      ressync: true
-    })
-    this.url = `/questions/advertisings?account_id=` + account_id
-    api.get(this.url).then(res => {
-      if (res.status === 200){
-        this.setState({
-          advertisings: res.data.data.advertisings,
-          isLoading: false,
-          total: res.data.data.total_questions,
-          account_id: account_id,
-          ressync: false
+  fetchQuestions(id) {
+    const url = `/questions/advertisings?account_id=${id}`
+    api.get(url).then(res => {
+      Swal.fire({
+        html:'<p>'+res.data.message+'</p>',
+        type: res.data.status,
+        showConfirmButton: true
+      });
+      if (res.data.status === 'success'){
+        let accountList = this.state.accounts;
+        let index = accountList.map((a, i) => {if(a.id === id) return i});
+        accountList[index] = {
+          id: accountList[index].id,
+          name: accountList[index].name,
+          key: accountList[index].name + accountList[index].id,
+          ads: res.data.data.advertisings,
+          questions: res.data.data.total_questions,
+        }
+        this.setState({ 
+          accounts: accountList,
+          advertisings: accountList[index].ads,
+          totalOfAds: accountList[index].ads.length
         });
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
       }
-    }).catch(error => this.setState({backend_error: true}));
+    }).catch(error => Swal.fire({html:`<p>${error}</p>`, type: 'error', showCloseButton: true}));
   }
 
   sendAnswer() {
@@ -208,10 +179,86 @@ class Perguntas extends Component {
     });
   }
 
+  buildAdsCards() {
+    if(this.state.advertisings.length > 0) {
+      // this.state.advertisings.map(ad => {
+      //   return (
+      //     <Carton className=""
+      //       xs="" sm="" md=""
+      //       timeout="" fadeIn={true}
+      //       header={ad.item_id} footer={}
+      //       >
+      //     </Carton>
+      //   );
+      // })
+    }
+  }
+
+  buildQAPanel() {
+    return(
+      <>
+      {
+        this.state.isLoading ? <span>Loading ...</span> : (
+          this.state.loadingAcc ? <span>Loading ...</span> : (
+            this.state.accounts.length <= 3 ? (
+              <BtnGroup className="btn btn-primary">
+                {this.state.accounts.map(acc => {
+                  return (
+                    <button className="btn btn-primary"
+                      onClick={()=>this.handleClick(acc.id)}
+                      key={acc.key}
+                      >{acc.name} ({acc.questions})
+                    </button>
+                  );
+                })}
+              </BtnGroup>
+          ):(this.state.accounts.length > 3 ? (
+              <DropDown
+                title="Minhas Contas"
+                >{this.state.accounts.map(acc => {
+                  return (
+                    <button
+                      className="dropdown dropdown-item"
+                      onClick={()=>this.handleClick(acc.id)}
+                      >{acc.name} ({acc.questions})
+                    </button>
+                  );
+                })}
+              </DropDown>
+          ):(<div>Você não possui contas sincronizadas.</div>)) 
+          )
+        )
+      }
+      </>
+    );
+  }
+
+  buildDataCard = () => {
+    return (
+      <>
+      <ul className="list-group col-md-4 mb-1">
+        <li className="list-group-item d-flex justify-content-between align-items-center">
+          Contas Sincronizadas
+          <span className="badge badge-primary badge-pill">{this.state.totalOfAcc}</span>
+        </li>
+        <li className="list-group-item d-flex justify-content-between align-items-center">
+          Perguntas não respondidas
+          <span className="badge badge-primary badge-pill">{this.state.totalOfAds}</span>
+        </li>
+        <li className="list-group-item d-flex justify-content-between align-items-center">
+          {this.buildQAPanel()}
+        </li>
+      </ul>
+      </>
+    );
+  }
+
   render() {
     return(
       <>
-      
+      {this.buildDataCard()}
+      <hr/>
+      {this.buildAdsCards()}
       </>
     );
   }
