@@ -30,8 +30,8 @@ class ListaContas extends Component {
       total: 0,
       fotoConta: fotoPadrao,
       noContas: true,
-      statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('=')[1],
-      errorMsg:  !window.location.href.split('?')[1].split('=')[1]? null : window.location.href.split('?')[1].split('&')[1].split('=')[1],
+      statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('&')[0].split('='),
+      errorMsg:  !window.location.href.split('?')[1].split('=')[1]? null : window.location.href.split('?')[1].split('&')[1].split('='),
     };
     this.openAuth = this.openAuth.bind(this);
 
@@ -158,6 +158,8 @@ class ListaContas extends Component {
   }
 
   fetchAccounts() {
+    console.log('status:'+this.state.statusMsg);
+    console.log('status:'+this.state.errorMsg);
     if (this.state.statusMsg === '400'){
       Swal.fire({
       html: "<p>"+this.state.errorMsg+"</p>",
