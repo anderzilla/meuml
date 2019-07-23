@@ -179,13 +179,7 @@ class ListaContas extends Component {
     }else if(this.state.statusMsg === 'lista'){
       this.state.statusMsg = 'lista';
     }else{
-      Swal.fire({
-        html: "<p>"+this.state.errorMsg+"<br /></p>",
-        type: "error",
-        showConfirmButton: false,
-        showCancelButton: true,
-        cancelButtonText: "Fechar"
-        });
+      this.state.statusMsg = 'lista';
     }
 
     axios
