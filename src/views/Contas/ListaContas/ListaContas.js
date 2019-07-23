@@ -30,8 +30,7 @@ class ListaContas extends Component {
       total: 0,
       fotoConta: fotoPadrao,
       noContas: true,
-      statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('&')[0].split('=')[1],
-      errorMsg:  !window.location.href.split('?')[1].split('=')[1]? null : window.location.href.split('?')[1].split('&')[1].split('=')[1],
+      statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('=')[1], 
     };
     this.openAuth = this.openAuth.bind(this);
 
@@ -158,11 +157,9 @@ class ListaContas extends Component {
   }
 
   fetchAccounts() {
-    console.log('status:'+this.state.statusMsg[1]);
-    console.log('error:'+this.state.errorMsg);
     if (this.state.statusMsg === '400'){
       Swal.fire({
-      html: "<p>"+this.state.errorMsg+"</p>",
+      html: "<p>Conta do Mercado Livre pertence a outro usuário<br /></p>",
       type: "error",
       showConfirmButton: false,
       showCancelButton: true,
@@ -176,10 +173,16 @@ class ListaContas extends Component {
         showCancelButton: false,
         confirmButtonText: "OK"
         });
-    }else if(this.state.statusMsg === 'lista'){
-      this.state.statusMsg = 'lista';
+    }else if(this.state.statusMsg === 'lista' || this.state.statusMsg === 'ok'){
+      this.state.statusMsg = 'ok';
     }else{
-      this.state.statusMsg = 'lista';
+      Swal.fire({
+        html: "<p>"+this.state.statusMsg+"<br /></p>",
+        type: "error",
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: "Fechar"
+        });
     }
 
     axios
