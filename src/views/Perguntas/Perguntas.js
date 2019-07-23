@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import api from '../../services/api';
 
 import Swal from "sweetalert2";
-import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Carton from '../../components/Card';
 import { BtnGroup, Item, DropDown } from '../../components/buttons/ButtonGroup';
+import { GroupItem, GroupHolder } from '../../components/ListGroup/Main';
 
 class Perguntas extends Component {
   constructor(props) {
@@ -21,6 +20,7 @@ class Perguntas extends Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.buildQuestsCard = this.buildQuestsCard.bind(this);
   }
 
 
@@ -179,22 +179,24 @@ class Perguntas extends Component {
     });
   }
 
-  buildAdsCards() {
-    if(this.state.advertisings.length > 0) {
-      // this.state.advertisings.map(ad => {
-      //   return (
-      //     <Carton className=""
-      //       xs="" sm="" md=""
-      //       timeout="" fadeIn={true}
-      //       header={ad.item_id} footer={}
-      //       >
-      //     </Carton>
-      //   );
-      // })
+  buildQuestsCard() {
+    if(this.state.isLoading === false && this.state.loadingAcc === false) {
+      if(this.state.totalOfAds >= 1) {
+        this.state.advertisings.map(ad => {
+          return(
+            <GroupItem
+              title={ad.name}
+              label={ad.question}
+              smallTitle={ad.coffe}
+              smallLabel={ad.tea}
+            />
+          );
+        });
+      } else return false;
     }
   }
 
-  buildQAPanel() {
+  buildAccountMenu() {
     return(
       <>
       {
@@ -246,7 +248,7 @@ class Perguntas extends Component {
           <span className="badge badge-primary badge-pill">{this.state.totalOfAds}</span>
         </li>
         <li className="list-group-item d-flex justify-content-between align-items-center">
-          {this.buildQAPanel()}
+          {this.buildAccountMenu()}
         </li>
       </ul>
       </>
@@ -256,9 +258,15 @@ class Perguntas extends Component {
   render() {
     return(
       <>
-      {this.buildDataCard()}
-      <hr/>
-      {this.buildAdsCards()}
+        {this.buildDataCard()}
+        <hr/>
+        <GroupHolder className="col-md-8">
+          {this.buildQuestsCard() ||
+          <GroupItem 
+            title="Não há perguntas a serem repondidas."
+            label="Você poderá responder a todas as perguntas por aqui.">
+          </GroupItem>}
+        </GroupHolder>
       </>
     );
   }
