@@ -30,7 +30,8 @@ class ListaContas extends Component {
       total: 0,
       fotoConta: fotoPadrao,
       noContas: true,
-      statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('=')[1], 
+      statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('=')[1],
+      errorMsg:  !window.location.href.split('?')[1].split('=')[1]? null : window.location.href.split('?')[1].split('&')[1].split('=')[1],
     };
     this.openAuth = this.openAuth.bind(this);
 
@@ -159,7 +160,7 @@ class ListaContas extends Component {
   fetchAccounts() {
     if (this.state.statusMsg === '400'){
       Swal.fire({
-      html: "<p>Conta do Mercado Livre pertence a outro usuário<br /></p>",
+      html: "<p>"+this.state.statusMsg+"</p>",
       type: "error",
       showConfirmButton: false,
       showCancelButton: true,

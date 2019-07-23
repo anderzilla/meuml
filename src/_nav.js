@@ -12,7 +12,7 @@ export default {
     },
     {
       name: 'Contas',
-      url: '/listacontas?status=lista',
+      url: '/listacontas?status=lista&mensagem=ok',
       id: 'contas',
       icon: 'fa fa-address-book',
 
