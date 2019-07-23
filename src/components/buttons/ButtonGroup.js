@@ -2,7 +2,6 @@ import React from "react";
 import {
   ButtonGroup,
   ButtonDropdown,
-  DropdownItem,
   DropdownMenu,
   DropdownToggle
 } from "reactstrap";
@@ -29,11 +28,23 @@ export class DropDown extends React.Component {
           toggle={this.toggle}
         >
           <DropdownToggle caret color="primary" size="sm">
-            Opções
+            {this.props.title || <span>Opções</span>}
           </DropdownToggle>
           <DropdownMenu>{this.props.children}</DropdownMenu>
         </ButtonDropdown>
       </ButtonGroup>
+    );
+  }
+}
+
+export class BtnGroup extends React.Component {
+  render() {
+    return(
+      <>
+        <ButtonGroup className="this.props.className">
+          {this.props.children}
+        </ButtonGroup>
+      </>
     );
   }
 }
