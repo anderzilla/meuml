@@ -160,7 +160,7 @@ class ListaContas extends Component {
   fetchAccounts() {
     if (this.state.statusMsg === '400'){
       Swal.fire({
-      html: "<p>"+this.state.statusMsg+"</p>",
+      html: "<p>"+this.state.errorMsg+"</p>",
       type: "error",
       showConfirmButton: false,
       showCancelButton: true,
@@ -174,11 +174,11 @@ class ListaContas extends Component {
         showCancelButton: false,
         confirmButtonText: "OK"
         });
-    }else if(this.state.statusMsg === 'lista' || this.state.statusMsg === 'ok'){
-      this.state.statusMsg = 'ok';
+    }else if(this.state.statusMsg === 'lista'){
+      this.state.statusMsg = 'lista';
     }else{
       Swal.fire({
-        html: "<p>"+this.state.statusMsg+"<br /></p>",
+        html: "<p>"+this.state.errorMsg+"<br /></p>",
         type: "error",
         showConfirmButton: false,
         showCancelButton: true,
