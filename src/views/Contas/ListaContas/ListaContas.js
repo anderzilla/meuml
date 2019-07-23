@@ -159,7 +159,7 @@ class ListaContas extends Component {
 
   fetchAccounts() {
     console.log('status:'+this.state.statusMsg[1]);
-    console.log('status:'+this.state.errorMsg[1]);
+    console.log('error:'+this.state.errorMsg);
     if (this.state.statusMsg === '400'){
       Swal.fire({
       html: "<p>"+this.state.errorMsg+"</p>",
