@@ -32,10 +32,10 @@ class CallBack extends Component {
                 doIt: 2
               })
               if (res.data.status === 'success') {
-                this.props.history.push('/listacontas?status=add'+res.data.status+'mensagem='+res.data.message);
+                this.props.history.push('/listacontas?status=add'+res.data.status);
                 window.location.reload();
               } else {
-                this.props.history.push('/listacontas?status='+res.data.status+'mensagem='+res.data.message);
+                this.props.history.push('/listacontas?status='+res.data.status);
                 window.location.reload();
               }
             }).catch((error) => {     
@@ -43,16 +43,16 @@ class CallBack extends Component {
               (this.setState({tipoErro: error.message})) :
               (this.setState({tipoErro: error.response.data.message}))
                 if (error.response !== undefined) {
-                  this.props.history.push('/listacontas?status=400&mensagem='+error.message);
+                  this.props.history.push('/listacontas?status=400');
                   window.location.reload();
                 } else {
-                  this.props.history.push('/listacontas?status='+error+'mensagem='+error.message);
+                  this.props.history.push('/listacontas?status='+error);
                   window.location.reload();
                 }
             })
 
         ) : (
-          window.location.href("/listacontas?status=erro&mensagem=Desconhecido")
+          window.location.href("/listacontas?status=erro")
         )}
         </div>
     )
