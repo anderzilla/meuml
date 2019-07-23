@@ -19,10 +19,11 @@ import axios from "axios";
 import fotoPadrao from "../../../assets/img/avatars/user.svg";
 import ReactLoading from "react-loading";
 
+import { DropDown, Item } from '../../../components/buttons/ButtonGroup'
+
 class ListaContas extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
     this.state = {
       dropdownOpen: new Array(50).fill(false),
       constas: [],
@@ -31,129 +32,14 @@ class ListaContas extends Component {
       fotoConta: fotoPadrao,
       noContas: true,
       statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('=')[1], 
+      name: ''
     };
-    this.openAuth = this.openAuth.bind(this);
 
-    
+    this.openAuth = this.openAuth.bind(this);    
   }
-  //motor do dropdown
-  toggle(i) {
-    const newArray = this.state.dropdownOpen.map((element, index) => {
-      return index === i ? !element : false;
-    });
-    this.setState({
-      dropdownOpen: newArray
-    });
-  }
+
   componentDidMount() {
     this.fetchAccounts();
-  }
-  //Sincronizar Conta
-  sincronizar(account_id) {
-    axios
-      .get(
-        process.env.REACT_APP_API_URL + `/accounts/` + account_id + "/sync",
-        { headers: { Authorization: "Bearer " + getToken() } }
-      )
-      .then(res => {
-        if (res.data.status === "success") {
-          this.state.statusMsg = 'ok';
-          Swal.fire({
-            html: "<p>" + res.data.message + "</p>",
-            type: "success",
-            showConfirmButton: true
-          });
-        } else {
-          Swal.fire({
-            html: "<p>" + res.data.message + "</p>",
-            type: "error",
-            showConfirmButton: true
-          });
-        }
-      })
-      .catch(error => {
-        Swal.fire({
-          html: "<p>" + error.response.data.message + "</p>",
-          type: "error",
-          showConfirmButton: false,
-          showCancelButton: true,
-          cancelButtonText: "Fechar"
-        });
-      });
-  }
-  //Excluir conta
-  excluir(account_id) {
-    axios
-      .delete(process.env.REACT_APP_API_URL + `/accounts/` + account_id, {
-        headers: { Authorization: "Bearer " + getToken() }
-      })
-      .then(res => {
-        if (res.data.status === "success") {
-          this.state.statusMsg = 'ok';
-          Swal.fire({
-            html: "<p>" + res.data.message + "</p>",
-            type: "success",
-            showConfirmButton: true,
-            onClose: () => {
-              this.fetchAccounts();
-            }
-          });
-        } else {
-          this.state.statusMsg = 'ok';
-          Swal.fire({
-            html: "<p>" + res.data.message + "</p>",
-            type: "error",
-            showConfirmButton: true
-          });
-          this.fetchAccounts();
-        }
-      })
-      .catch(error => {
-        Swal.fire({
-          html: "<p>" + error.response.data.message + "</p>",
-          type: "error",
-          showConfirmButton: false,
-          showCancelButton: true,
-          cancelButtonText: "Fechar"
-        });
-      });
-  }
-  //Renomear conta * somente para o sistema
-  renomear(account_id, index) {
-    const { value: novoNome } = Swal.fire({
-      title: "Renomear Conta:",
-      input: "text",
-      showCancelButton: true,
-      inputPlaceholder: "Preencha o novo nome"
-    }).then(result => {
-      if (result.value) {
-        axios
-          .put(
-            process.env.REACT_APP_API_URL + `/accounts/` + account_id,
-            { name: result.value },
-            { headers: { Authorization: "Bearer " + getToken() } }
-          )
-          .then(res => {
-            if (res.data.status === "success") {
-              this.state.statusMsg = 'ok';
-              document.getElementById("nomeConta-" + index).innerHTML = result.value;
-            } else {
-              Swal.fire({
-                html: "<p>" + res.data.message + "</p>",
-                type: "error",
-                showConfirmButton: true
-              });
-            }
-          })
-          .catch(error => {
-            Swal.fire({
-              html: "<p>" + error.response.data.message + "</p>",
-              type: "error",
-              confirmButtonText: "Fechar"
-            });
-          });
-      }
-    });
   }
 
   fetchAccounts() {
@@ -254,42 +140,34 @@ class ListaContas extends Component {
               </div>
             ) : (
               contas.map((c, k) => {
-                const { username, name, email, id } = this.state;
+                const { username, name, email } = this.state;
                 return (
                   <Col xs="12" sm="4" md="3" key={c.id} className="CardConta">
                     <Card className="card-accent-primary">
                       <CardHeader>
                         <span id={"nomeConta-" + k}>{c.name}</span>
                         <div className="float-right">
-                          <ButtonGroup>
-                            <ButtonDropdown
-                              isOpen={this.state.dropdownOpen[k]}
-                              toggle={() => {
-                                this.toggle(k);
-                              }}
-                            >
-                              <DropdownToggle caret color="primary" size="sm">
-                                Opções
-                              </DropdownToggle>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  onClick={() => this.renomear(c.id, k)}
-                                >
-                                  Renomear
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={() => this.sincronizar(c.id)}
-                                >
-                                  Sincronizar
-                                </DropdownItem>
-                                <DropdownItem
-                                  onClick={() => this.excluir(c.id)}
-                                >
-                                  Excluir
-                                </DropdownItem>
-                              </DropdownMenu>
-                            </ButtonDropdown>
-                          </ButtonGroup>
+                          <DropDown>
+                            <Item
+                                className="dropdown-item"
+                                name="Renomear"
+                                http="put"
+                                url={`accounts/${c.id}`}
+                                ask={'Informe o nome'}
+                              />
+                            <Item
+                              className="dropdown-item"
+                              name="Sincronizar"
+                              http="get"
+                              url={`accounts/${c.id}/sync`}
+                            />
+                            <Item
+                              className="dropdown-item"
+                              name="Excluir"
+                              http="delete"
+                              url={`accounts/${c.id}`}
+                            />
+                          </DropDown>
                         </div>
                       </CardHeader>
                       <CardBody>
