@@ -43,7 +43,7 @@ class CallBack extends Component {
               (this.setState({tipoErro: error})) :
               (this.setState({tipoErro: error.response.data.message}))
                 if (error.response !== undefined) {
-                  this.props.history.push('/listacontas?status='+error+'&mensagem='+this.state.tipoErro);
+                  this.props.history.push('/listacontas?status=400&mensagem='+this.state.tipoErro);
                   window.location.reload();
                 } else {
                   this.props.history.push('/listacontas?status='+error+'mensagem='+error.message);
