@@ -43,10 +43,10 @@ class CallBack extends Component {
               (this.setState({tipoErro: error})) :
               (this.setState({tipoErro: error.response.data.message}))
                 if (error.response !== undefined) {
-                  this.props.history.push('/listacontas?status='+error.data.status+'&mensagem='+this.state.tipoErro);
+                  this.props.history.push('/listacontas?status='+error+'&mensagem='+this.state.tipoErro);
                   window.location.reload();
                 } else {
-                  this.props.history.push('/listacontas?status='+error.data.status+'mensagem='+error.message);
+                  this.props.history.push('/listacontas?status='+error+'mensagem='+error.message);
                   window.location.reload();
                 }
             })
