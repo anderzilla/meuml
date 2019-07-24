@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import 'react-toastify/dist/ReactToastify.css';
 import { BtnGroup, Item, DropDown } from '../../components/buttons/ButtonGroup';
 import { GroupItem, GroupHolder } from '../../components/ListGroup/Main';
+import CategoriasDataTable from '../Categorias/CategoriasDataTable';
 
 class Perguntas extends Component {
   constructor(props) {
@@ -16,6 +17,11 @@ class Perguntas extends Component {
       totalOfAds: 0,
       isLoading: true,
       loadingAcc: true,
+      question: '',
+      answer: '',
+      acc_id: null,
+      user_id: null,
+      categoriesDataTableIs: 'closed',
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -23,13 +29,12 @@ class Perguntas extends Component {
     this.buildQuestsCard = this.buildQuestsCard.bind(this);
   }
 
-
-  handleClick(id) {
-    this.fetchQuestions(id);
-  }
-
   componentDidMount() {
     this.fetchAccounts()
+  }
+  
+  handleClick = id => {
+    this.fetchQuestions(id);
   }
 
   fetchAccounts = async () => {
@@ -54,7 +59,6 @@ class Perguntas extends Component {
             loadingAcc: false,
             totalOfAcc: accounts.length
           });
-          console.log(this.state)
         } else Swal.fire({ html: 'Você precisa ter ao menos uma conta cadastrada.', type: 'warning', showCloseButton: true });
       } else Swal.fire({ html: `<p>${res.data.message}</p>`, type: res.data.status, showCloseButton: true });
     } catch {
@@ -67,7 +71,7 @@ class Perguntas extends Component {
     }
   }
 
-  fetchQuestions(id) {
+  fetchQuestions = id => {
     const url = `/questions/advertisings?account_id=${id}`
     api.get(url).then(res => {
       Swal.fire({
@@ -94,17 +98,21 @@ class Perguntas extends Component {
     }).catch(error => Swal.fire({html:`<p>${error}</p>`, type: 'error', showCloseButton: true}));
   }
 
-  sendAnswer() {
-    this.url = `/questions/answer`;
-    api.post(this.url,
-        {
-          'account_id' : this.state.account_id.toString(),
-          'question_id' : this.state.question_id,
-          'text' : this.state.answer[this.state.question_id]
-        }
-    ).then(res => {
+  sendAnswer = () => {
+    const url = '/questions/answer';
+    const data = {
+      'account_id' : this.state.acc_id.toString(),
+      'question_id' : this.state.question,
+      'text' : this.state.answer
+    }
+    api.post(this.url, data).then(res => {
       if (res.status === 200){
-        Swal.fire({html:'<p>Pergunta respondida com sucesso!</p>', type: 'success', showConfirmButton: true});
+        Swal.fire({
+          html:'<p>Pergunta respondida com sucesso!</p>',
+          type: 'success',
+          showConfirmButton: true
+        });
+        
         setTimeout(function ressync(){
           this.fetchQuestions(this.state.account_id);
           this.fetchAccounts();
@@ -112,15 +120,24 @@ class Perguntas extends Component {
             ressync: false
           })
         }.bind(this), 2000);
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+
+      } else {
+        Swal.fire({
+          html:'<p>'+res.data.message+'</p>',
+          type: 'error',
+          showConfirmButton: true
+        });
       }
     }).catch(error => {
-      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+      Swal.fire({
+         html:'<p>'+ error.response.data.message+'</p>',
+         type: 'error',
+         showCloseButton: true
+        });
     });
   }
 
-  removeQuestion(question){
+  removeQuestion = question => {
     this.url = process.env.REACT_APP_API_URL + `/questions/` + question + '?account_id=' + this.state.account_id
     api.delete(this.url).then(res => {
       if (res.status === 200){
@@ -138,18 +155,24 @@ class Perguntas extends Component {
     });
   }
 
-  blockUserFromQuestions(customer_id = 0, item_id = 0, bids = false){
-    this.url = `/blacklist`;
-    if(bids === false){
-      api.post(this.url,
-          {
-            account_id:this.state.account_id,
-            user_id: customer_id.toString(),
-            item_id: item_id.toString(),
-         }
-      ).then(res => {
-        if (res.status === 200){
-          Swal.fire({html:'<p>Pergunta deletada com sucesso!</p>', type: 'success', showConfirmButton: true});
+  blockUser = (user_id, acc_id, madeABet) => {
+    if(madeABet === false &&
+       user_id !== undefined && user_id !== null &&
+       acc_id !== undefined && acc_id !== null){
+    
+      const url = '/blacklist';
+      const data = {
+        account_id:acc_id,
+        user_id: user_id.toString(),
+        acc_id: acc_id.toString(),
+      };
+      api.post(url, data).then(res => {
+        if (res.data.status === 'success'){
+          Swal.fire({
+            html:'<p>Pergunta deletada com sucesso!</p>',
+            type: 'success',
+            showConfirmButton: true
+          });
 
           setTimeout(function ressync(){
             this.fetchQuestions(this.state.account_id);
@@ -158,19 +181,24 @@ class Perguntas extends Component {
               ressync: false
             })
           }.bind(this), 2000);
-
-        }else{
-          Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+        } else {
+          Swal.fire({
+            html:'<p>'+res.data.message+'</p>',
+            type: 'error',
+            showConfirmButton: true
+          });
         }
       }).catch(error => {
-        Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+        Swal.fire({
+          html:'<p>'+ error.response.data.message+'</p>',
+          type: 'error',
+          showConfirmButton: true
+        });
       });
-
     }
-
   }
 
-  handleChange(event) {
+  handleChange = event => {
     var answer = {}
     answer[event.target.id] = event.target.value
     this.setState({
@@ -179,27 +207,38 @@ class Perguntas extends Component {
     });
   }
 
-  buildQuestsCard() {
+  handleCategories = () => {
+    if (this.state.categoriesDataTableIs === 'closed') {
+      this.setState({ categoriesDataTableIs: 'opened'});
+    } else this.setState({categoriesDataTableIs: 'closed'});
+    console.log(this.state.categoriesDataTableIs);
+  }
+
+  buildQuestsCard = () => {
     if(this.state.isLoading === false && this.state.loadingAcc === false) {
       if(this.state.totalOfAds >= 1) {
         this.state.advertisings.map(ad => {
           return(
-            <GroupItem
-              title={ad.name}
-              label={ad.question}
-              smallTitle={ad.coffe}
-              smallLabel={ad.tea}
-            />
+            <>
+              <GroupItem
+                title={ad.name}
+                label={ad.question}
+                smallTitle={ad.coffe}
+                smallLabel={ad.tea}
+              />
+              <button className="btn btn-danger" onClick={this.blockUser}>Bloquear</button>
+              <button className="btn btn-danger" onClick={this.removeQuestion}>Remover pergunta</button>
+            </>
           );
         });
       } else return false;
     }
   }
 
-  buildAccountMenu() {
+  buildAccountMenu = () => {
     return(
-      <>
-      {
+        <>
+        {
         this.state.isLoading ? <span>Loading ...</span> : (
           this.state.loadingAcc ? <span>Loading ...</span> : (
             this.state.accounts.length <= 3 ? (
@@ -230,7 +269,7 @@ class Perguntas extends Component {
           ):(<div>Você não possui contas sincronizadas.</div>)) 
           )
         )
-      }
+        }
       </>
     );
   }
@@ -238,19 +277,23 @@ class Perguntas extends Component {
   buildDataCard = () => {
     return (
       <>
-      <ul className="list-group col-md-4 mb-1">
-        <li className="list-group-item d-flex justify-content-between align-items-center">
-          Contas Sincronizadas
-          <span className="badge badge-primary badge-pill">{this.state.totalOfAcc}</span>
-        </li>
-        <li className="list-group-item d-flex justify-content-between align-items-center">
-          Perguntas não respondidas
-          <span className="badge badge-primary badge-pill">{this.state.totalOfAds}</span>
-        </li>
-        <li className="list-group-item d-flex justify-content-between align-items-center">
-          {this.buildAccountMenu()}
-        </li>
-      </ul>
+        <ul className="list-group col-md-4 mb-1">
+          <li className="list-group-item d-flex justify-content-between align-items-center">
+            Contas Sincronizadas
+            <span className="badge badge-primary badge-pill">{this.state.totalOfAcc}</span>
+          </li>
+          <li className="list-group-item d-flex justify-content-between align-items-center">
+            Perguntas não respondidas
+            <span className="badge badge-primary badge-pill">{this.state.totalOfAds}</span>
+          </li>
+          <li className="list-group-item d-flex justify-content-between align-items-center">
+            {this.buildAccountMenu()}
+            <button className="btn btn-secondary"
+              onClick={()=>this.handleCategories()}
+              >Categorias
+            </button>
+          </li>
+        </ul>
       </>
     );
   }
@@ -260,6 +303,7 @@ class Perguntas extends Component {
       <>
         {this.buildDataCard()}
         <hr/>
+        {this.state.categoriesDataTableIs === 'closed' ? <div /> : (<CategoriasDataTable />)}
         <GroupHolder className="col-md-8">
           {this.buildQuestsCard() ||
           <GroupItem 
