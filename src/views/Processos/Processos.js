@@ -78,7 +78,8 @@ class Processos extends Component {
           });
           this.setState({
             processos: this.state.listaProcessos,
-            isLoadingProcessos: false
+            isLoadingProcessos: false,
+            isLoadingAtualiza: false,
           });
         } else {
           Swal.fire({
@@ -136,6 +137,13 @@ class Processos extends Component {
     //return newText;
   }
 
+  atualizaProcessos() {
+    this.setState({
+      isLoadingProcessos: true,
+    });
+    this.fetchProcess();
+  }
+
   componentDidMount() {
     this.fetchProcess();
   }
@@ -144,9 +152,16 @@ class Processos extends Component {
     return (
       <div className="animated">
         <Card>
-          {/* <CardHeader className="">
-            <h5>Processos</h5>
-          </CardHeader> */}
+          <CardHeader>
+            <Row>
+              <Col md="8" />
+              <Col md="4" className="text-right">
+                  <Button color="primary" className="btn-sm" onClick={() => this.atualizaProcessos()}>
+                    <i className="fa fa-refresh"></i> Atualizar
+                  </Button>
+              </Col>
+            </Row>
+          </CardHeader>
           <CardBody>
             {!isLoadingProcessos ? (
               <div id="accordion">
