@@ -83,7 +83,8 @@ class MeusBloqueios extends Component {
             //this.fetchBlacklist(res.data.data[0].id);
 
             if (res.data.meta.total === 1) {
-              this.fetchBlacklist(res.data.data[0].id);
+              this.state.contas = res.data.data[0].id;
+              this.fetchBlacklist(res.data.data[0].id,1);
               this.state.arrayValue = [
                 { value: res.data.data[0].id, label: res.data.data[0].name }
               ];
@@ -179,6 +180,7 @@ class MeusBloqueios extends Component {
   }
 
   fetchBlacklist(accountId, pageNumber) {
+    console.log('entrou na fetch'+accountId);
     if (accountId === []) {
       this.setState({ blacklist: [] });
     } else {
@@ -262,7 +264,7 @@ class MeusBloqueios extends Component {
         <Card>
           <CardHeader>
             <Row>
-              <Col md="8" sm="6" xs="8">
+              <Col md="4" sm="6" xs="12">
                 {!isLoadingAccounts ? (
                   <Picky
                     value={this.state.arrayValue}
