@@ -21,7 +21,7 @@ const MinhasListasDeBloqueios = React.lazy(() => import('./views/Bloqueios/Minha
 //Categorias
 const Categorias = React.lazy(() => import('./views/Categorias'));
 //Perguntas
-const Perguntas = React.lazy(() => import('./views/Perguntas/Perguntas'));
+const Perguntas = React.lazy(() => import('./views/Perguntas'));
 //Perguntas
 const Processos = React.lazy(() => import('./views/Processos/Processos'));
 

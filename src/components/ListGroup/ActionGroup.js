@@ -1,6 +1,6 @@
 import React, { Component } from  'react';
 
-export class GroupItem extends Component {
+export class ActionLabel extends Component {
   render() {
     return(
       <>
@@ -17,7 +17,7 @@ export class GroupItem extends Component {
   }
 }
 
-export class GroupHolder extends Component {
+export class ActionGroup extends Component {
   render() {
     return(
       <>
