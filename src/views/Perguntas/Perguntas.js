@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import 'react-toastify/dist/ReactToastify.css';
 import { BtnGroup, Item, DropDown } from '../../components/buttons/ButtonGroup';
 import { GroupItem, GroupHolder } from '../../components/ListGroup/Main';
-import CategoriasDataTable from '../Categorias/CategoriasDataTable';
+import DataTable from '../../components/Categories/DataTable';
 
 class Perguntas extends Component {
   constructor(props) {
@@ -303,7 +303,7 @@ class Perguntas extends Component {
       <>
         {this.buildDataCard()}
         <hr/>
-        {this.state.categoriesDataTableIs === 'closed' ? <div /> : (<CategoriasDataTable />)}
+        {this.state.categoriesDataTableIs === 'closed' ? <div /> : (<DataTable />)}
         <GroupHolder className="col-md-8">
           {this.buildQuestsCard() ||
           <GroupItem 
