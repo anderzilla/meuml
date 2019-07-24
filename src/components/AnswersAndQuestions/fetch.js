@@ -13,8 +13,8 @@ export const fetchAccounts = async () => {
             id: acc.id,
             name: acc.name,
             key: acc.name + acc.id,
-            ads: acc.count_advertisings,
-            questions: acc.count_questions,
+            numberOfAds: acc.count_advertisings,
+            numberOfQuestions: acc.count_questions,
           });
         });
         return ({
@@ -48,8 +48,8 @@ export const fetchQuestions = id => {
         id: accountList[index].id,
         name: accountList[index].name,
         key: accountList[index].name + accountList[index].id,
-        ads: res.data.data.advertisings,
-        questions: res.data.data.total_questions,
+        numberOfAds: res.data.data.advertisings,
+        numberOfQuestions: res.data.data.total_questions,
       }
       return ({ 
         accounts: accountList,

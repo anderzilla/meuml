@@ -27,7 +27,8 @@ class SelectAccount extends Component {
         loadingAcc: false,
         accounts: res.accounts,
         totalOfAcc: res.accounts.length
-      })
+      });
+      console.log(this.state)
     } catch (error) {
       
     }
@@ -44,9 +45,10 @@ class SelectAccount extends Component {
                 {this.state.accounts.map(acc => {
                   return (
                     <button className="btn btn-primary btn-sm"
-                      onClick={()=>this.onClick().bind(acc.id)}
+                      onClick={this.props.onClick}
                       key={acc.key}
-                      >{acc.name} ({acc.questions})
+                      id={acc.id}
+                      >{acc.name} ({acc.numberOfQuestions})
                     </button>
                   );
                 })}
@@ -58,8 +60,8 @@ class SelectAccount extends Component {
                   return (
                     <button
                       className="dropdown dropdown-item"
-                      onClick={()=>this.onClick().bind(acc.id)}
-                      >{acc.name} ({acc.questions})
+                      onClick={this.props.onClick}
+                      >{acc.name} ({acc.numberOfQuestions})
                     </button>
                   );
                 })}
