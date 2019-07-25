@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchAccounts, fetchQuestions } from './fetch';
+import { fetchAccounts } from './fetch';
 import { BtnGroup, DropDown } from '../../components/buttons/ButtonGroup';
 
 class SelectAccount extends Component {

@@ -48,7 +48,7 @@ export const fetchQuestions = async id => {
     const url = `/questions/advertisings?account_id=${id}`
     const res = await api.get(url);
     if(res.data.status === 'success'){
-      return res.data.data.advertisings;
+      return {advertisings: res.data.data.advertisings};
     }
   }catch(error) {
     Swal.fire({
