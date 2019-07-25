@@ -41,8 +41,7 @@ export default class DataPanel extends Component {
     fetchQuestions(e.target.id).then(res => {
       let adsArray = [];
       let quests = this.state.unansweredQuestions;
-
-      res.forEach(ad => {
+      res.advertisings.forEach(ad => {
         let advertising = ad.title;
         let quantityAvailable = ad.quantity_available;
         let price = ad.price;
@@ -52,14 +51,12 @@ export default class DataPanel extends Component {
         adsArray.push({advertising, quantityAvailable, price, thumbnail, expirationDate, questions});
         ad.questions.map(a => {quests.push(a)});
       });
-
       this.setState({
         advertisings: adsArray,
         unansweredQuestions: quests
       });
     });
   }
-
   handleChange = e => {
     if(e.target.value === 'opened') this.setState({ categoriesDataTableIs: 'opened' })
     else this.setState({ categoriesDataTableIs: 'closed' });
