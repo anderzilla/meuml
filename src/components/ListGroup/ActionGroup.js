@@ -18,10 +18,11 @@ export class ActionLabel extends Component {
   sendAnswer = () => {
     const url = '/questions/answer';
     const data = {
-      'account_id' : this.state.accId.toString(),
-      'question_id' : this.state.questionId,
-      'text' : this.state.answer
+      account_id: this.state.accId.toString(),
+      question_id: this.state.questionId.toString(),
+      text: this.state.answer.toString()
     }
+
     api.post(url, data).then(res => {
       console.log(res);
     }).catch(error => {
@@ -59,8 +60,8 @@ export class ActionLabel extends Component {
       const url = '/blacklist';
       const data = {
         account_id:acc_id,
-        user_id: user_id.toString(),
-        acc_id: acc_id.toString(),
+        user_id: user_id,
+        acc_id: acc_id,
       };
       api.post(url, data).then(res => {
         if (res.data.status === 'success'){

@@ -56,6 +56,7 @@ export default class DataPanel extends Component {
         unansweredQuestions: quests
       });
     });
+    this.setState({ accId: e.target.id });
   }
 
   render() {
@@ -80,7 +81,7 @@ export default class DataPanel extends Component {
                   smallTitle={quest.from.first_name}
                   label={quest.text}
                   smallLabel={quest.date_created}
-                  accId={quest.seller_id}
+                  accId={this.state.accId}
                   questionId={quest.id}
                 />
             </ActionGroup>
