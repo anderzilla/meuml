@@ -74,7 +74,7 @@ export default class DataPanel extends Component {
         {this.state.unansweredQuestions.length === 0 ? (<div />) : (
           this.state.unansweredQuestions.map(quest => {
             return(
-              <ActionGroup className="col-md-">
+              <ActionGroup className="col-md-6">
                 <ActionLabel
                   title={quest.from.email}
                   smallTitle={quest.from.first_name}
@@ -87,7 +87,7 @@ export default class DataPanel extends Component {
             );
           })
         )}
-        {/* <button onClick={()=> console.log(this.state)}>Console Log</button> */}
+        <button onClick={()=> console.log(this.state)}>Console Log</button>
       </>
     );
   }

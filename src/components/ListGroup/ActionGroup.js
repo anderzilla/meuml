@@ -23,28 +23,7 @@ export class ActionLabel extends Component {
       'text' : this.state.answer
     }
     api.post(url, data).then(res => {
-      if (res.status === 200){
-        Swal.fire({
-          html:'<p>Pergunta respondida com sucesso!</p>',
-          type: 'success',
-          showConfirmButton: true
-        });
-        
-        setTimeout(function ressync(){
-          this.fetchQuestions(this.state.account_id);
-          this.fetchAccounts();
-          this.setState({
-            ressync: false
-          })
-        }.bind(this), 2000);
-
-      } else {
-        Swal.fire({
-          html:'<p>'+res.data.message+'</p>',
-          type: 'error',
-          showConfirmButton: true
-        });
-      }
+      console.log(res);
     }).catch(error => {
       Swal.fire({
          html:'<p>'+ error.response.data.message+'</p>',
@@ -53,7 +32,67 @@ export class ActionLabel extends Component {
         });
     });
   }
+  
+  removeQuestion = question => {
+    this.url = process.env.REACT_APP_API_URL + `/questions/` + question + '?account_id=' + this.state.account_id
+    api.delete(this.url).then(res => {
+      if (res.status === 200){
+        Swal.fire({html:'<p>Pergunta deletada com sucesso!</p>', type: 'success', showConfirmButton: true});
+        this.setState({ressync: true});
+        setTimeout(function ressync(){
+          this.fetchQuestions(this.state.account_id);
+          this.fetchAccounts()
+        }.bind(this), 2000);
+      }else{
+        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
+      }
+    }).catch(error => {
+      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
+    });
+  }
 
+  blockUser = (user_id, acc_id, madeABet) => {
+    if(madeABet === false &&
+       user_id !== undefined && user_id !== null &&
+       acc_id !== undefined && acc_id !== null){
+    
+      const url = '/blacklist';
+      const data = {
+        account_id:acc_id,
+        user_id: user_id.toString(),
+        acc_id: acc_id.toString(),
+      };
+      api.post(url, data).then(res => {
+        if (res.data.status === 'success'){
+          Swal.fire({
+            html:'<p>Pergunta deletada com sucesso!</p>',
+            type: 'success',
+            showConfirmButton: true
+          });
+
+          setTimeout(function ressync(){
+            this.fetchQuestions(this.state.account_id);
+            this.fetchAccounts();
+            this.setState({
+              ressync: false
+            })
+          }.bind(this), 2000);
+        } else {
+          Swal.fire({
+            html:'<p>'+res.data.message+'</p>',
+            type: 'error',
+            showConfirmButton: true
+          });
+        }
+      }).catch(error => {
+        Swal.fire({
+          html:'<p>'+ error.response.data.message+'</p>',
+          type: 'error',
+          showConfirmButton: true
+        });
+      });
+    }
+  }
   handleClick = e => {
     if(e.target.id === 'answer') {
       Swal.fire({
@@ -72,7 +111,6 @@ export class ActionLabel extends Component {
             answer: res.value
           });
           this.sendAnswer();
-          console.log(this.state)
         };
       });
     }
