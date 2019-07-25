@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SelectAccount from './SelectAccount';
-import DataTable from '../Categories/DataTable';
+import CategoriesBtn from '../Categories/CategoriesBtn';
 import { InfoGroup, InfoLabel } from '../ListGroup/InfoGroup';
 import { fetchQuestions, fetchAccounts } from './fetch';
 import Swal from 'sweetalert2';
@@ -48,12 +48,6 @@ export default class DataPanel extends Component {
     })
   }
 
-  handleCategories = () => {
-    if (this.state.categoriesDataTableIs === 'closed') {
-      this.setState({ categoriesDataTableIs: 'opened'});
-    } else this.setState({categoriesDataTableIs: 'closed'});
-  }
-
   handleClick = async e => {
     try {
       const res = await fetchQuestions(e.target.id);
@@ -74,6 +68,11 @@ export default class DataPanel extends Component {
     };
   }
 
+  handleChange = e => {
+    if(e.target.value === 'opened') this.setState({ categoriesDataTableIs: 'opened' })
+    else this.setState({ categoriesDataTableIs: 'closed' });
+  }
+
   render() {
     return (
       <>
@@ -83,14 +82,10 @@ export default class DataPanel extends Component {
           <InfoLabel span={this.state.totalOfQuestions}>Perguntas não respondidas</InfoLabel>
           <InfoLabel span="">
             <SelectAccount onClick={this.handleClick} accounts={this.state.accounts}/>
-            <button className="btn btn-secondary btn-sm"
-              onClick={()=>this.handleCategories()}
-              >Categorias
-            </button>
+            <p className="text-right"><CategoriesBtn/></p>
           </InfoLabel>
         </InfoGroup>
         <hr />
-        {this.state.categoriesDataTableIs === 'closed' ? <div /> : (<DataTable />)}
       </>
     );
   }

@@ -4,7 +4,7 @@ import api from '../../services/api';
 import Swal from "sweetalert2";
 import 'react-toastify/dist/ReactToastify.css';
 
-import DataPanel from '../../components/AnswersAndQuestions/DataPanel'
+import DataPanel from '../../components/QuestionsAndAnswers/DataPanel'
 
 class Perguntas extends Component {
   constructor(props) {
