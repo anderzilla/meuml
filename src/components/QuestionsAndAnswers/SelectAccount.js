@@ -28,7 +28,6 @@ class SelectAccount extends Component {
         accounts: res.accounts,
         totalOfAcc: res.accounts.length
       });
-      console.log(this.state)
     } catch (error) {
       
     }
@@ -48,7 +47,7 @@ class SelectAccount extends Component {
                       onClick={this.props.onClick}
                       key={acc.key}
                       id={acc.id}
-                      >{acc.name} ({acc.numberOfQuestions})
+                      >{acc.name} ({acc.numberOfQuests})
                     </button>
                   );
                 })}

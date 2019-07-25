@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SelectAccount from './SelectAccount';
 import CategoriesBtn from '../Categories/CategoriesBtn';
 import { InfoGroup, InfoLabel } from '../ListGroup/InfoGroup';
+import { ActionGroup, ActionLabel } from '../ListGroup/ActionGroup';
 import { fetchQuestions, fetchAccounts } from './fetch';
 import Swal from 'sweetalert2';
 
@@ -14,9 +15,9 @@ export default class DataPanel extends Component {
       accounts: [],
       advertisings: [],
       unansweredQuestions: [],
-      totalOfQuestions: 0,
-      totalOfAds: 0,
-      totalOfAcc: 0,
+      numberOfQuests: 0,
+      numberOfAds: 0,
+      numberOfAcc: 0,
     }
 
     this.handleClick = this.handleClick.bind(this);
@@ -27,45 +28,36 @@ export default class DataPanel extends Component {
 
   fetchData = () => {
     fetchAccounts().then(res => {
-      console.log(res)
       this.setState({
         accounts: res.accounts,
-        totalOfAcc: res.totalOfAcc
+        numberOfAcc: res.numberOfAcc,
+        numberOfAds: res.numberOfAds,
+        numberOfQuests: res.numberOfQuests
       });
-
-      res.accounts.map(acc => {
-        if(acc.numberOfAds > 0 && acc.numberOfAds!== undefined) {
-          let counter = this.state.totalOfAds;
-          this.setState({totalOfAds: counter + acc.numberOfAds})
-        }
-        if(acc.numberOfQuestions > 0 && acc.numberOfQuestions !== undefined) {
-          let counter = this.state.totalOfQuestions;
-          this.setState({ totalOfQuestions: counter + acc.numberOfQuestions})
-        }
-      })
-
-      console.log(this.state)
-    })
+    });
   }
 
-  handleClick = async e => {
-    try {
-      const res = await fetchQuestions(e.target.id);
-      if(res.data.status === 'success') {
-        this.setState({
-          accounts: res.data.accounts,
-          advertisings: res.data.advertisings,
-          totalOfAds: res.data.totalOfAds
-        });
-        Swal.fire({
-          html:`<p>${res.data.message}</p>`,
-          type: res.data.status,
-          showCloseButton: true
-        });
-      };
-    }catch{
-      // being handled inside fetchQuestions();
-    };
+  handleClick = e => {
+    fetchQuestions(e.target.id).then(res => {
+      let adsArray = [];
+      let quests = this.state.unansweredQuestions;
+
+      res.forEach(ad => {
+        let advertising = ad.title;
+        let quantityAvailable = ad.quantity_available;
+        let price = ad.price;
+        let thumbnail = ad.thumbnail;
+        let expirationDate = ad.expires_at;
+        let questions = ad.questions;
+        adsArray.push({advertising, quantityAvailable, price, thumbnail, expirationDate, questions});
+        ad.questions.map(a => {quests.push(a)});
+      });
+
+      this.setState({
+        advertisings: adsArray,
+        unansweredQuestions: quests
+      });
+    });
   }
 
   handleChange = e => {
@@ -77,15 +69,29 @@ export default class DataPanel extends Component {
     return (
       <>
         <InfoGroup className="col-md-6">
-          <InfoLabel span={this.state.totalOfAcc}>Contas Sincronizadas</InfoLabel>
-          <InfoLabel span={this.state.totalOfAds}>Anúncios encontrados</InfoLabel>
-          <InfoLabel span={this.state.totalOfQuestions}>Perguntas não respondidas</InfoLabel>
+          <InfoLabel span={this.state.numberOfAcc}>Contas Sincronizadas</InfoLabel>
+          <InfoLabel span={this.state.numberOfAds}>Anúncios encontrados</InfoLabel>
+          <InfoLabel span={this.state.numberOfQuests}>Perguntas não respondidas</InfoLabel>
           <InfoLabel span="">
             <SelectAccount onClick={this.handleClick} accounts={this.state.accounts}/>
             <p className="text-right"><CategoriesBtn/></p>
           </InfoLabel>
         </InfoGroup>
         <hr />
+        {this.state.unansweredQuestions.length === 0 ? (<div />) : (
+          this.state.unansweredQuestions.map(quest => {
+            return(
+              <ActionGroup className="col-md-6">
+                <ActionLabel
+                  title={quest.from.email}
+                  smallTitle={quest.from.first_name}
+                  label={quest.text}
+                  smallLabel={quest.date_created}
+                />
+            </ActionGroup>
+            );
+          })
+        )}
       </>
     );
   }

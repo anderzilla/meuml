@@ -6,6 +6,10 @@ export const fetchAccounts = async () => {
     const url = `/accounts?extra_fields=unanswered_questions`;
     const res = await api.get(url);
     let accounts = [];
+    let numberOfAds = 0;
+    let numberOfAcc = 0;
+    let numberOfQuests = 0;
+
     if(res.data.status === 'success') {
       if(res.data.data.length > 0) {
         await res.data.data.forEach(acc => {
@@ -14,12 +18,18 @@ export const fetchAccounts = async () => {
             name: acc.name,
             key: acc.name + acc.id,
             numberOfAds: acc.count_advertisings,
-            numberOfQuestions: acc.count_questions,
+            numberOfQuests: acc.count_questions,
           });
+          numberOfAcc = accounts.length;
+          numberOfAds += acc.count_advertisings;
+          numberOfQuests += acc.count_questions;
         });
+
         return ({
-          accounts: accounts,
-          totalOfAcc: accounts.length
+          accounts,
+          numberOfAcc,
+          numberOfAds,
+          numberOfQuests
         });
       } else Swal.fire({ html: 'Você precisa ter ao menos uma conta cadastrada.', type: 'warning', showCloseButton: true });
     } else Swal.fire({ html: `<p>${res.data.message}</p>`, type: res.data.status, showCloseButton: true });
@@ -33,29 +43,18 @@ export const fetchAccounts = async () => {
   }
 }
 
-export const fetchQuestions = id => {
-  const url = `/questions/advertisings?account_id=${id}`
-  api.get(url).then(res => {
-    Swal.fire({
-      html:'<p>'+res.data.message+'</p>',
-      type: res.data.status,
-      showConfirmButton: true
-    });
-    if (res.data.status === 'success'){
-      let accountList = this.state.accounts;
-      let index = accountList.map((a, i) => {if(a.id === id) return i});
-      accountList[index] = {
-        id: accountList[index].id,
-        name: accountList[index].name,
-        key: accountList[index].name + accountList[index].id,
-        numberOfAds: res.data.data.advertisings,
-        numberOfQuestions: res.data.data.total_questions,
-      }
-      return ({ 
-        accounts: accountList,
-        advertisings: accountList[index].ads,
-        totalOfAds: accountList[index].ads.length
-      });
+export const fetchQuestions = async id => {
+  try{
+    const url = `/questions/advertisings?account_id=${id}`
+    const res = await api.get(url);
+    if(res.data.status === 'success'){
+      return res.data.data.advertisings;
     }
-  }).catch(error => Swal.fire({html:`<p>${error}</p>`, type: 'error', showCloseButton: true}));
+  }catch(error) {
+    Swal.fire({
+      html:`<p>${error}</p>`,
+      type: 'error',
+      showCloseButton: true
+    });
+  }
 }
