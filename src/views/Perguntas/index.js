@@ -26,46 +26,6 @@ class Perguntas extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-
-  sendAnswer = () => {
-    const url = '/questions/answer';
-    const data = {
-      'account_id' : this.state.acc_id.toString(),
-      'question_id' : this.state.question,
-      'text' : this.state.answer
-    }
-    api.post(this.url, data).then(res => {
-      if (res.status === 200){
-        Swal.fire({
-          html:'<p>Pergunta respondida com sucesso!</p>',
-          type: 'success',
-          showConfirmButton: true
-        });
-        
-        setTimeout(function ressync(){
-          this.fetchQuestions(this.state.account_id);
-          this.fetchAccounts();
-          this.setState({
-            ressync: false
-          })
-        }.bind(this), 2000);
-
-      } else {
-        Swal.fire({
-          html:'<p>'+res.data.message+'</p>',
-          type: 'error',
-          showConfirmButton: true
-        });
-      }
-    }).catch(error => {
-      Swal.fire({
-         html:'<p>'+ error.response.data.message+'</p>',
-         type: 'error',
-         showCloseButton: true
-        });
-    });
-  }
-
   removeQuestion = question => {
     this.url = process.env.REACT_APP_API_URL + `/questions/` + question + '?account_id=' + this.state.account_id
     api.delete(this.url).then(res => {

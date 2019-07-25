@@ -57,10 +57,6 @@ export default class DataPanel extends Component {
       });
     });
   }
-  handleChange = e => {
-    if(e.target.value === 'opened') this.setState({ categoriesDataTableIs: 'opened' })
-    else this.setState({ categoriesDataTableIs: 'closed' });
-  }
 
   render() {
     return (
@@ -78,17 +74,20 @@ export default class DataPanel extends Component {
         {this.state.unansweredQuestions.length === 0 ? (<div />) : (
           this.state.unansweredQuestions.map(quest => {
             return(
-              <ActionGroup className="col-md-6">
+              <ActionGroup className="col-md-">
                 <ActionLabel
                   title={quest.from.email}
                   smallTitle={quest.from.first_name}
                   label={quest.text}
                   smallLabel={quest.date_created}
+                  accId={quest.seller_id}
+                  questionId={quest.id}
                 />
             </ActionGroup>
             );
           })
         )}
+        {/* <button onClick={()=> console.log(this.state)}>Console Log</button> */}
       </>
     );
   }
