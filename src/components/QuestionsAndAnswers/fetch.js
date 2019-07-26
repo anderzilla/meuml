@@ -5,6 +5,7 @@ export const fetchAccounts = async () => {
   try {
     const url = `/accounts?extra_fields=unanswered_questions`;
     const res = await api.get(url);
+    await console.log(res)
     let accounts = [];
     let numberOfAds = 0;
     let numberOfAcc = 0;
@@ -38,7 +39,6 @@ export const fetchAccounts = async () => {
       type: 'error',
       showCloseButton: true
     });
-    this.props.history.push('/#/contas');
   }
 }
 

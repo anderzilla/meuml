@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import SelectAccount from './SelectAccount';
-import CategoriesBtn from '../Categories/CategoriesBtn';
-import { InfoGroup, InfoLabel } from '../ListGroup/InfoGroup';
-import { ActionGroup, ActionLabel } from '../ListGroup/ActionGroup';
-import { fetchQuestions, fetchAccounts } from './fetch';
-import Swal from 'sweetalert2';
+import SelectAccount from '../buttons/SelectAccount';
+import CategoriesBtn from '../../Categories/CategoriesBtn';
+import { InfoGroup, InfoLabel } from '../../ListGroup/InfoGroup';
+import { fetchQuestions, fetchAccounts } from '../fetch';
+import { Question } from '../Question';
 
 export default class DataPanel extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       categoriesDataTableIs: 'closed',
       accounts: [],
@@ -19,11 +17,11 @@ export default class DataPanel extends Component {
       numberOfAds: 0,
       numberOfAcc: 0,
     }
-
     this.handleClick = this.handleClick.bind(this);
   }
+
   componentDidMount() {
-    this.fetchData();
+    // this.fetchData();
   }
 
   fetchData = () => {
@@ -76,17 +74,16 @@ export default class DataPanel extends Component {
         {this.state.unansweredQuestions.length === 0 ? (<div />) : (
           this.state.unansweredQuestions.map(quest => {
             return(
-              <ActionGroup className="col-md-6">
-                <ActionLabel
-                  title={quest.from.email}
-                  smallTitle={quest.from.first_name}
-                  label={quest.text}
-                  smallLabel={quest.date_created}
-                  accId={this.state.accId}
-                  userId={quest.from.id}
-                  questionId={quest.id}
-                />
-            </ActionGroup>
+              <Question key={quest.from.id}
+                title={quest.from.email}
+                smallTitle={quest.from.first_name}
+                label={quest.text}
+                smallLabel={quest.date_created}
+                accId={this.state.accId}
+                userId={quest.from.id}
+                questionId={quest.id}
+              >
+              </Question>
             );
           })
         )}

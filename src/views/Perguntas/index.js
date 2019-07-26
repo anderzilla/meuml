@@ -1,5 +1,5 @@
 import React from 'react';
-import DataPanel from '../../components/QuestionsAndAnswers/DataPanel'
+import DataPanel from '../../components/QuestionsAndAnswers/DataPanel';
 
 const Perguntas = () => {
   return(

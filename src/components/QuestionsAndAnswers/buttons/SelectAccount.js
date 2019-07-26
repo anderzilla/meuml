@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { fetchAccounts } from './fetch';
-import { BtnGroup, DropDown } from '../../components/buttons/ButtonGroup';
+import { fetchAccounts } from '../fetch';
+import { BtnGroup, DropDown } from '../../buttons/ButtonGroup';
 
 class SelectAccount extends Component {
   constructor(props) {
@@ -19,18 +19,15 @@ class SelectAccount extends Component {
     this.updateAccounts();
   }
 
-  updateAccounts = async () => {
-    try {
-      const res = await fetchAccounts();
+  updateAccounts = () => {
+    fetchAccounts().then(res=>{
       this.setState({
         isLoading: false,
         loadingAcc: false,
         accounts: res.accounts,
         totalOfAcc: res.accounts.length
       });
-    } catch (error) {
-      
-    }
+    }).catch(err=>{console.log(err)})
   }
 
   render() {
