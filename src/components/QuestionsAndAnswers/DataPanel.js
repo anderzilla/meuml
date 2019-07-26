@@ -38,6 +38,7 @@ export default class DataPanel extends Component {
   }
 
   handleClick = e => {
+    this.fetchData();
     fetchQuestions(e.target.id).then(res => {
       let adsArray = [];
       let quests = this.state.unansweredQuestions;
@@ -82,6 +83,7 @@ export default class DataPanel extends Component {
                   label={quest.text}
                   smallLabel={quest.date_created}
                   accId={this.state.accId}
+                  userId={quest.from.id}
                   questionId={quest.id}
                 />
             </ActionGroup>

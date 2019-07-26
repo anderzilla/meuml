@@ -24,76 +24,92 @@ export class ActionLabel extends Component {
     }
 
     api.post(url, data).then(res => {
-      console.log(res);
+      if(res.status === 200) {
+        Swal.fire({
+          html: `<p>${res.data.message}</p>`,
+          type: res.data.status,
+          showCloseButton: true
+        });
+        this.fetchQuestions(this.state.account_id);
+        this.fetchAccounts();
+      } else {
+        Swal.fire({
+          html: 'Ops, parece que algo deu errado. Tente novamente.',
+          type: 'warning',
+          showCloseButton: true
+        });
+      }
     }).catch(error => {
       Swal.fire({
-         html:'<p>'+ error.response.data.message+'</p>',
+         html:`<p>${error.response.data.message}</p>`,
          type: 'error',
          showCloseButton: true
         });
     });
   }
-  
-  removeQuestion = question => {
-    this.url = process.env.REACT_APP_API_URL + `/questions/` + question + '?account_id=' + this.state.account_id
-    api.delete(this.url).then(res => {
-      if (res.status === 200){
-        Swal.fire({html:'<p>Pergunta deletada com sucesso!</p>', type: 'success', showConfirmButton: true});
-        this.setState({ressync: true});
-        setTimeout(function ressync(){
-          this.fetchQuestions(this.state.account_id);
-          this.fetchAccounts()
-        }.bind(this), 2000);
-      }else{
-        Swal.fire({html:'<p>'+res.data.message+'</p>', type: 'error', showConfirmButton: true});
-      }
-    }).catch(error => {
-      Swal.fire({html:'<p>'+ error.response.data.message+'</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
-  }
 
-  blockUser = (user_id, acc_id, madeABet) => {
-    if(madeABet === false &&
-       user_id !== undefined && user_id !== null &&
-       acc_id !== undefined && acc_id !== null){
-    
+  blockUser = (user_id, acc_id) => {
+    if(user_id !== undefined && user_id !== null &&
+      acc_id !== undefined && acc_id !== null){
       const url = '/blacklist';
       const data = {
-        account_id:acc_id,
-        user_id: user_id,
-        acc_id: acc_id,
+        account_id: acc_id.toString(),
+        user_id: user_id.toString(),
+        acc_id: acc_id.toString()
       };
       api.post(url, data).then(res => {
-        if (res.data.status === 'success'){
+        if (res.status === 200){
           Swal.fire({
-            html:'<p>Pergunta deletada com sucesso!</p>',
-            type: 'success',
+            html:`<p>${res.data.message}</p>`,
+            type: res.data.status,
             showConfirmButton: true
           });
-
-          setTimeout(function ressync(){
-            this.fetchQuestions(this.state.account_id);
-            this.fetchAccounts();
-            this.setState({
-              ressync: false
-            })
-          }.bind(this), 2000);
+          this.fetchQuestions(this.state.account_id);
+          this.fetchAccounts();
         } else {
           Swal.fire({
-            html:'<p>'+res.data.message+'</p>',
-            type: 'error',
-            showConfirmButton: true
+            html:`<p>${res.data.message}</p>`,
+            type: res.data.status,
+            showCloseButton: true
           });
         }
       }).catch(error => {
         Swal.fire({
-          html:'<p>'+ error.response.data.message+'</p>',
+          html:`<p>${error}</p>`,
           type: 'error',
-          showConfirmButton: true
+          showCloseButton: true
         });
       });
     }
   }
+  
+  removeQuestion = (question, account) => {
+    const url = `/questions/${question}?account_id=${account}`;
+    api.delete(url).then(res => {
+      if (res.data.status === 'success'){
+        Swal.fire({
+          html:`<p>${res.data.message}</p>`,
+          type: res.data.status,
+          showCloseButton: true
+        });
+        this.fetchQuestions(this.state.account_id);
+        this.fetchAccounts();
+      }else{
+        Swal.fire({
+          html:`<p>${res.data.message}</p>`,
+          type: 'error',
+          showCloseButton: true
+        });
+      }
+    }).catch(error => {
+      Swal.fire({
+        html:`<p>${error}</p>`,
+        type: 'error',
+        showCloseButton: true
+      });
+    });
+  }
+
   handleClick = e => {
     if(e.target.id === 'answer') {
       Swal.fire({
@@ -126,8 +142,13 @@ export class ActionLabel extends Component {
             <small className="ml-6">{this.props.smallTitle}</small>
           </div>
           <div className="float-right">
+            <button className="btn btn-danger btn-sm ml-1"
+              onClick={()=>this.removeQuestion(this.props.questionId, this.props.accId)}
+              id="block"
+              >Deletar Pergunta
+            </button>
             <button className="btn btn-danger btn-sm"
-              onClick={this.handleClick}
+              onClick={()=>this.blockUser(this.props.userId, this.props.accId)}
               id="block"
               >Bloquear Usuário
             </button>

@@ -9,7 +9,6 @@ export const fetchAccounts = async () => {
     let numberOfAds = 0;
     let numberOfAcc = 0;
     let numberOfQuests = 0;
-
     if(res.data.status === 'success') {
       if(res.data.data.length > 0) {
         await res.data.data.forEach(acc => {
