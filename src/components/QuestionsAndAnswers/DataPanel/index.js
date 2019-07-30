@@ -58,6 +58,16 @@ export default class DataPanel extends Component {
     this.setState({ accId: e.target.id });
   }
 
+  formatDate = date => {
+    for(let i = 0; i < 10; i ++) {
+      let yy = date[0] + date[1] + date[2] + date[3];
+      let mm = date[5] + date[6];
+      let dd = date[8] + date[9];
+
+      return `${dd}/${mm}/${yy}`;
+    }
+  }
+
   render() {
     return (
       <>
@@ -78,7 +88,7 @@ export default class DataPanel extends Component {
                 title={quest.from.email}
                 smallTitle={quest.from.first_name}
                 label={quest.text}
-                smallLabel={quest.date_created}
+                smallLabel={this.formatDate(quest.date_created)}
                 accId={this.state.accId}
                 userId={quest.from.id}
                 questionId={quest.id}
