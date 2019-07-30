@@ -82,6 +82,7 @@ export default class DataPanel extends Component {
                 accId={this.state.accId}
                 userId={quest.from.id}
                 questionId={quest.id}
+                onClick={()=>this.handleClick}
               >
               </Question>
             );

@@ -86,6 +86,7 @@ export class Question extends Component {
                 question={this.props.questionId} 
                 account={this.props.accId}
                 id="remove"
+                onClick={()=>this.props.onClick()}
               />
             </ActionLabel>
         </ActionGroup>

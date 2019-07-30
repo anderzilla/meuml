@@ -6,7 +6,10 @@ import { fetchAccounts, fetchQuestions } from '../fetch';
 const Delete = props => {
   return(
     <>
-      <button onClick={()=>removeQuestion(props.question, props.account)} className="btn btn-danger btn-sm">Remover</button>
+      <button onClick={()=>{
+        removeQuestion(props.question, props.account)
+        props.onClick();
+      }} className="btn btn-danger btn-sm">Remover</button>
     </>
   );
 }
