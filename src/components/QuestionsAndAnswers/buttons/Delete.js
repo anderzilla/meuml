@@ -13,29 +13,42 @@ const Delete = props => {
 
 const removeQuestion = (question, account) => {
   const url = `/questions/${question}?account_id=${account}`;
-  api.delete(url).then(res => {
-    if (res.data.status === 'success'){
-      Swal.fire({
-        html:`<p>${res.data.message}</p>`,
-        type: res.data.status,
-        showCloseButton: true
+  Swal.fire({
+    html: `<p>Você tem certeza que deseja excluir esta pergunta?`,
+    type: 'warning',
+    showConfirmButton: true,
+    confirmButtonText: 'Sim, tenho certeza!',
+    showCancelButton: true,
+    cancelButtonText: 'Não, espera!'
+  }).then(res => {
+    if(res.value === true) {
+      api.delete(url).then(res => {
+        if (res.data.status === 'success'){
+          Swal.fire({
+            html:`<p>${res.data.message}</p>`,
+            type: res.data.status,
+            showCloseButton: true
+          });
+          sync(account);
+        }else{
+          Swal.fire({
+            html:`<p>${res.data.message}</p>`,
+            type: 'error',
+            showCloseButton: true
+          });
+        }
+      }).catch(error => {
+        Swal.fire({
+          html:`<p>${error}</p>`,
+          type: 'error',
+          showCloseButton: true
+        });
+        sync(account);
       });
-      sync(account);
-    }else{
-      Swal.fire({
-        html:`<p>${res.data.message}</p>`,
-        type: 'error',
-        showCloseButton: true
-      });
-    }
-  }).catch(error => {
-    Swal.fire({
-      html:`<p>${error}</p>`,
-      type: 'error',
-      showCloseButton: true
-    });
-    sync(account);
-  });
+    };
+  })
+    .catch(err => console.log(err))
+  
 }
 
 const sync = async (id) => {
