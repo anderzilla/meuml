@@ -21,7 +21,7 @@ export default class DataPanel extends Component {
   }
 
   componentDidMount() {
-    // this.fetchData();
+    this.fetchData();
   }
 
   fetchData = () => {
@@ -87,7 +87,6 @@ export default class DataPanel extends Component {
             );
           })
         )}
-        <button onClick={()=> console.log(this.state)}>Console Log</button>
       </>
     );
   }

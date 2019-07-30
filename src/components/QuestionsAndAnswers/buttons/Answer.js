@@ -44,7 +44,7 @@ const sendAnswer = (accId) => (questionId) => (answer) => {
           type: 'success',
           showCloseButton: true
         });
-        sync();
+        sync(accId);
       } else {
         Swal.fire({
           html: 'Ops, parece que algo deu errado. Tente novamente.',
@@ -62,11 +62,17 @@ const sendAnswer = (accId) => (questionId) => (answer) => {
     });
   }
 
-const sync = () => {
-  fetchAccounts().then(()=>{
-    fetchQuestions();
-  });
-
+const sync = async (id) => {
+  try {
+    await fetchAccounts();
+    await fetchQuestions(id);
+  } catch (error) {
+    Swal.fire({
+      html: `<p>${error}</p>`,
+      type: 'error',
+      showCloseButton: true
+    })
+  }
 }
 
 export default Answer;

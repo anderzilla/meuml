@@ -21,12 +21,12 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { getToken } from "../../../auth";
-import BootstrapTable from "react-bootstrap-table-next";
+import {BootstrapTable} from "react-bootstrap-table-next";
 import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone
 } from "react-bootstrap-table2-paginator";
-import ToolkitProvider from "react-bootstrap-table2-toolkit";
+// import ToolkitProvider from "react-bootstrap-table2-toolkit";
 
 class MinhasListasDeBloqueio extends Component {
   constructor(props) {

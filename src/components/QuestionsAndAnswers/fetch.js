@@ -5,14 +5,13 @@ export const fetchAccounts = async () => {
   try {
     const url = `/accounts?extra_fields=unanswered_questions`;
     const res = await api.get(url);
-    await console.log(res)
     let accounts = [];
     let numberOfAds = 0;
     let numberOfAcc = 0;
     let numberOfQuests = 0;
     if(res.data.status === 'success') {
       if(res.data.data.length > 0) {
-        await res.data.data.forEach(acc => {
+        res.data.data.forEach(acc => {
           accounts.push({
             id: acc.id,
             name: acc.name,
