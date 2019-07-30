@@ -1,10 +1,9 @@
 import React, { Component } from  'react';
-import api from '../../../services/api';
 import { fetchAccounts, fetchQuestions } from '../fetch';
 import { ActionGroup, ActionLabel } from '../../ListGroup/ActionGroup';
 import Answer from '../buttons/Answer';
 import Delete from '../buttons/Delete';
-import Swal from 'sweetalert2';
+import BlockQuestUser from '../buttons/Block';
 
 export class Question extends Component {
   constructor(props) {
@@ -25,42 +24,6 @@ export class Question extends Component {
     }).catch(err => {
       this.setState({ sync: false, error: err });
     });
-  }
-
-  blockUser = (user_id, acc_id) => {
-    if(user_id !== undefined && user_id !== null &&
-      acc_id !== undefined && acc_id !== null){
-      const url = '/blacklist';
-      const data = {
-        account_id: acc_id.toString(),
-        user_id: user_id.toString(),
-        acc_id: acc_id.toString()
-      };
-      api.post(url, data).then(res => {
-        if (res.data.status === 'success'){
-          Swal.fire({
-            html:`<p>Resposta enviada!</p>`,
-            type: 'success',
-            showCloseButton: true
-          }).then(()=>{
-            this.resync();
-          });
-        } else {
-          Swal.fire({
-            html:`<p>${res.data.message}</p>`,
-            type: res.data.status,
-            showCloseButton: true
-          });
-        }
-      }).catch(error => {
-        Swal.fire({
-          html:`<p>${error}</p>`,
-          type: 'error',
-          showCloseButton: true
-        });
-        this.resync();
-      });
-    }
   }
 
   render() {
@@ -87,6 +50,10 @@ export class Question extends Component {
                 account={this.props.accId}
                 id="remove"
                 onClick={()=>this.props.onClick()}
+              />
+              <BlockQuestUser 
+                userId={this.props.userId}
+                accId={this.props.accId}
               />
             </ActionLabel>
         </ActionGroup>
