@@ -77,7 +77,7 @@ export default class DataPanel extends Component {
           <InfoLabel span={this.state.numberOfAds}>Anúncios encontrados</InfoLabel>
           <InfoLabel span={this.state.numberOfQuests}>Perguntas não respondidas</InfoLabel>
           <InfoLabel span="">
-            <SelectAccount onClick={this.handleClick} accounts={this.state.accounts}/>
+            <SelectAccount onClick={this.handleClick}/>
             <p className="text-right"><CategoriesBtn/></p>
           </InfoLabel>
         </InfoGroup>

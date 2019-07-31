@@ -1,4 +1,4 @@
-export default {
+export const data = {
   rows: [
     {
       'idusuario': '100',
