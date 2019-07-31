@@ -5,12 +5,12 @@ import { fetchAccounts, fetchQuestions } from '../fetch';
 
 const Delete = props => {
   return(
-    <>
-      <button onClick={()=>{
-        removeQuestion(props.question, props.account)
-        props.onClick();
-      }} className="btn btn-danger btn-sm">Remover</button>
-    </>
+    <button onClick={()=>{
+      removeQuestion(props.question, props.account)
+      props.onClick();
+    }} className="btn btn-danger btn-sm ml-1 mb-1 mt-1 mr-1"
+      >Remover
+    </button>
   );
 }
 
@@ -51,7 +51,7 @@ const removeQuestion = (question, account) => {
     };
   })
     .catch(err => console.log(err))
-  
+
 }
 
 const sync = async (id) => {
