@@ -6,7 +6,7 @@ import { fetchAccounts, fetchQuestions } from '../fetch';
 const Block = props => {
   return(
     <>
-      <button className="btn btn-warning btn-sm"
+      <button className="btn btn-danger btn-sm btn-sm ml-1 mb-1 mt-1 mr-1"
         userId={props.userId}
         accId={props.accId}
         onClick={()=> handleClick(props)}
@@ -35,25 +35,25 @@ const blockQuestUser = (userId) => (accId) => {
   if (userId !== undefined && userId !== null &&
       accId !== undefined && accId !== null){
     const url = '/blacklist';
-    const headers = { Authorization: "Bearer " + localStorage.getItem('@MeuML-Token') }
-    const data = {
-      bids: true,
-      questions: true,
-      motive_id: 1,
-      motive_description: "",
-      account_id: accId.toString(),
-      customer_id: userId.toString()
-    };
-    api.post(url, data, headers).then(res => {
+    const data = [{
+                	"account_id": accId,
+                	"bids": true,
+                	"customer_id": `${userId}`,
+                	"motive_description": "",
+                	"motive_id": 1,
+                	"questions": true
+                }];
+    api.post(url, data).then(res => {
       if (res.data.status === 'success') {
         Swal.fire({
-          html: `<p>Resposta enviada!</p>`,
+          html: `<p>Usuário bloqueado!</p>`,
           type: 'success',
           showCloseButton: true
         }).then(() => {
           sync(accId);
         });
       } else {
+        console.log(res)
         Swal.fire({
           html: `<p>${res.data.message}</p>`,
           type: res.data.status,

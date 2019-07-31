@@ -7,7 +7,7 @@ const Answer = props => {
   return(
     <button
       onClick={()=>handleClick(props)}
-      className="btn btn-success btn-sm ml-1 mb-1 mt-1 mr-1"
+      className="btn btn-primary btn-sm ml-1 mb-1 mt-1 mr-1"
       >Responder
     </button>
   );

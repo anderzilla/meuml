@@ -8,7 +8,7 @@ const Delete = props => {
     <button onClick={()=>{
       removeQuestion(props.question, props.account)
       props.onClick();
-    }} className="btn btn-danger btn-sm ml-1 mb-1 mt-1 mr-1"
+    }} className="btn btn-secondary btn-sm ml-1 mb-1 mt-1 mr-1"
       >Remover
     </button>
   );

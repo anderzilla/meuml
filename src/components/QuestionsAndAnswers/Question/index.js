@@ -3,6 +3,7 @@ import { fetchAccounts, fetchQuestions } from '../fetch';
 import { ActionGroup, ActionLabel } from '../../ListGroup/ActionGroup';
 import Answer from '../buttons/Answer';
 import Delete from '../buttons/Delete';
+import Block from '../buttons/Block';
 
 export class Question extends Component {
   constructor(props) {
@@ -27,7 +28,7 @@ export class Question extends Component {
 
   render() {
     return(
-      <ActionGroup className="col-md-6">
+      <ActionGroup className="col-md-7">
         <ActionLabel key={this.props.key}
           title={this.props.title}
           smallTitle={this.props.smallTitle}
@@ -49,6 +50,10 @@ export class Question extends Component {
               account={this.props.accId}
               id="remove"
               onClick={()=>this.props.onClick()}
+            />
+            <Block
+              userId={this.props.userId}
+              accId={this.props.accId}
             />
           </div>
           </ActionLabel>

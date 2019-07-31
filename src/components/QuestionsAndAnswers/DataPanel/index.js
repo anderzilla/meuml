@@ -37,27 +37,28 @@ export default class DataPanel extends Component {
 
   handleClick = e => {
     this.fetchData();
-    fetchQuestions(e.target.id).then(res => {
-      let adsArray = [];
-      let quests = this.state.unansweredQuestions;
-      res.advertisings.forEach(ad => {
-        let advertising = ad.title;
-        let quantityAvailable = ad.quantity_available;
-        let price = ad.price;
-        let thumbnail = ad.thumbnail;
-        let expirationDate = ad.expires_at;
-        let questions = ad.questions;
-        adsArray.push({advertising, quantityAvailable, price, thumbnail, expirationDate, questions});
-        ad.questions.map(a => {quests.push(a)});
+    if(e !== undefined && e !== null) {
+      fetchQuestions(e.target.id).then(res => {
+        let adsArray = [];
+        let quests = this.state.unansweredQuestions;
+        res.advertisings.forEach(ad => {
+          let advertising = ad.title;
+          let quantityAvailable = ad.quantity_available;
+          let price = ad.price;
+          let thumbnail = ad.thumbnail;
+          let expirationDate = ad.expires_at;
+          let questions = ad.questions;
+          adsArray.push({advertising, quantityAvailable, price, thumbnail, expirationDate, questions});
+          ad.questions.map(a => {quests.push(a)});
+        });
+        this.setState({
+          advertisings: adsArray,
+          unansweredQuestions: quests
+        });
       });
-      this.setState({
-        advertisings: adsArray,
-        unansweredQuestions: quests
-      });
-    });
-    this.setState({ accId: e.target.id });
+      this.setState({ accId: e.target.id });
+    };
   }
-
   formatDate = date => {
     for(let i = 0; i < 10; i ++) {
       let yy = date[0] + date[1] + date[2] + date[3];

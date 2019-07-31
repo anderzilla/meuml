@@ -41,7 +41,10 @@ class SelectAccount extends Component {
                 {this.state.accounts.map(acc => {
                   return (
                     <button className="btn btn-primary btn-sm"
-                      onClick={this.props.onClick}
+                      onClick={()=>{
+                        this.updateAccounts()
+                        this.props.onClick()
+                      }}
                       key={acc.key}
                       id={acc.id}
                       >{acc.name} ({acc.numberOfQuests})
@@ -62,7 +65,7 @@ class SelectAccount extends Component {
                   );
                 })}
               </DropDown>
-          ):(<div>Você não possui contas sincronizadas.</div>)) 
+          ):(<div>Você não possui contas sincronizadas.</div>))
           )
         )
         }
