@@ -13,9 +13,8 @@ import Swal from "sweetalert2";
 
 import Pagination from "react-js-pagination";
 import ReactLoading from 'react-loading';
-// import Moment from 'moment';
 
-class CategoriasDataTable extends React.Component {
+class DataTable extends React.Component {
     constructor(props) {
         super(props);
 
@@ -30,7 +29,6 @@ class CategoriasDataTable extends React.Component {
             data: [],
             sizePerPage: 50,
             totalSize: 0,
-            sizePerPage: 50,
             page: '',
             filter: '',
             filtro: '',
@@ -293,4 +291,4 @@ class CategoriasDataTable extends React.Component {
     }
 }
 
-export default CategoriasDataTable;
+export default DataTable;
