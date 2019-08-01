@@ -1,136 +1,98 @@
-import React, { Component } from 'react';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Table,
-  Row,
-  Col,
-  Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from "reactstrap";
-import Pagination from "react-js-pagination";
-import { data } from './_data';
+import React, {Component} from 'react';
+import {Card, CardHeader, CardBody} from 'reactstrap';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import 'react-bootstrap-table/dist//react-bootstrap-table-all.min.css';
+import data from './_data';
 
-export default class UserTable extends Component {
+import api from '../../services/api';
+import {Item, BtnGroup, DropDown} from '../buttons/ButtonGroup';
+import { fetchAccounts, fetchBlackList } from './fetch';
+
+class DataTable extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      thead: ['id', 'conta', 'tipo', 'motivo', 'descricao'],
-      tbody: [],
-      total: 1,
-      activePage: 1,
-      sizePerPage: 10,
-      isLoading: true
+    this.table = data.rows;
+    this.options = {
+      sortIndicator: true,
+      hideSizePerPage: true,
+      paginationSize: 3,
+      hidePageListOnlyOnePage: true,
+      clearSearch: true,
+      alwaysShowAllBtns: false,
+      withFirstAndLast: false
     }
-
-    this.fetchData = this.fetchData.bind(this);
+    this.state = {
+      accounts: [],
+      numberOfAcc: 0,
+      account_id: null,
+    }
   }
 
   componentDidMount() {
-    this.fetchData();
-  }
-
-  fetchData() {
-    this.setState({
-      tbody: data,
-      isLoading: false
+    fetchAccounts().then(res => {
+      this.setState({
+        accounts: res.accounts,
+        numberOfAcc: res.numberOfAcc
+      });
+    fetchBlackList(this.state.accounts[0]);
     });
   }
 
-  unblockUser () {
-    return <button className="btn btn-success btn-sm ">Desbloquear</button>
+  defineAccount = e => {
+    if(e !== undefined && e !== null) {
+      console.log(e.target)
+      const id = e.target.id;
+      this.setState({ account_id: id });
+      fetchBlackList();
+    }
   }
 
-  headBuilder = () => {
-    if(this.state.thead !== undefined &&
-      this.state.thead !== null &&
-      this.state.thead !== '') {
-        return this.state.thead.map(col => {
-          return (
-            <th>{col}</th>
-          );
-        });
-      }
-      else return <div />
-  }
-
-  bodyBuilder = () => {
-    if(this.state.tbody !== undefined &&
-      this.state.tbody !== null &&
-      this.state.tbody !== '') {
-        return this.state.tbody.rows.map(user => {
-          return(
-            <tr key={user.idusuario}>
-              <td>{user.idusuario}</td>
-              <td>{user.conta}</td>
-              <td>{user.tipo}</td>
-              <td>{user.motivo}</td>
-              <td>{user.descricao}</td>
-              <td>{this.unblockUser(user.idusuario)}</td>
-            </tr>
-          );
+  accountBtnGroup () {
+    if(this.state.accounts.length <= 3) {
+      this.state.accounts.map(acc => {
+        return(
+          <button className="btn btn-secondary btn-sm"
+            id={acc.id}
+            >{acc.name}
+          </button>
+        );
       });
-      }
-      else return <div />
-  }
-
-  footerBuilder = () => {
-    return(
-      <Pagination
-        activePage={this.state.activePage}
-        itemsCountPerPage={this.state.sizePerPage}
-        totalItemsCount={this.state.total - 1}
-        pageRangeDisplayed={5}
-        onChange={this.handlePageChange}
-        itemClass="btn btn-md btn-outline-info"
-        activeClass="btn btn-md btn-info"
-        innerClass="btn-group"
-        activeLinkClass="text-white"
-      />
-    );
-  }
-
-  handlePageChange = () => {
-
+    } else {
+      this.state.accounts.map(acc => {
+        return(
+          <button className="dropdown-item"
+            id={acc.id}
+            >{acc.name}
+          </button>
+        );
+      });
+    }
   }
 
   render() {
-    return(
-      <div className="container-fluid">
-        {this.state.isLoading ? <p>Carregando ...</p> : (
-          <div className="animated fadeIn">
-            <div className="row">
-              <div className="col-lg-8">
-                <div className="card">
-                  <div className="card-header">
-                    <select>
-                      <option>Escolha uma conta</option>
-                    </select>
-                  </div>
-                  <div className="card-body">
-                    <table className="table table-responsive-sm" >
-                      <thead>
-                        <tr>{this.headBuilder()}</tr>
-                      </thead>
-                      <tbody>
-                        {this.bodyBuilder()}
-                      </tbody>
-                      <tfooter>
-                        {this.footerBuilder()}
-                      </tfooter>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+    return (
+      <div className="animated">
+        <Card>
+          <CardHeader>
+            <BtnGroup>
+            {this.accountBtnGroup()}
+            <button onClick={() => console.log(this.state)}>Console Log State</button>
+            </BtnGroup>
+          </CardHeader>
+          <CardBody>
+            <BootstrapTable data={this.table} version="4" striped hover pagination search options={this.options}>
+              <TableHeaderColumn dataField="idusuario" dataSort>id</TableHeaderColumn>
+              <TableHeaderColumn isKey dataField="conta">Conta</TableHeaderColumn>
+              <TableHeaderColumn dataField="tipo" dataSort>Tipo</TableHeaderColumn>
+              <TableHeaderColumn dataField="motivo" dataSort>Motivo</TableHeaderColumn>
+              <TableHeaderColumn dataField="descricao" dataSort>Descrição</TableHeaderColumn>
+              <TableHeaderColumn dataField="removeFromBlackList" dataSort>Desbloquear</TableHeaderColumn>
+            </BootstrapTable>
+          </CardBody>
+        </Card>
       </div>
     );
   }
 }
+
+export default DataTable;

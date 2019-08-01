@@ -1,11 +1,12 @@
-export const data = {
+export default {
   rows: [
     {
       'idusuario': '100',
       'conta': 'PJ',
       'tipo': 'Compras e Perguntas',
       'motivo': 'Cancelamento',
-      'descricao': ''
+      'descricao': '',
+      'removeFromBlackList': '100'
     },
     {
       'idusuario': '101',
