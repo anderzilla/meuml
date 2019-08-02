@@ -9,7 +9,7 @@ const Logout = React.lazy(() => import('./views/Autenticacao/Logout'));
 const Cadastro = React.lazy(() => import('./views/Autenticacao/Cadastro'));
 const RecuperarSenha = React.lazy(() => import('./views/Autenticacao/RecuperarSenha'));
 //Contas
-const ListaContas = React.lazy(() => import('./views/Contas/ListaContas'));
+const Contas = React.lazy(() => import('./views/Contas/ListaContas'));
 const CallBack = React.lazy(() => import('./views/Contas/CallBack'));
 const ContasAdicionar = React.lazy(() => window.location.href = process.env.REACT_APP_API_URL + '/oauth/mercado-livre/authorize');
 //Bloqueios
@@ -24,6 +24,9 @@ const Categorias = React.lazy(() => import('./views/Categorias/CategoriasDataTab
 const Perguntas = React.lazy(() => import('./views/Perguntas/Perguntas'));
 //Perguntas
 const Processos = React.lazy(() => import('./views/Processos/Processos'));
+//Anuncios
+//const MeusAnuncios = React.lazy(() => import('./views/Anuncios/MeusAnuncios'));
+const AdicionarAnuncios = React.lazy(() => import('./views/Anuncios/AdicionarAnuncio'));
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -38,7 +41,7 @@ const routes = [
   { path: '/cadastro', name: 'Cadastre-se', component: Cadastro, exact: true},
   { path: '/recuperarsenha', name: 'Recuperar Senha', component: RecuperarSenha, exact: true},
   //Contas
-  { path: '/listacontas', name: 'Contas', component: ListaContas, exact: true },
+  { path: '/contas/listacontas', name: 'Contas', component: Contas, exact: true },
   { path: '/callback', name: 'Adicionar Conta', component: CallBack , exact: true},
   { path: '/contas/adicionar', name: 'Autorizar Conta Mercado Livre', component: ContasAdicionar, exact: true },
   //Bloqueios
@@ -53,6 +56,9 @@ const routes = [
   { path: '/perguntas', name: 'Perguntas e Respostas', component: Perguntas, exact: true },
   //Processos
   { path: '/processos', name: 'Processos', component: Processos, exact: true },
+  //Anuncios
+  { path: '/anuncios/adicionaranuncios', name: 'Adicionar Anúncio', component: AdicionarAnuncios, exact: true },
+  //{ path: '/anuncios/meusanuncios', name: 'Meus Anúncios', component: MeusAnuncios, exact: true },
 ];
 
 export default routes;

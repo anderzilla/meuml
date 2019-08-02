@@ -12,23 +12,34 @@ export default {
     },
     {
       name: 'Contas',
-      url: '/listacontas?status=lista',
+      url: '/contas/listacontas?status=lista',
       id: 'contas',
       icon: 'fa fa-address-book',
 
     },
-    // {
-    //   name: 'Anúncios',
-    //   url: '/dashboard',
-    //   icon: 'fa fa-bullhorn',
+    {
+       name: 'Anúncios',
+       url: '/dashboard',
+       icon: 'fa fa-bullhorn',
+       children: [
+        {
+          name: 'Meus Anúncios',
+          url: '/anuncios/meusanuncios',
+          icon: 'fa fa-bullhorn',
+        },
+        {
+          name: 'Adicionar Anúncios',
+          url: '/anuncios/adicionaranuncios',
+          icon: 'fa fa-plus',
+        },
+      ],
+     },
+     /*{
+       name: 'Vendas',
+       url: '/dashboard',
+       icon: 'fa fa-shopping-cart',
 
-    // },
-    // {
-    //   name: 'Vendas',
-    //   url: '/dashboard',
-    //   icon: 'fa fa-shopping-cart',
-
-    // },
+     },*/
     {
       name: 'Pesos e Dimensões',
       url: '/categorias',
