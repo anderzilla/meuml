@@ -41,7 +41,7 @@ export class BtnGroup extends React.Component {
   render() {
     return(
       <>
-        <ButtonGroup className="this.props.className">
+        <ButtonGroup className={this.props.className}>
           {this.props.children}
         </ButtonGroup>
       </>

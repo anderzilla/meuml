@@ -32,25 +32,26 @@ export const Accounts = async () => {
         });
       } else Swal.fire({ html: 'Você precisa ter ao menos uma conta cadastrada.', type: 'warning', showCloseButton: true });
     } else Swal.fire({ html: `<p>${res.data.message}</p>`, type: res.data.status, showCloseButton: true });
-  } catch(e) {
+  } catch(error) {
     Swal.fire({
-      html: `<p>${e}</p>`,
+      html: `<p>${error}</p>`,
       type: 'error',
       showCloseButton: true
     });
   }
 }
 
-export const BlackList = accId => {
-  if(accId !== null) {
-    const url = `blacklist?account_id=${accId}`;
-    api.get(url).then(res => {
-      return({
+export const BlackList = async accId => {
+  if(accId !== null && accId !== undefined) {
+    try {
+      const url = `blacklist?account_id=${accId}`;
+      const res = await api.get(url);
+      if(res) return({
         data: res.data.data,
         meta: res.data.meta,
         status: res.data.status,
         message: res.data.message,
       });
-    })
+    } catch {}
   };
 }
