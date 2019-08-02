@@ -1,9 +1,9 @@
 import React from 'react';
-import UserTable from '../../../components/BlockedUsers/UserTable';
+import Main from '../../../components/BlockedUsers/Main';
 
 const MeusBloqueios = () => {
   return(
-    <UserTable />
+    <Main />
   );
 }
 

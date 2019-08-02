@@ -38,8 +38,6 @@ class DataContainer extends Component {
         const status = response.status;
         const message = response.message;
         this.setState({ blacklist, paginationSize, status, message });
-        localStorage.setItem('blacklist', blacklist[0].account_id);
-        localStorage.setItem('paginationSize', paginationSize);
       }
     } catch (error) {
       Swal.fire({
@@ -103,75 +101,59 @@ const ChooseAccBtn = () => {
   );
 };
 
-class DataTable extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      blacklist: this.blacklist,
-      paginationSize: this.paginationSize
-    };
-
-    this.options = {
-      sortIndicator: true,
-      hideSizePerPage: true,
-      hidePageListOnlyOnePage: true,
-      clearSearch: true,
-      alwaysShowAllBtns: false,
-      withFirstAndLast: false
-    };
-  }
-
-  render() {
-    return (
-      <DataContainer>
-        <div className="animated">
-          <Card>
-            <CardHeader>
-              <h5>Escolha uma conta:</h5>
-              <ChooseAccBtn />
-            </CardHeader>
-            <CardBody>
-              <Consumer>
-                {(provider) => { return(
-                <BootstrapTable
-                  data={this.table}
-                  version="4"
-                  striped
-                  hover
-                  pagination
-                  search
-                  options={this.options}
-                  data={provider.state.blacklist}
-                  paginationSize={provider.state.paginationSize}
-                >
-                  <TableHeaderColumn dataField="account_id" dataSort>
-                    Id da Conta
-                  </TableHeaderColumn>
-                  <TableHeaderColumn isKey dataField="customer_id">
-                    Id do Usuário
-                  </TableHeaderColumn>
-                  <TableHeaderColumn dataField="motive_id" dataSort>
-                    Tipo do Bloqueio
-                  </TableHeaderColumn>
-                  <TableHeaderColumn dataField="motive_description" dataSort>
-                    Descrição do Motivo
-                  </TableHeaderColumn>
-                  <TableHeaderColumn dataField="bids" dataSort>
-                    P/ Compras
-                  </TableHeaderColumn>
-                  <TableHeaderColumn dataField="questions" dataSort>
-                    P/ Perguntas
-                  </TableHeaderColumn>
-                </BootstrapTable>
-                )}}
-              </Consumer>
-            </CardBody>
-          </Card>
-        </div>
-      </DataContainer>
-    );
-  }
+const Main = () => {
+  return (
+    <DataContainer>
+      <div className="animated">
+        <Card>
+          <CardHeader>
+            <h5>Escolha uma conta:</h5>
+            <ChooseAccBtn />
+          </CardHeader>
+          <CardBody>
+            <Consumer>
+              {(provider) => { return(
+              <BootstrapTable
+                version="4"
+                striped
+                hover
+                pagination
+                search
+                data={provider.state.blacklist}
+                paginationSize={provider.state.paginationSize}
+                sortIndicator ={true}
+                hideSizePerPage ={true}
+                hidePageListOnlyOnePage ={true}
+                clearSearch ={true}
+                alwaysShowAllBtns ={false}
+                withFirstAndLast ={false}
+              >
+                <TableHeaderColumn dataField="account_id" dataSort>
+                  Id da Conta
+                </TableHeaderColumn>
+                <TableHeaderColumn isKey dataField="customer_id">
+                  Id do Usuário
+                </TableHeaderColumn>
+                <TableHeaderColumn dataField="motive_id" dataSort>
+                  Tipo do Bloqueio
+                </TableHeaderColumn>
+                <TableHeaderColumn dataField="motive_description" dataSort>
+                  Descrição do Motivo
+                </TableHeaderColumn>
+                <TableHeaderColumn dataField="bids" dataSort>
+                  P/ Compras
+                </TableHeaderColumn>
+                <TableHeaderColumn dataField="questions" dataSort>
+                  P/ Perguntas
+                </TableHeaderColumn>
+              </BootstrapTable>
+              )}}
+            </Consumer>
+          </CardBody>
+        </Card>
+      </div>
+    </DataContainer>
+  );
 }
 
-export default DataTable;
+export default Main;
