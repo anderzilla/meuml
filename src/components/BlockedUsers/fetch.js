@@ -1,7 +1,7 @@
 import api from '../../services/api';
 import Swal from 'sweetalert2';
 
-export const fetchAccounts = async () => {
+export const Accounts = async () => {
   try {
     const url = `/accounts?extra_fields=unanswered_questions`;
     const res = await api.get(url);
@@ -41,11 +41,16 @@ export const fetchAccounts = async () => {
   }
 }
 
-export const fetchBlackList = accId => {
+export const BlackList = accId => {
   if(accId !== null) {
     const url = `blacklist?account_id=${accId}`;
     api.get(url).then(res => {
-      console.log(res)
+      return({
+        data: res.data.data,
+        meta: res.data.meta,
+        status: res.data.status,
+        message: res.data.message,
+      });
     })
   };
 }
