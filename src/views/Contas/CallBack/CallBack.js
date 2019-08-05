@@ -41,7 +41,7 @@ class CallBack extends Component {
               }
             }).catch((error) => {     
               !error.response ?
-              (this.setState({tipoErro: error.message})) :
+              (this.setState({tipoErro: error.split('code')[1]})) :
               (this.setState({tipoErro: error.response.data.message}))
                 if (error.response.status === 400) {
                   this.props.history.push('/listacontas?status=400');
@@ -52,7 +52,7 @@ class CallBack extends Component {
                 } else {
                   //this.props.history.push('/listacontas?status='+error);
                   //window.location.reload();
-                  console.log(error);
+                  console.log(this.status.tipoErro);
                 }
             })
 
