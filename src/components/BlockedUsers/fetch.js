@@ -55,3 +55,20 @@ export const BlackList = async accId => {
     } catch {}
   };
 }
+
+export const UnblockUser = async (accId, customerId) => {
+  if(accId !== null && accId !== undefined) {
+    try {
+      const url = `blacklist/unblock`;
+      const data = {
+        "account_id": accId,
+        "bids": true,
+        "block_id": `${customerId}`,
+        "questions": true
+      }
+      const res = await api.post(url, data);
+      console.log(res);
+      return res
+    } catch {}
+  };
+}
