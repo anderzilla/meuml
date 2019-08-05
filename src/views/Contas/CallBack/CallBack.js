@@ -35,8 +35,9 @@ class CallBack extends Component {
                 this.props.history.push('/listacontas?status=add'+res.data.status);
                 window.location.reload();
               } else {
-                this.props.history.push('/listacontas?status='+res.data.status);
-                window.location.reload();
+                console.log(res.data);
+                //this.props.history.push('/listacontas?status='+res.data.status);
+                //window.location.reload();
               }
             }).catch((error) => {     
               !error.response ?
