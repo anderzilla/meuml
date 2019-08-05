@@ -15,20 +15,13 @@ export default {
       url: '/listacontas?status=lista',
       id: 'contas',
       icon: 'fa fa-address-book',
+    },
+    {
+      name: 'Painel de controle',
+      url: '/dashboard',
+      icon: 'fa fa-dashboard',
 
     },
-    // {
-    //   name: 'Anúncios',
-    //   url: '/dashboard',
-    //   icon: 'fa fa-bullhorn',
-
-    // },
-    // {
-    //   name: 'Vendas',
-    //   url: '/dashboard',
-    //   icon: 'fa fa-shopping-cart',
-
-    // },
     {
       name: 'Pesos e Dimensões',
       url: '/categorias',
@@ -74,14 +67,13 @@ export default {
        name: 'Processos',
        url: '/processos',
        icon: 'fa fa-file-powerpoint-o',
-     },
-    
-    // {
-    //   name: 'Perguntas',
-    //   url: '/perguntas',
-    //   icon: 'fa fa-question-circle',
+     },    
+    {
+      name: 'Perguntas',
+      url: '/perguntas',
+      icon: 'fa fa-question-circle',
 
-    // },
+    },
     {
       name: 'Sair',
       url: '/logout',
