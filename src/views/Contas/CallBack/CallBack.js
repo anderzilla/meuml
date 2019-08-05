@@ -50,9 +50,8 @@ class CallBack extends Component {
                   this.props.history.push('/listacontas?status=409');
                   window.location.reload();
                 } else {
-                  //this.props.history.push('/listacontas?status='+error);
-                  //window.location.reload();
-                  console.log(error.split('code')[1]);
+                  this.props.history.push('/listacontas?status='+error.split('code')[1]);
+                  window.location.reload();
                 }
             })
 
