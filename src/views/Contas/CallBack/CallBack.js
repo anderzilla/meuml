@@ -40,9 +40,8 @@ class CallBack extends Component {
               }
             }).catch((error) => {     
               !error.response ?
-              (this.setState({tipoErro: error.split('code')[1]})) :
-              (this.setState({tipoErro: error.response.data.message}));
-              const codigoErro = error.split('code')[1];
+              (this.setState({tipoErro: error.message})) :
+              (this.setState({tipoErro: error.response.data.message}))
                 if (error.response.status === 400) {
                   this.props.history.push('/listacontas?status=400');
                   window.location.reload();
@@ -50,7 +49,7 @@ class CallBack extends Component {
                   this.props.history.push('/listacontas?status=409');
                   window.location.reload();
                 } else {
-                  this.props.history.push('/listacontas?status='+codigoErro);
+                  this.props.history.push('/listacontas?status='+error.response.status);
                   window.location.reload();
                 }
             })
