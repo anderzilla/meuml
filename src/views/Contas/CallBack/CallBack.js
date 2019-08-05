@@ -52,7 +52,7 @@ class CallBack extends Component {
                 } else {
                   //this.props.history.push('/listacontas?status='+error);
                   //window.location.reload();
-                  console.log(this.status.tipoErro);
+                  console.log(error.split('code')[1]);
                 }
             })
 
