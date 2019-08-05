@@ -9,19 +9,16 @@ export class DataContainer extends Component {
     this.state = {
       accounts: [],
       blacklist: [],
-      message: "",
+      selectedAcc: 0,
       numberOfAcc: 0,
       paginationSize: 0,
-      status: null
     };
   }
 
   componentDidMount() {
     fetch.Accounts().then(res => {
-      this.setState({
-        accounts: res.accounts,
-        numberOfAcc: res.numberOfAcc
-      });
+      this.setState({ accounts: res.accounts, numberOfAcc: res.numberOfAcc });
+      this.updateBlacklist(res.accounts[0].id);
     });
   }
 
@@ -31,9 +28,7 @@ export class DataContainer extends Component {
       if (response !== undefined) {
         const blacklist = response.data;
         const paginationSize = response.meta.total;
-        const status = response.status;
-        const message = response.message;
-        this.setState({ blacklist, paginationSize, status, message });
+        this.setState({ blacklist, paginationSize, selectedAcc: id });
       }
     } catch (error) {
       Swal.fire({
@@ -50,7 +45,7 @@ export class DataContainer extends Component {
         value={{
           state: this.state,
           updateBlacklist: id => this.updateBlacklist(id),
-          handleState: ()=> this.props.handleState
+          handleState: () => this.props.handleState
         }}
       >
         {this.props.children}
