@@ -35,14 +35,14 @@ class CallBack extends Component {
                 this.props.history.push('/listacontas?status=add'+res.data.status);
                 window.location.reload();
               } else {
-                console.log(res.data);
-                //this.props.history.push('/listacontas?status='+res.data.status);
-                //window.location.reload();
+                this.props.history.push('/listacontas?status='+res.data.status);
+                window.location.reload();
               }
             }).catch((error) => {     
               !error.response ?
               (this.setState({tipoErro: error.split('code')[1]})) :
-              (this.setState({tipoErro: error.response.data.message}))
+              (this.setState({tipoErro: error.response.data.message}));
+              const codigoErro = error.split('code')[1];
                 if (error.response.status === 400) {
                   this.props.history.push('/listacontas?status=400');
                   window.location.reload();
@@ -50,7 +50,7 @@ class CallBack extends Component {
                   this.props.history.push('/listacontas?status=409');
                   window.location.reload();
                 } else {
-                  this.props.history.push('/listacontas?status='+error.split('code')[1]);
+                  this.props.history.push('/listacontas?status='+codigoErro);
                   window.location.reload();
                 }
             })
