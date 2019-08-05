@@ -26,7 +26,6 @@ import {getToken} from '../../../auth';
 import Picky, {components} from "react-picky";
 import "react-picky/dist/picky.css";
 
-import ReactLoading from 'react-loading';
 class BloquearLista extends Component {
   constructor(props) {
     super(props);
@@ -48,7 +47,6 @@ class BloquearLista extends Component {
       accountId: null,
       value: null,
       arrayValue: [],
-      isLoadingCadastro: false
     }
 
     this.nbloqueios = "2048";
@@ -142,7 +140,7 @@ class BloquearLista extends Component {
   }
 
   handleSubmit(event) {
-    this.setState({isLoadingCadastro: true});
+
     event.preventDefault();
     if (this.state.blackListName === ''){
       Swal.fire({html:'<p>Preencha o nome da lista para bloqueá-la</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
@@ -162,9 +160,6 @@ class BloquearLista extends Component {
           const message = res.data.message;
           this.setState({message});
           Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-          this.setState({isLoadingCadastro: false});
-          window.location.href = "#/minhaslistasdebloqueios";
-
         }else{
           const message = res.data.message;
           this.setState({message});
@@ -184,16 +179,16 @@ class BloquearLista extends Component {
 
   render() {
     const { isLoading, isLoadingAccounts, isLoadingBlacklistList, backlistList, error, accounts} = this.state;
-    const {isLoadingCadastro} = this.state;
+
     return (
       <div className="animated fadeIn">
         <Row>
         <Col xs="12" sm="12" md="10" xl="8">
         <Card className="card-accent-primary">
         <Form name='novaLista' onSubmit={this.handleSubmit}>
-          {/* <CardHeader>
+          <CardHeader>
             <h5>Bloquear Lista</h5>
-          </CardHeader> */}
+          </CardHeader>
           <CardBody>
           <Row>
             <Col md="4" xs="12">
@@ -254,14 +249,8 @@ class BloquearLista extends Component {
             </Col>
           </Row>
           </CardBody>
-          <CardFooter className="text-right">
-          {!isLoadingCadastro ? (
-            <div>
-             <Button type="submit" size="sm" color="primary"><i className="fa fa-file-text"></i> Bloquear Lista</Button>
-          </div>
-          ) : (
-             <ReactLoading type={'spinningBubbles'} color={'#054785'} height={30} width={30}  className='spinnerStyleMini'/>
-          )}
+          <CardFooter>
+          <Button type="submit" size="sm" color="primary"><i className="fa fa-file-text"></i> Bloquear Lista</Button>
           </CardFooter>
           </Form>
         </Card>

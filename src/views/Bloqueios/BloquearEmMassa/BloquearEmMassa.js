@@ -8,8 +8,6 @@ import 'react-select/dist/react-select.min.css';
 import Picky, {components}  from "react-picky";
 import "react-picky/dist/picky.css";
 
-import ReactLoading from 'react-loading';
-
 import {parse} from 'react-json-parser';
 class BloquearEmMassa extends Component {
   constructor(props) {
@@ -49,7 +47,6 @@ class BloquearEmMassa extends Component {
       value: null,
       arrayValue: [],
       grid: [],
-      isLoadingCadastro: false
     }
     //fim dos STATES
       
@@ -185,7 +182,6 @@ class BloquearEmMassa extends Component {
 
 
   concluirOperacao() {
-    this.setState({isLoadingCadastro: true});
     this.setState({bloqueios: []});
     if (this.state.listagem === ''){
       Swal.fire({html:'<p>Preencha o campo Lista antes de Salvar!</p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
@@ -215,8 +211,6 @@ class BloquearEmMassa extends Component {
             const status_customer = res.data.status;
             this.setState({status_customer});
             Swal.fire({html:'<p>'+res.data.message+'</p>', type: this.state.status_customer, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-            this.setState({isLoadingCadastro: false});
-            window.location.href = "#/minhaslistasdebloqueios";
           }).catch((error) => {     
             !error.response ?
             (this.setState({tipoErro: error})) :
@@ -254,8 +248,7 @@ class BloquearEmMassa extends Component {
             const message = res.data.message;
             this.setState({message});
             Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-           // this.props.history.push("/meusbloqueios");
-            window.location.href = "#/meusbloqueios";
+            this.props.history.push("/meusbloqueios");
           }else{
             const message = res.data.message;
             this.setState({message});
@@ -278,29 +271,13 @@ class BloquearEmMassa extends Component {
         },
         {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
         ).then(res => {
-
-          this.state.arrayValue.map((s, k) => {
-            const { value, name } = this.state;
-            this.state.listagem.map((cid, x) => {
-              const { customer_id } = this.state;
-              this.state.bloqueios.push({
-                "account_id": s.value,
-                "bids": !this.state.bids ? false : true,
-                "customer_id": cid.customer_id,
-                "motive_description": "Outros - Em Massa",
-                "motive_id": '9',
-                "questions": !this.state.questions ? false : true,
-              });
-            })
-          })
-
           axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/customer`, {
             "list_name":this.state.nomeLista,
-            "customers":this.state.bloqueios
+            "customers":this.state.listagem
           },
           {headers: {"Authorization": 'Bearer ' + getToken(), "Content-Type": 'application/json'}}
           ).then(res => {
-
+           
             axios.post(process.env.REACT_APP_API_URL + `/blacklist/list/import`, 
               {
                 "blacklist_name":this.state.nomeLista, 
@@ -321,7 +298,6 @@ class BloquearEmMassa extends Component {
                 const message = res.data.message;
                 this.setState({message});
                 Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true});
-                window.location.href = "#/minhaslistasdebloqueios";
               }
             }).catch((error) => {
             
@@ -346,7 +322,7 @@ class BloquearEmMassa extends Component {
 }
 
   render() {
-    const {isLoadingCadastro} = this.state;
+
     const { isLoadingAccounts, isLoadingLista, error, accounts, selectedOption, changes, source, options, grid  } = this.state;
     
     return (
@@ -354,7 +330,9 @@ class BloquearEmMassa extends Component {
         <Row>
         <Col xs="12" sm="12" md="10" xl="8">
         <Card className="card-accent-primary">
-       
+        <CardHeader>
+        <h5>Bloqueio em Massa</h5>
+        </CardHeader>
         <CardBody>
         <FormGroup>
           <Label for="lista">Lista de Bloqueio</Label>
@@ -368,10 +346,11 @@ class BloquearEmMassa extends Component {
           autoComplete="given-name"
           autoFocus={true}
           onMouseOut={() => this.montarTabela(this.state.lista)}
-          /> 
+          
+          > </Input>
         </FormGroup>
         
-        <ButtonGroup className="fullWidth">
+        <ButtonGroup>
         <Button 
           className="btn btn-md" 
           color="primary" 
@@ -543,13 +522,7 @@ class BloquearEmMassa extends Component {
         )}
         </CardBody>
         <CardFooter  className="text-right">
-          {!isLoadingCadastro ? (
-            <div>
-              <Button color="primary" onClick={() => this.concluirOperacao()} disabled={this.state.salvar?true:false} >Concluir</Button>
-             </div>
-          ) : (
-             <ReactLoading type={'spinningBubbles'} color={'#054785'} height={30} width={30}  className='spinnerStyleMini'/>
-          )}
+          <Button color="primary" onClick={() => this.concluirOperacao()} disabled={this.state.salvar} >Concluir</Button>
         </CardFooter>
         
         </Card>

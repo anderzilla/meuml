@@ -168,20 +168,20 @@ class MinhasListasDeBloqueio extends Component {
     return (
       <div className="animated fadeIn">
         <Card className="card-accent-primary">
-          {/* <CardHeader>
+          <CardHeader>
             <Row>
             <Col md="3" xs="3" sm="12"><h5>Listas - {this.state.nlistas}</h5> </Col>
             <Col md="6" xs="6" sm="12"></Col>
             </Row>
-          </CardHeader> */}
+          </CardHeader>
           <CardBody>
           <Table responsive>
                   <thead>
                   <tr>
-                    <th className="text-left tbcol-30">Nome da Lista</th>
-                    <th className="text-let tbcol-50">Descrição</th>
-                    <th className="text-left tbcol-15">Quantidade</th>
-                    <th className="text-right tbcol-5"></th>
+                    <th class="text-left tbcol-30">Nome da Lista</th>
+                    <th class="text-let tbcol-50">Descrição</th>
+                    <th class="text-left tbcol-15">Quantidade</th>
+                    <th class="text-right tbcol-5"></th>
                   </tr>
                   </thead>
                   <tbody>
@@ -190,17 +190,17 @@ class MinhasListasDeBloqueio extends Component {
                   backlistList.map((l, key) => {
                           const { id, name } = this.state;
                           return (
-                            <tr key={key}>
-                              <td className="text-left">{l.name}</td>
-                              <td className="text-center">{l.list_description}</td>
-                              <td className="text-center">{l.quantidade}</td>
-                              <td className="text-right">
-                                <Button onClick={()=>this.fetchDeletarLista(l.id)} className="btn btn-danger btn-small"><i className="fa fa-trash"></i></Button>
+                            <tr>
+                              <td class="text-left">{l.name}</td>
+                              <td class="text-center">{l.list_description}</td>
+                              <td class="text-center">{l.quantidade}</td>
+                              <td class="text-right">
+                                <Button onClick={()=>this.fetchDeletarLista(l.id)} class="btn btn-danger btn-small"><i class="fa fa-trash"></i></Button>
                               </td>
                             </tr>
                         )})
                       ) : (
-                       <tr><td><h3>Carregando...</h3></td></tr> 
+                        <h3>Carregando...</h3>
                       )}
                   </tbody>
                 </Table>

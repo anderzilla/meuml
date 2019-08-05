@@ -5,8 +5,6 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import logo from '../../../assets/img/brand/MeuML-logo2.png'
 
-import ReactLoading from 'react-loading';
-
 class RecuperarSenha extends Component {
 
   constructor(props) {
@@ -17,8 +15,6 @@ class RecuperarSenha extends Component {
       message: '',
       status: '',
       show: false,
-
-      isLoadingCadastro: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -36,7 +32,7 @@ class RecuperarSenha extends Component {
   }
 
   handleSubmit(event) {
-    this.setState({isLoadingCadastro: true});
+
     event.preventDefault();
     
     this.setState({auth: 'true'});
@@ -50,9 +46,7 @@ class RecuperarSenha extends Component {
       if (this.state.status === 'success'){
         const message = res.data.message;
         this.setState({message});
-        this.setState({isLoadingCadastro: false});
         Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showConfirmButton: true,
-        
         onClose: () => {
           this.props.history.push('/login');
           window.location.reload();
@@ -88,7 +82,6 @@ class RecuperarSenha extends Component {
   }
 
   render() {
-    const {isLoadingCadastro} = this.state;
     return (
       <div className="app flex-row align-items-center">
         <Container>
@@ -113,16 +106,10 @@ class RecuperarSenha extends Component {
                       </InputGroup>
                       <Row>
                         <Col xs="12" className="text-center">
-                            {!isLoadingCadastro ? (
-                              <div>
-                                  <Button type="submit" color="primary"><i className="fa fa-check"></i> Enviar</Button>
-                                  <Link to="./" >
-                                    <Button className="btn btn-danger" title="Voltar" ><i className="fa fa-arrow-left"></i> Voltar</Button>
-                                  </Link> 
-                               </div>
-                            ) : (
-                              <ReactLoading type={'spinningBubbles'} color={'#054785'} height={30} width={30}  className='spinnerStyleMiniCenter'/>
-                            )}
+                          <Button type="submit" color="primary"><i className="fa fa-check"></i> Enviar</Button>
+                          <Link to="./" >
+                            <Button className="btn btn-danger" title="Voltar" ><i className="fa fa-arrow-left"></i> Voltar</Button>
+                          </Link>
                         </Col>
                       </Row>
                     </Form>

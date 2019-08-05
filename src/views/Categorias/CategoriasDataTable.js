@@ -34,7 +34,7 @@ class CategoriasDataTable extends React.Component {
 
     fetchCategorias(limit = 50, page = 1, filter = '', sortName = 'id', sortOrder = 'ASC') {
 
-        if(page >= this.state.last_page && this.state.last_page != 0){
+        if(page >= this.state.last_page){
            page =  this.state.last_page
         }
 
