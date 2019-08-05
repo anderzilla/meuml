@@ -3,7 +3,6 @@ import {
   Row,
   Col,
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   Button,
@@ -23,7 +22,6 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { getToken } from "../../../auth";
 import { AppSwitch } from "@coreui/react";
-import Select from "react-select";
 import "react-select/dist/react-select.min.css";
 import Picky from "react-picky";
 import "react-picky/dist/picky.css";
@@ -99,8 +97,7 @@ class BloquearComprador extends Component {
         if (res.status === 200) {
           const listaContas = [];
           const resContas = res.data.data;
-          resContas.map((c, k) => {
-            const { id, name } = this.state;
+          resContas.map(c => {
             listaContas.push({ value: c.id, label: c.name });
           });
           this.setState({
@@ -109,9 +106,9 @@ class BloquearComprador extends Component {
           });
           if (res.data.meta.total > 0) {
             if (res.data.meta.total === 1) {
-              this.state.arrayValue = [
+              this.setState({arrayValue : [
                 { value: res.data.data[0].id, label: res.data.data[0].name }
-              ];
+              ]});
               this.fetchBlacklist(res.data.data[0].id);
             }
           } else {
@@ -235,8 +232,7 @@ class BloquearComprador extends Component {
           textConfirmButton: "OK"
         });
       } else {
-        this.state.arrayValue.map((s, k) => {
-          const { value, name } = this.state;
+        this.state.arrayValue.map(s => {
           this.state.bloqueios.push({
             account_id: s.value,
             bids: !this.state.bids ? false : true,
@@ -303,14 +299,10 @@ class BloquearComprador extends Component {
   render() {
     const { isLoadingCadastro } = this.state;
     const {
-      isLoading,
       isLoadingAccounts,
       isLoadingMotivos,
-      error,
       accounts,
       motivos,
-      listaContas,
-      selectedOption
     } = this.state;
     return (
       <div className="animated fadeIn">
@@ -400,7 +392,6 @@ class BloquearComprador extends Component {
                             autoFocus={true}
                             color="outline-dark"
                             required
-                            onChange={this.handleInputChange}
                             value={this.state.customer_id}
                             onChange={event => {
                               if (this.state.tipoUser === "ID") {
@@ -443,10 +434,9 @@ class BloquearComprador extends Component {
                             </DropdownToggle>
                             <DropdownMenu>
                               {motivos.map((m, key) => {
-                                const { id, name } = this.state;
                                 return (
                                   <DropdownItem
-                                    key={m.id}
+                                    key={key}
                                     onClick={() =>
                                       this.fetchMotivoSelecionado(
                                         m.id,
@@ -455,7 +445,7 @@ class BloquearComprador extends Component {
                                       )
                                     }
                                   >
-                                    {m.id} - {m.name}
+                                    {key} - {m.name}
                                   </DropdownItem>
                                 );
                               })}
