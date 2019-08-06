@@ -31,7 +31,6 @@ class CallBack extends Component {
                 executed: true,
                 doIt: 2
               })
-              console.log(res);
               if (res.data.status === 'success') {
                 this.props.history.push('/listacontas?status=add'+res.data.status);
                 window.location.reload();
