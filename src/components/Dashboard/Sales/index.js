@@ -1,5 +1,5 @@
-import React from './node_modules/react';
-import { Col, Row } from './node_modules/reactstrap';
+import React from 'react';
+import { Col, Row } from 'reactstrap';
 import Callout from '../../Callout';
 
 const Sales = props => {

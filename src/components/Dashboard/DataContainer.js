@@ -1,4 +1,4 @@
-import React, { Component } from './node_modules/react';
+import React, { Component } from 'react';
 export const Data = React.createContext();
 
 export class DataContainer extends Component {
@@ -6,7 +6,8 @@ export class DataContainer extends Component {
     super(props);
 
     this.state = {
-      selectedAcc: '',
+      accounts: [],
+      selectedAcc: 'Nenhuma conta selecionada.',
       accReputation: 0,
       accLevel: 0,
       salesData: {
@@ -15,7 +16,8 @@ export class DataContainer extends Component {
         total: 0,
         avalition: 0
       },
-      salesWithMediation: 0
+      salesWithMediation: 0,
+      numberOfAccounts: 0,
     }
   }
 
@@ -25,16 +27,19 @@ export class DataContainer extends Component {
   
   fetchData() {
     this.setState({
-      selectedAcc: 'Conta 1',
-      accReputation: 'gold',
-      accLevel: '4',
-      salesData: {
-        canceled: 3,
-        realyzed: 300,
-        total: 303,
-        avalition: 10
-      },
-      salesWithMediation: 1
+      accounts: [
+        {name:'Conta 1', id: 1, canceled: 1, realyzed: 2, total: 3, salesWithMediation: 1},
+        {name:'Conta 2', id: 2},
+        {name:'Conta 3', id: 3},
+        {name:'Conta 4', id: 4},
+      ],
+      numberOfAccounts: 4
+    });
+  }
+  
+  selectAccount(acc) {
+    this.state.accounts.map(account => {
+      if(account.id === acc) this.setState({ selectedAcc: account });
     });
   }
   
@@ -43,7 +48,8 @@ export class DataContainer extends Component {
       <Data.Provider
         value={{
           state: this.state,
-          fetchData: () => this.fetchData
+          fetchData: () => this.fetchData,
+          selectAccount: (acc) => this.selectAccount(acc)
         }}
         >{this.props.children}
       </Data.Provider>
