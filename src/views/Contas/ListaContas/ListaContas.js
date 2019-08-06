@@ -330,14 +330,14 @@ class ListaContas extends Component {
                             <h5 className="tituloVendas">Vendas</h5>
                             <h5 className="text-success valores">
                               {
-                                c.count_orders
+                                c.total_orders
                               }
                             </h5>
                           </Col>
                           <Col md="6" sm="12">
                             <h5 className="tituloAnuncios">Anúncios</h5>
                             <h5 className="text-success valores">
-                              {c.count_advertisings}
+                              {c.total_advertisings}
                             </h5>
                           </Col>
                         </Row>
