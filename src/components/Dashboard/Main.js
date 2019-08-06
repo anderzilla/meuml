@@ -15,8 +15,14 @@ const Main = () => {
                 <Col>
                   <Card>
                     <CardHeader>
-                      <div className="ml-3"><SelectAccount /></div><br/>
-                      <h6>{provider.state.selectedAcc.name || 'Nenhuma conta selecionada.'}</h6><hr/>
+                      <div className="ml-3 mb-3"><SelectAccount/></div>
+                      <div className="acc-info">
+                        {provider.state.selectedAcc !== 'Nenhuma conta selecionada.' ? (
+                          <h6>
+                            {provider.state.selectedAcc.name} Nível: {provider.state.selectedAcc.accLevel}
+                          </h6>
+                        ):(<div/>)}
+                      </div><hr/>
                     </CardHeader>
                     <CardBody>
                       <Sales/>

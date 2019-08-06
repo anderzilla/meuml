@@ -8,13 +8,13 @@ export class DataContainer extends Component {
     this.state = {
       accounts: [],
       selectedAcc: 'Nenhuma conta selecionada.',
-      accReputation: 0,
-      accLevel: 0,
       salesData: {
         canceled: 0,
         realyzed: 0,
         total: 0,
-        avalition: 0
+        avalition: 0,
+        accReputation: 0,
+        accLevel: 0
       },
       salesWithMediation: 0,
       numberOfAccounts: 0,
@@ -28,7 +28,7 @@ export class DataContainer extends Component {
   fetchData() {
     this.setState({
       accounts: [
-        {name:'Conta 1', id: 1, canceled: 1, realyzed: 2, total: 3, salesWithMediation: 1},
+        {name:'Gustavo', id: 1, canceled: 1, realyzed: 2, total: 3, salesWithMediation: 1, accLevel: 4},
         {name:'Conta 2', id: 2},
         {name:'Conta 3', id: 3},
         {name:'Conta 4', id: 4},

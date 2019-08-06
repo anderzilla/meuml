@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Row } from 'reactstrap';
-import Widget02 from './Widget02';
+import Widget02 from '../../widgets/Widget02';
 import { Data } from '../DataContainer';
 
 const Sales = props => {

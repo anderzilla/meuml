@@ -1,9 +1,11 @@
-import React from 'react';
-import Main from '../../components/Dashboard/Main';
+import React, { Suspense } from 'react';
+const Main = React.lazy(() => import('../../components/Dashboard/Main'));
 
 const Dashboard = () => {
   return (
-    <Main />
+    <Suspense fallback={<div>Carregando . . .</div>}>
+      <Main />
+    </Suspense>
   );
 }
 
