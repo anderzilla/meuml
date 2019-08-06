@@ -1,20 +1,31 @@
 import React from 'react';
 import { Col, Row } from 'reactstrap';
-import Callout from '../../Callout';
+import Widget02 from './Widget02';
+import { Data } from '../DataContainer';
 
 const Sales = props => {
   return (
-    <>
-      <Col xs="12" md="6" xl="6">
-        <h6>Vendas</h6>
-        <Row>
-          <Callout title="Canceladas" color="danger" info={props.canceled} />
-          <Callout title="Bem Sucedidas" color="success" info={props.realyzed} />
-          <Callout title="Vendas com mediações" color="warning" info={props.salesWithMediation} />
-          <Callout title="Total" color="info" info={props.total} />
-        </Row>
-      </Col>
-    </>
+    <Data.Consumer>
+      {(provider) => {
+        return(<>
+          <h5>Vendas</h5>
+          <Row>
+            <Col xs="12" sm="6" lg="3">
+              <Widget02 header={provider.state.selectedAcc.canceled || '-'} mainText="Canceladas" icon="fa fa-cogs" color="primary" />
+            </Col>
+            <Col xs="12" sm="6" lg="3">
+              <Widget02 header={provider.state.selectedAcc.realyzed || '-'} mainText="Realizadas" icon="fa fa-laptop" color="info" />
+            </Col>
+            <Col xs="12" sm="6" lg="3">
+              <Widget02 header={provider.state.selectedAcc.salesWithMediation || '-'} mainText="Mediações" icon="fa fa-moon-o" color="warning" />
+            </Col>
+            <Col xs="12" sm="6" lg="3">
+              <Widget02 header={provider.state.selectedAcc.total || '-'} mainText="Total" icon="fa fa-bell" color="danger" />
+            </Col>
+         </Row>
+        </>);
+      }}
+    </Data.Consumer>
   );
 }
 

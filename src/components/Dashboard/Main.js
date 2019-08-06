@@ -15,17 +15,11 @@ const Main = () => {
                 <Col>
                   <Card>
                     <CardHeader>
-                      <h5>Painel de Controle: </h5><br/>
+                      <div className="ml-3"><SelectAccount /></div><br/>
                       <h6>{provider.state.selectedAcc.name || 'Nenhuma conta selecionada.'}</h6><hr/>
-                      <SelectAccount />
                     </CardHeader>
                     <CardBody>
-                      <Sales 
-                        canceled={provider.state.selectedAcc.canceled}
-                        realyzed={provider.state.selectedAcc.realyzed}
-                        salesWithMediation={provider.state.selectedAcc.salesWithMediation}
-                        total={provider.state.selectedAcc.total}
-                      />
+                      <Sales/>
                     </CardBody>
                   </Card>
                 </Col>
