@@ -8,6 +8,7 @@ import {
     Table
 } from "reactstrap";
 import axios from "axios";
+import Moment from "moment";
 import { getToken } from "../../auth";
 import Swal from "sweetalert2";
 
@@ -81,7 +82,7 @@ class CategoriasDataTable extends React.Component {
                     totalSize: total,
                     sizePerPage: res.data.meta.limit,
                     page: res.data.meta.page,
-                    lastUpdate: res.data.meta.last_update,
+                    lastUpdate: Moment(res.data.meta.last_update).format('DD/MM/YYYY HH:MM'),
                     last_page: res.data.meta.last_page
                 });
 
@@ -223,7 +224,7 @@ class CategoriasDataTable extends React.Component {
             <div className="animated fadeIn">
                 <Card>
                     <CardHeader>
-                        {/* <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.state.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6> */}
+                        <h6 className={"labelAtualiza"}> Atualizado em {this.state.lastUpdate} </h6>
                         <div className='input-group filtro'>
                             <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" value={this.state.filter} placeholder={'Pesquisar por descrição...'} onChange={this.handleChange} onClick={this.onFilterChange} />
                             <span className='it-group-btn'>
