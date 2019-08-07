@@ -32,7 +32,8 @@ producao:
     - git checkout master
     - whoami
     - npm i
-    - CI=false npm run build
+    - CI=false npm run build:staging
+    - pm2 restart producao-react-panel
   only:
     - master
     - merge-request
