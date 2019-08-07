@@ -45,12 +45,12 @@ class BloquearComprador extends Component {
       accountId: "",
       accountName: "",
       accountsSelected: "",
-      bids: "",
+      bids: false,
       customer_id: "",
       motivoBloqueio: "",
       motiveDescription: "",
       motiveId: "",
-      questions: "",
+      questions: false,
       accounts: [],
       motivos: [],
       isLoadingAccounts: true,
@@ -174,6 +174,13 @@ class BloquearComprador extends Component {
     });
   }
 
+  changeBids(status){
+    (status=== false)? this.state.bids = true: this.state.bids = false;
+  }
+  changeQuestions(status){
+    (status=== false)? this.state.questions = true: this.state.questions = false;
+  }
+
   handleChange = selectedOption => {
     this.setState({ isLoadingCadastro: false });
     this.setState({ selectedOption });
@@ -235,11 +242,11 @@ class BloquearComprador extends Component {
         this.state.arrayValue.map(s => {
           this.state.bloqueios.push({
             account_id: s.value,
-            bids: !this.state.bids ? false : true,
+            bids: this.state.bids,
             customer_id: this.state.customer_id,
             motive_description: this.state.motivoBloqueio,
             motive_id: this.state.motiveId,
-            questions: !this.state.questions ? false : true
+            questions: this.state.questions
           });
         });
 
@@ -477,8 +484,8 @@ class BloquearComprador extends Component {
                           variant={"pill"}
                           color={"danger"}
                           name="bids"
-                          value="1"
-                          onChange={this.handleInputChange}
+                          aria-checked = {this.state.bids}
+                          onChange={()=>this.changeBids(this.state.bids)}
                         />
                         <span className="textoSwitch">
                           {" "}
@@ -491,8 +498,8 @@ class BloquearComprador extends Component {
                           variant={"pill"}
                           color={"danger"}
                           name="questions"
-                          value="1"
-                          onChange={this.handleInputChange}
+                          aria-checked = {this.state.questions}
+                          onChange={()=>this.changeQuestions(this.state.questions)}
                         />
                         <span className="textoSwitch">
                           Bloquear para perguntas
