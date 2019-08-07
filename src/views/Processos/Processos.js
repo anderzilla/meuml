@@ -214,7 +214,7 @@ class Processos extends Component {
                           <CardBody className="subItensProcessos">
                             <ListGroup className="listaSubItem">
                               {p.subprocessos.map((d, k) => {
-                                this.preFormatedext(d.cause);
+                                this.preFormatedext(d.message);
                                 const tituloSubItem = d.tool_name.replace(
                                   "Blacklist",
                                   "Bloqueio"
