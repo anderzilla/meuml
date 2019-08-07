@@ -1,7 +1,7 @@
 import React from 'react';
 
 const SellerStatus = props => {
-  return validate(props);
+  return validate(props)
 }
 
 const validate = props => {

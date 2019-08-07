@@ -17,20 +17,22 @@ const Main = () => {
                 <Col>
                   <Card>
                     <CardHeader>
-                      <div className="mt-2 mb-3">
-                        <SelectAccount/>
+                      <div className="mt-2 mb-3" style={{textAlign: 'right'}}>
+                        <SelectAccount />
                       </div>
-                      <div className="ml-3 mt-1">
-                        <b><SellerStatus status={provider.state.selectedAccount.seller_reputation.power_seller_status}/></b>
+                      <div className="ml-3">
                         <Row>
                           <h6>Nível da conta:</h6>
-                          <LevelId levelId={provider.state.selectedAccount.seller_reputation.level_id}/>
+                          <LevelId
+                            levelId={provider.state.selectedAccount.seller_reputation.level_id}/>
                         </Row>
+                        <SellerStatus 
+                          status={provider.state.selectedAccount.seller_reputation.power_seller_status}/>
                       </div>
-                    <hr/>
+                      <hr/>
                     </CardHeader>
                     <CardBody>
-                      <Sales/>
+                      <Sales />
                     </CardBody>
                   </Card>
                 </Col>
