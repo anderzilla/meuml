@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import api from '../../services/api';
+import data from './_data';
+import Swal from 'sweetalert2';
 export const Data = React.createContext();
 
 export class DataContainer extends Component {
@@ -7,40 +10,92 @@ export class DataContainer extends Component {
 
     this.state = {
       accounts: [],
-      selectedAcc: 'Nenhuma conta selecionada.',
-      salesData: {
-        canceled: 0,
-        realyzed: 0,
-        total: 0,
-        avalition: 0,
-        accReputation: 0,
-        accLevel: 0
+      accountsFound: 0,
+      selectedAccount:{
+        "seller_reputation": {
+          "level_id": "",
+          "power_seller_status": "none",
+          "transactions": {
+            "canceled": 0,
+            "completed": 0,
+            "period": "",
+            "ratings": {
+              "negative": 0,
+              "neutral": 0,
+              "positive": 0
+            },
+            "total": 0
+          },
+          "metrics": {
+            "sales": {
+              "period": "",
+              "completed": 0
+            },
+            "claims": {
+              "period": "",
+              "rate": 0
+            },
+            "delayed_handling_time": {
+              "period": "",
+              "rate": 0
+            },
+            "cancellations": {
+              "period": "",
+              "rate": 0
+            }
+          }
+        }
       },
-      salesWithMediation: 0,
-      numberOfAccounts: 0,
+      isLoading: true
     }
   }
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchAccounts();
   }
   
-  fetchData() {
-    this.setState({
-      accounts: [
-        {name:'Gustavo', id: 1, canceled: 1, realyzed: 2, total: 3, salesWithMediation: 1, accLevel: 4},
-        {name:'Conta 2', id: 2},
-        {name:'Conta 3', id: 3},
-        {name:'Conta 4', id: 4},
-      ],
-      numberOfAccounts: 4
-    });
+  fetchAccounts = async () => {
+    try {
+      const response = await api.get('/accounts');
+      const {accounts, total } = this.filterJSON(response);
+      this.setState({
+        accounts: accounts,
+        accountsFound: total,
+        isLoading: false
+      });
+    } catch (error) {
+      Swal.fire({
+        html: `<p>${error}</p>`,
+        type: 'error',
+        showCloseButton: true
+      });
+    }
   }
   
-  selectAccount(acc) {
-    this.state.accounts.map(account => {
-      if(account.id === acc) this.setState({ selectedAcc: account });
-    });
+  selectAccount(accountId) {
+    console.log(accountId);
+    this.setState({ selectedAccount: data });
+    // api.get('/metricas/accountId').then(response => {
+    //   this.setState({ selectedAccount: response.data });
+    // }).catch(error => Swal.fire({ 
+    //   html: `<p>${error}</p>`,
+    //   type: 'error',
+    //   showCloseButton: true
+    // }));
+  }
+
+  filterJSON = (response) => {
+    if(response.status === 200) {
+      const accounts = response.data.data.map(account => {
+        return {
+          name: account.name,
+          id: account.id,
+          external_id: account.external_id,
+        }
+      });
+      const total = response.data.data.length;
+      return {accounts, total};
+    } else return false;
   }
   
   render() {
@@ -48,8 +103,8 @@ export class DataContainer extends Component {
       <Data.Provider
         value={{
           state: this.state,
-          fetchData: () => this.fetchData,
-          selectAccount: (acc) => this.selectAccount(acc)
+          fetchAccounts: () => this.fetchAccounts,
+          selectAccount: (accountId) => this.selectAccount(accountId)
         }}
         >{this.props.children}
       </Data.Provider>

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  ButtonGroup,
-  ButtonDropdown,
-  DropdownMenu,
-  DropdownToggle,
-  DropdownItem
-} from "reactstrap";
+import { ButtonGroup, ButtonDropdown, DropdownMenu, DropdownToggle } from "reactstrap";
 
 export default class DropDown extends React.Component {
   constructor(props) {

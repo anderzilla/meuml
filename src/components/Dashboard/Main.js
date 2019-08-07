@@ -1,6 +1,8 @@
 import React from 'react';
 import Sales from './Sales';
+import SellerStatus from '../widgets/SellerStatus';
 import SelectAccount from './buttons/SelectAccount';
+import LevelId from '../widgets/LevelId';
 import { Data, DataContainer } from './DataContainer';
 import { Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
 
@@ -15,14 +17,17 @@ const Main = () => {
                 <Col>
                   <Card>
                     <CardHeader>
-                      <div className="ml-3 mb-3"><SelectAccount/></div>
-                      <div className="acc-info">
-                        {provider.state.selectedAcc !== 'Nenhuma conta selecionada.' ? (
-                          <h6>
-                            {provider.state.selectedAcc.name} Nível: {provider.state.selectedAcc.accLevel}
-                          </h6>
-                        ):(<div/>)}
-                      </div><hr/>
+                      <div className="mt-2 mb-3">
+                        <SelectAccount/>
+                      </div>
+                      <div className="ml-3 mt-1">
+                        <b><SellerStatus status={provider.state.selectedAccount.seller_reputation.power_seller_status}/></b>
+                        <Row>
+                          <h6>Nível da conta:</h6>
+                          <LevelId levelId={provider.state.selectedAccount.seller_reputation.level_id}/>
+                        </Row>
+                      </div>
+                    <hr/>
                     </CardHeader>
                     <CardBody>
                       <Sales/>
