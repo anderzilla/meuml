@@ -169,21 +169,32 @@ class BloquearComprador extends Component {
     const value = target.value;
     const name = target.name;
 
+    this.setState({
+      [name]: value,
+      isLoadingCadastro: false
+    });
+  }
+
+  onChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
     if(name === 'bids'){
       this.setState({
-        'checked_bids':event.checked
+        checked_bids:event.checked
       })
     }
 
     if(name === 'questions'){
       this.setState({
-        'checked_questions':event.checked
+        checked_questions:event.checked
       })
     }
-
+    console.log(event.checked)
+    console.log(event.checkedStatus)
     this.setState({
-      [name]: value,
-      isLoadingCadastro: false
+      name: value,
     });
   }
 
