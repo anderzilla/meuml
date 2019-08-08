@@ -24,7 +24,7 @@ export default class Rating extends Component {
           return(<>
           <h5>Avaliações</h5>
             <Row>
-              <Col sm="6" md="2">
+              <Col sm="6" md="4">
                 <Widget04 
                   icon="cui-thumb-up" 
                   color="success"
@@ -33,7 +33,7 @@ export default class Rating extends Component {
                   >Positivas
                 </Widget04>
               </Col>
-              <Col sm="6" md="2">
+              <Col sm="6" md="4">
                 <Widget04 
                   icon="icon-drop" 
                   color="primary"
@@ -42,7 +42,7 @@ export default class Rating extends Component {
                   >Neutras
                 </Widget04>
               </Col>
-              <Col sm="6" md="2">
+              <Col sm="6" md="4">
                 <Widget04 
                   icon="cui-thumb-down" 
                   color="danger"

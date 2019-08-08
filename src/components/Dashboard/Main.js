@@ -12,6 +12,9 @@ const Main = () => {
     <DataContainer>
       <Data.Consumer>
         {(provider) => {
+          let sellerStatus = provider.state.selectedAccount.seller_reputation.power_seller_status;
+          let levelId = provider.state.selectedAccount.seller_reputation.level_id;
+          let accountName = provider.state.selectedAccount.seller_reputation.account_name || '-';
           return(
             <div className="animated fadeIn">
               <Row>
@@ -21,19 +24,19 @@ const Main = () => {
                       <div className="mt-2 mb-3" style={{textAlign: 'right'}}>
                         <SelectAccount />
                       </div>
-                      <div className="ml-3">
-                        <h4>{provider.state.selectedAccount.seller_reputation.account_name || '-'}</h4>
-                        <Row>
-                          <h6>Nível da conta:</h6>
-                          <SellerReputation
-                            levelId={provider.state.selectedAccount.seller_reputation.level_id}/>
-                        </Row>
-                        <SellerStatus 
-                          status={provider.state.selectedAccount.seller_reputation.power_seller_status}/>
-                      </div>
                       <hr/>
                     </CardHeader>
                     <CardBody>
+                      <div className="ml-3 mb-3">
+                        <Row>
+                          <h4 className="mr-3">{accountName}</h4>
+                          <SellerStatus status={sellerStatus}/>
+                        </Row>
+                        <Row>
+                          <h6>Nível da conta:</h6>
+                          <SellerReputation levelId={levelId}/>
+                        </Row>
+                      </div>
                       <Rating />
                       <hr />
                       <Transactions />
