@@ -75,8 +75,7 @@ class MeusBloqueios extends Component {
           const listaContas = [];
           const resContas = res.data.data;
           resContas.map((c, k) => {
-            const { id, name } = this.state;
-            listaContas.push({ value: c.id, label: c.name });
+            listaContas.push({ value: c.id, label: c.name, key: k });
           });
           this.setState({
             accounts: listaContas,
@@ -167,8 +166,7 @@ class MeusBloqueios extends Component {
           const listaMotivos = [];
           const resMotivos = res.data.data;
           resMotivos.map((m, k) => {
-            const { id, name } = this.state;
-            listaMotivos.push({ id: m.id, name: m.name });
+            listaMotivos.push({ id: m.id, name: m.name, key:k });
           });
           this.setState({
             motivos: listaMotivos
@@ -199,10 +197,9 @@ class MeusBloqueios extends Component {
       this.setState({ blacklist: [] });
     } else {
       if (pageNumber === "" || !pageNumber) {
-        this.state.paginate = 0;
+        this.state.paginate = 1;
       } else {
-        this.state.paginate =
-          pageNumber * this.state.sizePerPage - this.state.sizePerPage;
+        this.state.paginate = pageNumber ;
       }
       this.state.rota =
         "/blacklist?account_id=" +
@@ -393,7 +390,7 @@ class MeusBloqueios extends Component {
             <Pagination
               activePage={this.state.activePage}
               itemsCountPerPage={this.state.sizePerPage}
-              totalItemsCount={this.state.total - 1}
+              totalItemsCount={this.state.total}
               pageRangeDisplayed={5}
               onChange={this.handlePageChange}
               itemClass="btn btn-md btn-outline-info"
