@@ -55,6 +55,7 @@ class Login extends Component {
     });
   }
   handleSubmit(event) {
+
     event.preventDefault();
     //Realiza o login testando os dados do usuário no servidor
     axios
@@ -184,7 +185,7 @@ class Login extends Component {
                           <Input
                             type="submit"
                             value="Entrar"
-                            className="btn btn-block btn-primary active"
+                            className="btn btn-block btn-primary active btn-login"
                           />
                         </Col>
                         <Col xs="7" className="text-right ">

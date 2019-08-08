@@ -313,31 +313,32 @@ class ListaContas extends Component {
                         </div>
                         <div className="text-left">
                           <p className="labelCard">
-                            <i className="fa fa-envelope" /> E-mail:
+                            <i className="fa fa-envelope" /> E-mail:<br></br>
+                            {c.external_data.email}
                           </p>
-                          {c.external_data.email}
-                          <br />
+                          
+                         
                           <p className="labelCard">
-                            <i className="fa fa-user" /> Usuário:
+                            <i className="fa fa-user" /> Usuário:<br></br>
+                            {c.external_data.nickname}
                           </p>
-                          {c.external_data.nickname}
-                          <br />
+                          
                         </div>
                       </CardBody>
                       <CardFooter>
                         <Row>
-                          <Col md="6" sm="12">
+                          <Col >
                             <h5 className="tituloVendas">Vendas</h5>
                             <h5 className="text-success valores">
                               {
-                                c.count_orders
+                                c.total_orders
                               }
                             </h5>
                           </Col>
-                          <Col md="6" sm="12">
+                          <Col >
                             <h5 className="tituloAnuncios">Anúncios</h5>
                             <h5 className="text-success valores">
-                              {c.count_advertisings}
+                              {c.total_advertisings}
                             </h5>
                           </Col>
                         </Row>

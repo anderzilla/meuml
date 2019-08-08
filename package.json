@@ -110,7 +110,7 @@
     "test:cov": "react-scripts test --coverage",
     "test:debug": "react-scripts --inspect-brk test --runInBand",
     "eject": "react-scripts eject",
-    "build:staging": "REACT_APP_API_URL=https://api.app2.meuml.com npm run build"
+    "build:staging": "REACT_APP_API_URL=https://api2.app2.meuml.com npm run build"
   },
   "bugs": {
     "url": "https://github.com/coreui/coreui-pro-react-admin-template-starter/issues"

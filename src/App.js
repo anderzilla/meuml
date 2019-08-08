@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Data, DataContainer } from './containers/Data';
 import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { isAuthenticated } from "./auth";
 //import { logout } from "./logout";
@@ -168,21 +169,23 @@ class App extends Component {
 
   render() {
     return (
-      <HashRouter >
-        <Switch >
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/cadastro" component={Cadastro} />
-          <Route exact path="/recuperarsenha" component={RecuperarSenha} />
-          <Route exact path="/confirmarcadastro/:email/:hash" component={ConfirmarCadastro} />
-          <Route exact path="/alterarsenha/:email/:hash" component={AlterarSenha} />
-          {/*acesso restrito */}
-          <PrivateRoute path="/" name="MeuML.com" component={DefaultLayout} />
-          <PrivateRoute path="/callback" name="MeuML.com - Callback" component={CallBack} />
-          <PrivateRoute path="/logout" name="MeuML.com" component={Logout} />
-          <Route exact path="/404" name="Page 404" component={Page404} />
-          <Route exact path="/500" name="Page 500" component={Page500} />
-        </Switch>
-      </HashRouter>
+      <DataContainer>
+        <HashRouter >
+          <Switch >
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/cadastro" component={Cadastro} />
+            <Route exact path="/recuperarsenha" component={RecuperarSenha} />
+            <Route exact path="/confirmarcadastro/:email/:hash" component={ConfirmarCadastro} />
+            <Route exact path="/alterarsenha/:email/:hash" component={AlterarSenha} />
+            {/*acesso restrito */}
+            <PrivateRoute path="/" name="MeuML.com" component={DefaultLayout} />
+            <PrivateRoute path="/callback" name="MeuML.com - Callback" component={CallBack} />
+            <PrivateRoute path="/logout" name="MeuML.com" component={Logout} />
+            <Route exact path="/404" name="Page 404" component={Page404} />
+            <Route exact path="/500" name="Page 500" component={Page500} />
+          </Switch>
+        </HashRouter>
+      </DataContainer>
     );
   }
 }
