@@ -1,9 +1,10 @@
 import React from 'react';
-import Sales from './Sales';
+import Rating from './Rating';
+import Transactions from './Transactions';
 import SellerStatus from '../widgets/SellerStatus';
 import SelectAccount from './buttons/SelectAccount';
-import LevelId from '../widgets/LevelId';
 import { Data, DataContainer } from './DataContainer';
+import SellerReputation from '../widgets/SellerReputation';
 import { Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
 
 const Main = () => {
@@ -21,9 +22,10 @@ const Main = () => {
                         <SelectAccount />
                       </div>
                       <div className="ml-3">
+                        <h4>{provider.state.selectedAccount.seller_reputation.account_name || '-'}</h4>
                         <Row>
                           <h6>Nível da conta:</h6>
-                          <LevelId
+                          <SellerReputation
                             levelId={provider.state.selectedAccount.seller_reputation.level_id}/>
                         </Row>
                         <SellerStatus 
@@ -32,7 +34,8 @@ const Main = () => {
                       <hr/>
                     </CardHeader>
                     <CardBody>
-                      <Sales />
+                      <Rating />
+                      <Transactions />
                     </CardBody>
                   </Card>
                 </Col>

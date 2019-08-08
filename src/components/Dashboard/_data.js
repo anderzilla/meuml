@@ -1,5 +1,6 @@
 export default {
   "seller_reputation": {
+    "account_name": "Gustavo",
     "level_id": "5_green",
     "power_seller_status": "platinum",
     "transactions": {

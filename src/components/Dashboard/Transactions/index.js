@@ -1,9 +1,9 @@
 import React from 'react';
 import { Col, Row } from 'reactstrap';
-import Widget02 from '../../widgets/Widget02';
 import { Data } from '../DataContainer';
+import Widget02 from '../../widgets/Widget02';
 
-const Sales = props => {
+const Transactions = props => {
   return (
     <Data.Consumer>
       {(provider) => {
@@ -12,14 +12,14 @@ const Sales = props => {
           <Row>
             <Col xs="12" sm="6" lg="3">
               <Widget02 
-                header={provider.state.selectedAccount.seller_reputation.transactions.canceled || '-'} 
-                mainText="Canceladas" icon="fa fa-ban" color="primary"
+                header={provider.state.selectedAccount.seller_reputation.transactions.completed || '-'} 
+                mainText="Realizadas" icon="fa fa-check" color="success"
               />
             </Col>
             <Col xs="12" sm="6" lg="3">
               <Widget02 
-                header={provider.state.selectedAccount.seller_reputation.transactions.completed || '-'} 
-                mainText="Realizadas" icon="fa fa-check" color="info"
+                header={provider.state.selectedAccount.seller_reputation.transactions.canceled || '-'} 
+                mainText="Canceladas" icon="fa fa-ban" color="danger"
               />
             </Col>
             <Col xs="12" sm="6" lg="3">
@@ -31,7 +31,7 @@ const Sales = props => {
             <Col xs="12" sm="6" lg="3">
               <Widget02 
                 header={provider.state.selectedAccount.seller_reputation.transactions.total || '-'} 
-                mainText="Total" icon="fa fa-calculator" color="danger"
+                mainText="Total" icon="fa fa-calculator" color="primary"
               />
             </Col>
          </Row>
@@ -41,4 +41,4 @@ const Sales = props => {
   );
 }
 
-export default Sales
+export default Transactions;
