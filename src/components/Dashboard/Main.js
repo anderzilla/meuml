@@ -35,6 +35,7 @@ const Main = () => {
                     </CardHeader>
                     <CardBody>
                       <Rating />
+                      <hr />
                       <Transactions />
                     </CardBody>
                   </Card>
