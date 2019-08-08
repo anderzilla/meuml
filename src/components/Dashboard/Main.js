@@ -3,19 +3,16 @@ import Rating from './Rating';
 import Transactions from './Transactions';
 import SellerStatus from '../widgets/SellerStatus';
 import SelectAccount from './buttons/SelectAccount';
-import { Data, DataContainer } from './DataContainer';
 import SellerReputation from '../widgets/SellerReputation';
+import { Data, DataContainer } from '../../containers/Data';
 import { Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
 
 const Main = () => {
   return (
     <DataContainer>
       <Data.Consumer>
-        {(provider) => {
-          let sellerStatus = provider.state.selectedAccount.seller_reputation.power_seller_status;
-          let levelId = provider.state.selectedAccount.seller_reputation.level_id;
-          let accountName = provider.state.selectedAccount.seller_reputation.account_name || '-';
-          return(
+        {(provider) => { return(
+          provider.state.isLoading ? <p>Carregando ...</p> : provider.state.accountsFound > 0 ? (
             <div className="animated fadeIn">
               <Row>
                 <Col>
@@ -29,12 +26,12 @@ const Main = () => {
                     <CardBody>
                       <div className="ml-3 mb-3">
                         <Row>
-                          <h4 className="mr-3">{accountName}</h4>
-                          <SellerStatus status={sellerStatus}/>
+                          <h4 className="mr-3">{provider.state.selectedAccount.name || 'Selecione uma conta'}</h4>
+                          <SellerStatus status={provider.state.selectedAccount.external_data.seller_reputation.power_seller_status}/>
                         </Row>
                         <Row>
                           <h6>Nível da conta:</h6>
-                          <SellerReputation levelId={levelId}/>
+                          <SellerReputation levelId={provider.state.selectedAccount.external_data.seller_reputation.level_id}/>
                         </Row>
                       </div>
                       <Rating />
@@ -45,8 +42,9 @@ const Main = () => {
                 </Col>
               </Row>
             </div>
-          )}
-        }
+            ):(
+              <p>Você não possui nenhuma conta do ML cadastrada.</p>
+            ))}}
       </Data.Consumer>
     </DataContainer>
   );

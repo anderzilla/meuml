@@ -9,6 +9,8 @@ export class DataContainer extends Component {
     this.state = {
       accounts: [],
       isLoading: true,
+      selectedAccount: [],
+      accountsFound: 0
     }
   }
   
@@ -23,10 +25,20 @@ export class DataContainer extends Component {
       if (response.status === 200) {
         this.setState({
           accounts: response.data.data,
+          accountsFound: response.data.data.length,
+          selectedAccount: response.data.data[0],
           isLoading: false
         });
+        console.log(this.state);
       }
     }).catch(err => console.log(err));
+  }
+
+  selectAccount = id => {
+    const selectedAccount = this.state.accounts.map(account => {
+      if (account.id === id) return account;
+    });
+    this.setState({ selectedAccount: selectedAccount });
   }
 
   render() {
@@ -35,6 +47,7 @@ export class DataContainer extends Component {
         value={{
             state: this.state,
             fetchAccounts: () => this.fetchAccounts,
+            selectAccount: (id) => this.selectAccount(id)
           }}
         >{this.props.children}
       </Data.Provider>
