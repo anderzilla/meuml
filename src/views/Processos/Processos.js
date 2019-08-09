@@ -174,6 +174,8 @@ class Processos extends Component {
   atualizaProcessos() {
     this.setState({
       isLoadingProcessos: true,
+      listaProcessos:[],
+      processos: []
     });
     this.fetchProcess();
   }
