@@ -35,6 +35,8 @@ class BloquearLista extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
+    this.changeBids = this.changeBids.bind(this);
+    this.changeQuestions = this.changeQuestions.bind(this);
 
     this.state = {
       accountName: "",
@@ -191,8 +193,8 @@ class BloquearLista extends Component {
             {
               blacklist_name: this.state.blackListName,
               accounts: this.state.accountId,
-              bids: !this.state.bids ? false : true,
-              questions: !this.state.questions ? false : true
+              bids: this.state.bids,
+              questions: this.state.questions
             },
             {
               headers: {
@@ -320,7 +322,7 @@ class BloquearLista extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="bids"
-                              aria-checked={this.state.bids}
+                              checked={this.state.bids}
                               onChange={() => this.changeBids(this.state.bids)}
                             />
                             <span className="textoSwitch">
@@ -336,7 +338,7 @@ class BloquearLista extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="questions"
-                              aria-checked={this.state.questions}
+                              checked={this.state.questions}
                               onChange={() =>
                                 this.changeQuestions(this.state.questions)
                               }

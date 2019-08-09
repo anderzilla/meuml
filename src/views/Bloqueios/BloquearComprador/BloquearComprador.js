@@ -38,6 +38,8 @@ class BloquearComprador extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.selectMultipleOption = this.selectMultipleOption.bind(this);
+        this.changeBids = this.changeBids.bind(this);
+        this.changeQuestions = this.changeQuestions.bind(this);
 
         this.state = {
             dropdownOpenConta: false,
@@ -484,7 +486,7 @@ class BloquearComprador extends Component {
                                                     variant={"pill"}
                                                     color={"danger"}
                                                     name="bids"
-                                                    aria-checked = {this.state.bids}
+                                                    checked = {this.state.bids}
                                                     onChange={()=>this.changeBids(this.state.bids)}
                                                 />
                                                 <span className="textoSwitch">
@@ -498,7 +500,7 @@ class BloquearComprador extends Component {
                                                     variant={"pill"}
                                                     color={"danger"}
                                                     name="questions"
-                                                    aria-checked = {this.state.questions}
+                                                    checked = {this.state.questions}
                                                     onChange={()=>this.changeQuestions(this.state.questions)}
                                                 />
                                                 <span className="textoSwitch">
