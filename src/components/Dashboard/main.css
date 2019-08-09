@@ -1,4 +1,7 @@
-#main {
-  float: right;
+#avatar {
   margin-right: 50px;
+}
+
+#avatar-title {
+  margin-left: 15px;
 }

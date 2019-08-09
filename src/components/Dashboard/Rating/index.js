@@ -3,10 +3,32 @@ import Widget04 from '../../widgets/Widget04';
 import { Data } from '../../../containers/Data';
 import { Col, Row } from 'reactstrap';
 
-const getValue = data => {
-  if (data !== 0) {
-    const newData = String(data).substring(2);
+const getValue = props => {
+  const { negative, neutral, positive } = props;
+  if (negative > positive) {
+    const newData = String(negative).substring(2);
     return newData;
+  }
+  else if (negative < positive) {
+    const newData = String(positive).substring(2);
+    return newData;
+  }
+  else if (neutral > positive && neutral > negative) {
+    const newData = String(neutral).substring(2);
+    return newData;
+  }
+}
+
+const cardConfig = props => {
+  const { negative, neutral, positive } = props;
+  let color = '';
+  if (negative > positive) color = "danger"
+  else if (positive > negative) color = "success"
+  else if (neutral > positive && neutral > negative) color = "warning";
+  return { 
+    content: `Positivas: ${positive}% Neutras: ${neutral}% Negativas: ${negative}%`,
+    value: getValue({negative, neutral, positive}),
+    color: color
   }
 }
 
@@ -14,40 +36,24 @@ const Rating = () => {
   return(
     <Data.Consumer>
       {(provider) => {
-        console.log(provider.state)
+        let negative = provider.state.selectedAccount.external_data.seller_reputation.transactions.ratings.negative;
+        let neutral = provider.state.selectedAccount.external_data.seller_reputation.transactions.ratings.neutral;
+        let positive = provider.state.selectedAccount.external_data.seller_reputation.transactions.ratings.positive;
+        let config = cardConfig({negative, neutral, positive})
         return(
-        provider.state.isLoading ? <p>Carregando ...</p> : provider.state.accountsFound > 0 ? (<>
-        <h5>Avaliações</h5>
-          <Row className="col-md-8" id="rating-container">
-            <Col md="3">
+        provider.state.isLoading ? <p>Carregando ...</p> : provider.state.accountsFound > 0 ? (
+          <Row className="col-md-5" id="rating-container">
+            <Col md="6">
               <Widget04 
-                icon="cui-thumb-up" 
-                color="success"
-                header={provider.state.selectedAccount.external_data.seller_reputation.transactions.ratings.positive}
-                value={getValue(provider.state.selectedAccount.external_data.seller_reputation.transactions.ratings.positive)}
-                >Positivas
-              </Widget04>
-            </Col>
-            <Col md="3">
-              <Widget04 
-                icon="icon-drop" 
-                color="primary"
-                header={provider.state.selectedAccount.external_data.seller_reputation.transactions.ratings.negative}
-                value={getValue(provider.state.selectedAccount.external_data.seller_reputation.transactions.ratings.negative)}
-                >Neutras
-              </Widget04>
-            </Col>
-            <Col md="3">
-              <Widget04 
-                icon="cui-thumb-down" 
-                color="danger"
-                header={provider.state.selectedAccount.external_data.seller_reputation.transactions.ratings.neutral}
-                value={getValue(provider.state.selectedAccount.external_data.seller_reputation.transactions.ratings.neutral)}
-                >Negativas
+                icon="cui-thumb-up cui-sm" 
+                color={config.color}
+                header="Avaliações"
+                value={config.value}
+                >{config.content}
               </Widget04>
             </Col>
           </Row>
-        </>):(<div/>)
+        ):(<div/>)
       )}}
     </Data.Consumer>
   );

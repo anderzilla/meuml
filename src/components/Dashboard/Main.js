@@ -2,12 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Rating from './Rating';
 import Transactions from './Transactions';
-import SellerStatus from '../widgets/SellerStatus';
+import SellerReputation from './SellerReputation';
 import SelectAccount from './buttons/SelectAccount';
-import SellerReputation from '../widgets/SellerReputation';
+import SellerMetrics from './SellerMetrics';
 import { Data, DataContainer } from '../../containers/Data';
 import { Card, CardBody, CardHeader, Col, Row } from 'reactstrap';
-
 import './main.css';
 
 const Main = () => {
@@ -18,24 +17,33 @@ const Main = () => {
           return(
             provider.state.isLoading ? <p>Carregando ...</p> : provider.state.accountsFound > 0 ? (
             <div className="animated fadeIn">
-              <Row>
-                <Col>
-                  <Card>
-                    <CardHeader>
-                      <SelectAccount />
+              <Row id="main-row">
+                <Col id="main-col">
+                  <Card id="main-card">
+                    <CardHeader id="card-header">
+                      <SelectAccount 
+                        id="select-account"
+                      />
                     </CardHeader>
-                    <CardBody>
-                      <div id="main">
-                        <Row>
-                          <SellerStatus />
-                        </Row>
-                        <h4>{provider.state.selectedAccount.name}</h4>
-                        <SellerReputation />
+                    <CardBody id="card-body">
+                      <div id="avatar">
+                        <h4 id="avatar-title">
+                          {provider.state.selectedAccount.name}
+                        </h4>
+                        <SellerReputation
+                          id="seller-reputation"
+                        />
                       </div>
-                      <br/>
-                      <Rating />
-                      <hr />
-                      <Transactions />
+                    <hr/>
+                      <Transactions
+                        id="seller-transactions"
+                      />
+                      <hr/>
+                      <SellerMetrics />
+                      <hr/>
+                      <Rating
+                        id="seller-rating"
+                      />
                     </CardBody>
                   </Card>
                 </Col>
