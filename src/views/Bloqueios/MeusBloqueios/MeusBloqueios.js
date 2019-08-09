@@ -301,7 +301,7 @@ class MeusBloqueios extends Component {
                 )}
               </Col>
               <Col md="4" sm="4" xs="12">
-              {(this.state.total > 0 && !this.isEmpty(this.state.contas))? 
+              {(!this.isEmpty(this.state.arrayValue))? 
                 <FormGroup row>
                 <Col md="12">
                   <InputGroup>
