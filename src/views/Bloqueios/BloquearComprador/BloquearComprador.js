@@ -443,16 +443,16 @@ class BloquearComprador extends Component {
                                                             {motivos.map((m, key) => {
                                                                 return (
                                                                     <DropdownItem
-                                                                        key={key}
+                                                                        key={m.key}
                                                                         onClick={() =>
                                                                             this.fetchMotivoSelecionado(
-                                                                                m.id,
+                                                                                m.key,
                                                                                 m.name,
                                                                                 m.description
                                                                             )
                                                                         }
                                                                     >
-                                                                        {key} - {m.name}
+                                                                        {m.key} - {m.name}
                                                                     </DropdownItem>
                                                                 );
                                                             })}

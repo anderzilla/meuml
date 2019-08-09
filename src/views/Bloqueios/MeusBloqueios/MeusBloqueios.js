@@ -166,7 +166,7 @@ class MeusBloqueios extends Component {
           const listaMotivos = [];
           const resMotivos = res.data.data;
           resMotivos.map((m, k) => {
-            listaMotivos.push({ id: m.id, name: m.name, key:k });
+            listaMotivos.push({ id: m.id, name: m.name, key:parseInt(m.key) });
           });
           this.setState({
             motivos: listaMotivos
@@ -253,7 +253,7 @@ class MeusBloqueios extends Component {
   }
 
   pagaMotivo(motivoId) {
-    const mt = this.state.motivos.find(z => z.id === motivoId).name;
+    const mt = this.state.motivos.find(z => z.key === motivoId).name;
     return mt;
   }
 
@@ -301,7 +301,7 @@ class MeusBloqueios extends Component {
                 )}
               </Col>
               <Col md="4" sm="4" xs="12">
-              {(this.state.total > 0)? 
+              {(this.state.total > 0 && !this.isEmpty(this.state.contas))? 
                 <FormGroup row>
                 <Col md="12">
                   <InputGroup>
@@ -350,9 +350,9 @@ class MeusBloqueios extends Component {
                     </td>
                   </tr>
                 ) : !isLoading ? (
-                  blacklist.map(bl => {
+                  blacklist.map((bl, key) => {
                     return (
-                      <tr key={bl.customer_id}>
+                      <tr key={key}>
                         <td>{bl.customer_id}</td>
                         <td className="text-center">
                           {bl.bids ? (
