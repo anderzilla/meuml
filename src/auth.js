@@ -9,8 +9,9 @@ export const API = "https://api.app2.meuml.com";
 
 export const isAuthenticated = () => {
   if (localStorage.getItem("@MeuML-Token-expire") !== null) {
+    console.log()
     if (
-      Moment.utc(localStorage.getItem("@MeuML-Token-expire")).format("DD") ===
+      Moment(localStorage.getItem("@MeuML-Token-expire")).format("DD") ===
       Moment.utc().format("DD")
     ) {
       const expireToken = Moment.utc(
