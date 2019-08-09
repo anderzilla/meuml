@@ -166,7 +166,7 @@ class MeusBloqueios extends Component {
           const listaMotivos = [];
           const resMotivos = res.data.data;
           resMotivos.map((m, k) => {
-            listaMotivos.push({ id: m.id, name: m.name, cod:m.key });
+            listaMotivos.push({ id: m.id, name: m.name, key:parseInt(m.key) });
           });
           this.setState({
             motivos: listaMotivos
@@ -253,7 +253,7 @@ class MeusBloqueios extends Component {
   }
 
   pagaMotivo(motivoId) {
-    const mt = this.state.motivos.find(z => z.cod === motivoId).name;
+    const mt = this.state.motivos.find(z => z.key === motivoId).name;
     return mt;
   }
 

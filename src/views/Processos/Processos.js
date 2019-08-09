@@ -71,16 +71,46 @@ class Processos extends Component {
       .get(this.url, { headers: { Authorization: "Bearer " + getToken() } })
       .then(res => {
         if (res.status === 200) {
-          const resProcessos = res.data.data;
-          resProcessos.map((data, y) => {
-            this.showData(data);
-            this.state.accordion.push(false);
-          });
+
+          const data = res.data.data;
+
+
+          for (var i = 0; i < data.length; i++) {
+            console.log(data[i]);
+
+            var tituloProcesso = data[i].tool_name.replace("Blacklist", "Bloqueio");
+            var andamento =
+                data[i].item_finished === null
+                    ? 0
+                    : data[i].item_finished + "/" + data[i].item_total;
+
+            console.log('data.process_items',data[i].process_items)
+            if(data[i].process_items.length > 0){
+              console.log('this.state.listaProcessos')
+              this.state.accordion.push(false);
+              this.state.listaProcessos.push({
+                titulo: tituloProcesso,
+                andamento: andamento,
+                criacao: data[i].date_created === null ? null : Moment(data[i].date_created).format("DD/MM/YYYY HH:mm"),
+                conclusao:
+                    data[i].date_finished === null
+                        ? data[i].date_finished
+                        : Moment(data[i].date_finished).format("DD/MM/YYYY HH:mm"),
+                subprocessos: data[i].process_items
+              });
+            }else{
+              console.log('else')
+            }
+          }
+
+          console.log('this.state.listaProcessos.',this.state.listaProcessos)
+
           this.setState({
             processos: this.state.listaProcessos,
             isLoadingProcessos: false,
             isLoadingAtualiza: false,
           });
+
         } else {
           Swal.fire({
             html: "<p>" + res.data.message + "</p>",
@@ -93,6 +123,7 @@ class Processos extends Component {
   }
 
   isEmpty(obj) {
+    return obj.length > 0;
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) return false;
     }
@@ -105,18 +136,21 @@ class Processos extends Component {
       data.item_finished === null
         ? 0
         : data.item_finished + "/" + data.item_total;
-    !this.isEmpty(data.process_items)
-      ? this.state.listaProcessos.push({
-          titulo: tituloProcesso,
-          andamento: andamento,
-          criacao: Moment(data.date_created).format("DD/MM/YYYY HH:mm"),
-          conclusao:
+
+    if(data.process_items.length > 0){
+      this.state.listaProcessos.push({
+        titulo: tituloProcesso,
+        andamento: andamento,
+        criacao: Moment(data.date_created).format("DD/MM/YYYY HH:mm"),
+        conclusao:
             data.date_finished === null
-              ? data.date_finished
-              : Moment(data.date_finished).format("DD/MM/YYYY HH:mm"),
-          subprocessos: data.process_items
-        })
-      : console.log();
+                ? data.date_finished
+                : Moment(data.date_finished).format("DD/MM/YYYY HH:mm"),
+        subprocessos: data.process_items
+      })
+    }else{
+      console.log(data)
+    }
   }
 
   preFormatedext(text) {
@@ -149,6 +183,8 @@ class Processos extends Component {
   }
   render() {
     const { isLoadingProcessos, processos } = this.state;
+    console.log('processos ', processos );
+    console.log('processos ', isLoadingProcessos );
     return (
       <div className="animated">
         <Card>
@@ -165,13 +201,15 @@ class Processos extends Component {
           <CardBody>
             {!isLoadingProcessos ? (
               <div id="accordion">
-                {this.isEmpty(processos) ? (
+                {processos.length < 1? (
                   <div className="alert alert-info fade show">
                     Nenhum Processo encontrado!
                   </div>
                 ) : (
                   processos.map((p, k) => {
-                    return !this.isEmpty(p.subprocessos) ? (
+                    console.log('pppppp',p);
+                    console.log('kkkkkk',k);
+                    return !this.isEmpty(p) ? (
                       <Card className="mb-0 listaProcessos " key={k}>
                         <CardHeader
                           id={"heading" + k}
@@ -214,7 +252,7 @@ class Processos extends Component {
                           <CardBody className="subItensProcessos">
                             <ListGroup className="listaSubItem">
                               {p.subprocessos.map((d, k) => {
-                                this.preFormatedext(d.cause);
+                                this.preFormatedext(d.message);
                                 const tituloSubItem = d.tool_name.replace(
                                   "Blacklist",
                                   "Bloqueio"
