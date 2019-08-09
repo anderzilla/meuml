@@ -31,7 +31,7 @@ class Processos extends Component {
       paginate: "",
       processos: [],
       isLoadingProcessos: true,
-      tempoProcesso: "",
+      tempoProcesso: 
       listaProcessos: [],
       accordion: [],
       fadeIn: true,
@@ -173,7 +173,7 @@ class Processos extends Component {
     this.setState({
       isLoadingProcessos: true,
       process: [],
-      process_items: []
+      listaProcessos: []
     });
     this.fetchProcess();
   }
