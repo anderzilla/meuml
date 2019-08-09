@@ -10,13 +10,13 @@ export const API = "https://api.app2.meuml.com";
 export const isAuthenticated = () => {
   if (localStorage.getItem("@MeuML-Token-expire") !== null) {
     if (
-      Moment(localStorage.getItem("@MeuML-Token-expire")).format("DD") ===
-      Moment().format("DD")
+      Moment.utc(localStorage.getItem("@MeuML-Token-expire")).format("DD") ===
+      Moment.utc().format("DD")
     ) {
-      const expireToken = Moment(
+      const expireToken = Moment.utc(
         localStorage.getItem("@MeuML-Token-expire")
       ).format("DD/MM/YYYY HH:mm");
-      const dataFim = Moment().format("DD/MM/YYYY HH:mm");
+      const dataFim = Moment.utc().format("DD/MM/YYYY HH:mm");
       if (expireToken > dataFim) {
         if (localStorage.getItem(TOKEN_KEY) !== null) {
           return true;
