@@ -18,7 +18,10 @@ const SelectAccount = () => {
         } else if (provider.state.accountsFound === 2 || provider.state.accountsFound === 3) {
           return <ButtonGroup>
                   {provider.state.accounts.map(acc => {
-                    return <button className="btn btn-secondary btn-sm">{acc}</button>
+                    return <button className="btn btn-secondary btn-sm"
+                            onClick={() => provider.selectAccount(acc.id)}
+                            >{acc.name}
+                           </button>
                   })}
                 </ButtonGroup>
         

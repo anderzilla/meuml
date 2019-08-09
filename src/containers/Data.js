@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { getToken } from '../auth';
+import axios from 'axios';
+import mock from './_mock';
 export const Data = React.createContext();
 
 export class DataContainer extends Component {
@@ -9,7 +10,7 @@ export class DataContainer extends Component {
     this.state = {
       accounts: [],
       isLoading: true,
-      selectedAccount: [],
+      selectedAccount: {},
       accountsFound: 0
     }
   }
@@ -26,10 +27,9 @@ export class DataContainer extends Component {
         this.setState({
           accounts: response.data.data,
           accountsFound: response.data.data.length,
-          selectedAccount: response.data.data[0],
+          selectedAccount: mock.data,
           isLoading: false
         });
-        console.log(this.state);
       }
     }).catch(err => console.log(err));
   }
@@ -38,7 +38,7 @@ export class DataContainer extends Component {
     const selectedAccount = this.state.accounts.map(account => {
       if (account.id === id) return account;
     });
-    this.setState({ selectedAccount: selectedAccount });
+    this.setState({ selectedAccount: selectedAccount[0] });
   }
 
   render() {
