@@ -301,7 +301,7 @@ class MeusBloqueios extends Component {
                 )}
               </Col>
               <Col md="4" sm="4" xs="12">
-              {(this.state.total > 0)? 
+              {(this.state.total > 0 && !this.isEmpty(this.state.contas))? 
                 <FormGroup row>
                 <Col md="12">
                   <InputGroup>
@@ -350,9 +350,9 @@ class MeusBloqueios extends Component {
                     </td>
                   </tr>
                 ) : !isLoading ? (
-                  blacklist.map(bl => {
+                  blacklist.map((bl, key) => {
                     return (
-                      <tr key={bl.customer_id}>
+                      <tr key={key}>
                         <td>{bl.customer_id}</td>
                         <td className="text-center">
                           {bl.bids ? (
