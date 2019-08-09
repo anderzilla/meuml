@@ -223,7 +223,7 @@ class CategoriasDataTable extends React.Component {
             <div className="animated fadeIn">
                 <Card>
                     <CardHeader>
-                        <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.state.last_update).format('DD/MM/YYYY HH:MM')} </h6>
+                        <h6 className={"labelAtualiza"}> Atualizado em {Moment.utc(this.state.last_update).format('DD/MM/YYYY HH:MM')} </h6>
                         <div className='input-group filtro'>
                             <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" value={this.state.filter} placeholder={'Pesquisar por descrição...'} onChange={this.handleChange} onClick={this.onFilterChange} />
                             <span className='it-group-btn'>
