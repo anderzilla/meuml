@@ -18,7 +18,7 @@ const createComponent = props => {
   if(props === null) {
     return (
       <>
-        <Col lg="7">
+        <Col lg="11">
           <i className="cui cui-star font-lg"></i>
           <Progress
             className="progress-xs"
@@ -47,7 +47,7 @@ const createComponent = props => {
           alt="Avatar"
           id="avatar"
         />
-        <Col lg="7">
+        <Col lg="11">
           <i className="cui cui-star font-lg"></i>
           <Progress
             className="progress-xs"
