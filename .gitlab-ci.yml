@@ -33,7 +33,6 @@ producao:
     - whoami
     - npm i
     - CI=false npm run build:staging
-    - pm2 restart producao-react-panel
   only:
     - master
     - merge-request
