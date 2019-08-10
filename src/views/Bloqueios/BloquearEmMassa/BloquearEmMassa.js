@@ -35,6 +35,8 @@ class BloquearEmMassa extends Component {
     this.toggleCustom = this.toggleCustom.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
+    this.changeBids = this.changeBids.bind(this);
+    this.changeQuestions = this.changeQuestions.bind(this);
 
     this.state = {
       dropdownOpenConta: false,
@@ -421,11 +423,11 @@ class BloquearEmMassa extends Component {
 
                 this.state.bloqueios.push({
                   account_id: s.value,
-                  bids: !this.state.bids ? false : true,
+                  bids: this.state.bids,
                   customer_id: cid.customer_id,
                   motive_description: this.state.motivoBloqueio,
                   motive_id: "9",
-                  questions: !this.state.questions ? false : true
+                  questions: this.state.questions
                 });
               });
             });
@@ -515,11 +517,11 @@ class BloquearEmMassa extends Component {
                     const { customer_id } = this.state;
                     this.state.bloqueios.push({
                       account_id: s.value,
-                      bids: !this.state.bids ? false : true,
+                      bids: this.state.bids,
                       customer_id: cid.customer_id,
                       motive_description: "Outros - Em Massa",
                       motive_id: "9",
-                      questions: !this.state.questions ? false : true
+                      questions: this.state.questions
                     });
                   });
                 });
@@ -546,8 +548,8 @@ class BloquearEmMassa extends Component {
                         {
                           blacklist_name: this.state.nomeLista,
                           accounts: this.state.accountId,
-                          bids: !this.state.bids ? false : true,
-                          questions: !this.state.questions ? false : true
+                          bids: this.state.bids,
+                          questions: this.state.questions
                         },
                         {
                           headers: {
@@ -778,7 +780,7 @@ class BloquearEmMassa extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="bids"
-                              aria-checked={this.state.bids}
+                              checked={this.state.bids}
                               onChange={() => this.changeBids(this.state.bids)}
                             />
                             <span className="textoSwitch">
@@ -792,7 +794,7 @@ class BloquearEmMassa extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="questions"
-                              aria-checked={this.state.questions}
+                              checked={this.state.questions}
                               onChange={() =>
                                 this.changeQuestions(this.state.questions)
                               }
@@ -869,7 +871,7 @@ class BloquearEmMassa extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="bids"
-                              aria-checked={this.state.bids}
+                              checked={this.state.bids}
                               onChange={() => this.changeBids(this.state.bids)}
                             />
                             <span className="textoSwitch">
@@ -883,7 +885,7 @@ class BloquearEmMassa extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="questions"
-                              aria-checked={this.state.questions}
+                              checked={this.state.questions}
                               onChange={() =>
                                 this.changeQuestions(this.state.questions)
                               }

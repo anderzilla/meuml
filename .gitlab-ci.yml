@@ -27,13 +27,12 @@ producao:
   environment:
     name: producao
   script:
-    - cd /usr/share/nginx/html/meuml/
+    - cd /usr/share/nginx/html/front-end/
     - git pull https://ci-homolog-b:ci-homolog-b@gitlab.com/bitflix/front-end.git master
     - git checkout master
     - whoami
     - npm i
     - CI=false npm run build:staging
-    - pm2 restart producao-react-panel
   only:
     - master
     - merge-request
