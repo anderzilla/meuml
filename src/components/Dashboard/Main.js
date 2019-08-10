@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Rating from './Rating';
+// import Rating from './Rating';
 import Transactions from './Transactions';
 import SellerReputation from './SellerReputation';
 import SelectAccount from './buttons/SelectAccount';
@@ -20,30 +20,14 @@ const Main = () => {
               <Row id="main-row">
                 <Col id="main-col">
                   <Card id="main-card">
-                    <CardHeader id="card-header">
-                      <SelectAccount 
-                        id="select-account"
-                      />
-                    </CardHeader>
+                    <SelectAccount/>
                     <CardBody id="card-body">
                       <div id="avatar">
-                        <h4 id="avatar-title">
-                          {provider.state.selectedAccount.name}
-                        </h4>
-                        <SellerReputation
-                          id="seller-reputation"
-                        />
+                        <h4 id="avatar-title">{provider.state.selectedAccount.name}</h4>
+                        <SellerReputation/>
                       </div>
-                    <hr/>
-                      <Transactions
-                        id="seller-transactions"
-                      />
-                      <hr/>
+                      <Transactions />
                       <SellerMetrics />
-                      <hr/>
-                      <Rating
-                        id="seller-rating"
-                      />
                     </CardBody>
                   </Card>
                 </Col>

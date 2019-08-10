@@ -1,0 +1,10 @@
+#button {
+  max-width: 12%;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+#button-group {
+  float: right;
+  max-width: 33%;
+}

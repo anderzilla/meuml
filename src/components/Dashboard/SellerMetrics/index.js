@@ -1,6 +1,8 @@
 import React from 'react';
 import { Data } from '../../../containers/Data';
-import { Col, Row, Card, CardHeader, CardBody } from 'reactstrap';
+import Widget from '../../widgets/Widget02';
+import { Col, Row } from 'reactstrap';
+import Rating from '../Rating';
 
 const SellerMetrics = () => {
   return(
@@ -11,24 +13,7 @@ const SellerMetrics = () => {
             <Title 
               period={provider.state.selectedAccount.external_data.seller_reputation.metrics.sales.period}
             />
-            <Row>
-              <CardSample
-                header="Atrasos"
-                body={provider.state.selectedAccount.external_data.seller_reputation.metrics.delayed_handling_time.rate}
-              />
-              <CardSample
-                header={'Header'}
-                body={'Body'}
-              />
-              <CardSample
-                header={'Header'}
-                body={'Body'}
-              />
-              <CardSample
-                header={'Header'}
-                body={'Body'}
-              />
-            </Row>
+            <CardsContainer provider={provider.state}  />
           </>
         );
       }}
@@ -36,21 +21,59 @@ const SellerMetrics = () => {
   );
 }
 
-const CardSample = props => {
-  return (
-    <Col>
-      <Card>
-        <CardHeader>
-          <h5>{props.header}</h5>
-        </CardHeader>
-        <CardBody>
-          <p>Atrasos {props.body}%</p>
-        </CardBody>
-      </Card>
-    </Col>
-  )
+const CardsContainer = props => {
+  const provider = props.provider;
+  return(
+    <Row>
+      <Row className="col-md-8">
+        <Card
+          col="4"
+          header="Atrasos"
+          body={provider.selectedAccount.external_data.seller_reputation.metrics.delayed_handling_time.rate+"%"}
+          icon="fa fa-hourglass-2"
+          color="secondary"
+          variant={0}/>
+        <Card
+          col="4" 
+          header="Reclamações"
+          body={provider.selectedAccount.external_data.seller_reputation.metrics.claims.rate+"%"}
+          icon="fa fa-thumbs-down"
+          color="warning"
+          variant={0}/>
+      </Row>
+      <Row className="col-md-8">
+        <Card
+          col="4" 
+          header="Mediações"
+          body={provider.selectedAccount.external_data.seller_reputation.metrics.sales.completed}
+          icon="fa fa-support"
+          color="info"
+          variant={0}/>
+        <Card
+          col="4" 
+          header="Cancelamentos"
+          body={provider.selectedAccount.external_data.seller_reputation.metrics.cancellations.rate+"%"}
+          icon="fa fa-times-circle-o"
+          color="danger"
+          variant={0}/>
+      </Row>
+      <Rating />
+    </Row>
+  );
 }
 
+const Card = props => {
+  return (
+    <Col md="6">
+      <Widget 
+        header={props.header}
+        mainText={props.body}
+        icon={props.icon}
+        color={props.color}
+        variant={props.variant}/>
+    </Col>
+  );
+}
 const Title = props => {
   let period = 'últimos 4';
   if (props.period === '60 months') period = 'últimos 60';

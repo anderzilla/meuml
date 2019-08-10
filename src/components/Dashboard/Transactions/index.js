@@ -15,7 +15,7 @@ const Transactions = props => {
             <Col xs="12" sm="6" lg="3">
               <Widget02 
                 header={provider.state.selectedAccount.external_data.seller_reputation.transactions.total || '-'} 
-                mainText="TOTAL" icon="fa fa-calculator" color="primary"
+                mainText="TOTAL" icon="fa fa-calculator" color="dark"
               />
             </Col>
             <Col xs="12" sm="6" lg="3">

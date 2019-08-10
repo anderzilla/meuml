@@ -2,6 +2,7 @@ import React from 'react';
 import Widget04 from '../../widgets/Widget04';
 import { Data } from '../../../containers/Data';
 import { Col, Row } from 'reactstrap';
+import './index.css';
 
 const getValue = props => {
   const { negative, neutral, positive } = props;
@@ -26,7 +27,7 @@ const cardConfig = props => {
   else if (positive > negative) color = "success"
   else if (neutral > positive && neutral > negative) color = "warning";
   return { 
-    content: `Positivas: ${positive}% Neutras: ${neutral}% Negativas: ${negative}%`,
+    content: `Positivas: ${positive}% | Neutras: ${neutral}% | Negativas: ${negative}%`,
     value: getValue({negative, neutral, positive}),
     color: color
   }
@@ -42,17 +43,15 @@ const Rating = () => {
         let config = cardConfig({negative, neutral, positive})
         return(
         provider.state.isLoading ? <p>Carregando ...</p> : provider.state.accountsFound > 0 ? (
-          <Row className="col-md-5" id="rating-container">
-            <Col md="6">
-              <Widget04 
-                icon="cui-thumb-up cui-sm" 
-                color={config.color}
-                header="Avaliações"
-                value={config.value}
-                >{config.content}
-              </Widget04>
-            </Col>
-          </Row>
+          <Col id="rating-container">
+            <Widget04 
+              icon="cui-thumb-up cui-sm" 
+              color={config.color}
+              header="Avaliações"
+              value={config.value}
+              >{config.content}
+            </Widget04>
+          </Col>
         ):(<div/>)
       )}}
     </Data.Consumer>
