@@ -65,12 +65,16 @@ const ListaContas = () => {
                         <div className="text-primary text-center nomeDuasLinhas" title={acc.external_name}>{acc.external_name}</div>
                         <div className="text-left">
                           <Row>
-                            <p className="labelCard mr-1"><i className="fa fa-envelope"></i> E-mail: </p>
-                            <small>{acc.external_data.email}</small>
+                            <p className="labelCard mr-1">
+                              <i className="fa fa-envelope"></i>
+                              E-mail: {acc.external_data.email}
+                            </p>
                           </Row>
                           <Row>
-                            <p className="labelCard mr-1"><i className="fa fa-user"></i> Usuário: </p>
-                            <small>{acc.external_data.nickname}</small>
+                            <p className="labelCard mr-1">
+                              <i className="fa fa-user"></i>
+                              Usuário: {acc.external_data.nickname}
+                            </p>
                           </Row>
                         </div>
                         <Row>
@@ -80,7 +84,7 @@ const ListaContas = () => {
                           </Col>
                           <Col md="6" sm="12">
                             <h5 className="tituloAnuncios">Anúncios</h5>
-                            <h5 className="text-success valores">{acc.count_advertisings}</h5>
+                            <h5 className="text-success valores">{acc.count_advertisings || '0'}</h5>
                           </Col>
                         </Row>
                       </Carton>

@@ -27,7 +27,7 @@ export class DropDown extends React.Component {
           isOpen={this.state.dropdown === "opened"}
           toggle={this.toggle}
         >
-          <DropdownToggle caret color="primary" size="sm">
+          <DropdownToggle caret color="dark" size="sm">
             {this.props.title || <span>Opções</span>}
           </DropdownToggle>
           <DropdownMenu>{this.props.children}</DropdownMenu>
