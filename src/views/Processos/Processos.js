@@ -15,6 +15,8 @@ import Swal from "sweetalert2";
 import Moment from "moment";
 import ReactLoading from "react-loading";
 import { getToken } from "../../auth";
+
+
 class Processos extends Component {
   constructor(props) {
     super(props);
@@ -29,7 +31,7 @@ class Processos extends Component {
       paginate: "",
       processos: [],
       isLoadingProcessos: true,
-      tempoProcesso: "",
+      tempoProcesso: '',
       listaProcessos: [],
       accordion: [],
       fadeIn: true,
@@ -76,34 +78,30 @@ class Processos extends Component {
 
 
           for (var i = 0; i < data.length; i++) {
-            console.log(data[i]);
-
             var tituloProcesso = data[i].tool_name.replace("Blacklist", "Bloqueio");
             var andamento =
                 data[i].item_finished === null
                     ? 0
                     : data[i].item_finished + "/" + data[i].item_total;
 
-            console.log('data.process_items',data[i].process_items)
+
             if(data[i].process_items.length > 0){
               console.log('this.state.listaProcessos')
               this.state.accordion.push(false);
               this.state.listaProcessos.push({
                 titulo: tituloProcesso,
                 andamento: andamento,
-                criacao: data[i].date_created === null ? null : Moment(data[i].date_created).format("DD/MM/YYYY HH:mm"),
+                criacao: data[i].date_created === null ? null : Moment.utc(data[i].date_created).format("DD/MM/YYYY HH:mm"),
                 conclusao:
                     data[i].date_finished === null
                         ? data[i].date_finished
-                        : Moment(data[i].date_finished).format("DD/MM/YYYY HH:mm"),
+                        : Moment.utc(data[i].date_finished).format("DD/MM/YYYY HH:mm"),
                 subprocessos: data[i].process_items
               });
             }else{
               console.log('else')
             }
           }
-
-          console.log('this.state.listaProcessos.',this.state.listaProcessos)
 
           this.setState({
             processos: this.state.listaProcessos,
@@ -141,11 +139,11 @@ class Processos extends Component {
       this.state.listaProcessos.push({
         titulo: tituloProcesso,
         andamento: andamento,
-        criacao: Moment(data.date_created).format("DD/MM/YYYY HH:mm"),
+        criacao: Moment.utc(data.date_created).format("DD/MM/YYYY HH:mm"),
         conclusao:
             data.date_finished === null
                 ? data.date_finished
-                : Moment(data.date_finished).format("DD/MM/YYYY HH:mm"),
+                : Moment.utc(data.date_finished).format("DD/MM/YYYY HH:mm"),
         subprocessos: data.process_items
       })
     }else{
