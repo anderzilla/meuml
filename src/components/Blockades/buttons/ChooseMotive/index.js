@@ -27,28 +27,24 @@ export default function ChooseMotive(props) {
   }
 
   return (
-    <Col xs="12" sm="6" md="6">
-      <FormGroup>
-        <Row>
-          <DropDown title="Selecione um motivo">
-          {motiveList.map(motive => {
-            return (
-              <button
-                callback={(value)=> props.callback(value)}
-                onClick={(e)=> handleClick(e)}
-                title={motive.description}
-                className="dropdown-item"
-                name={motive.name}
-                key={motive.key}
-                id={motive.id}
-                >{motive.key} - {motive.name}
-              </button>
-            );
-          })}
-          </DropDown>
-          <Input className="form-control col-md-6 ml-1" placeholder={motive} value={motive} readOnly/>
-        </Row>
-      </FormGroup>
-    </Col>
+    <Row className="ml-1">
+      <DropDown title="Bloqueio">
+      {motiveList.map(motive => {
+        return (
+          <button
+            callback={(value)=> props.callback(value)}
+            onClick={(e)=> handleClick(e)}
+            title={motive.description}
+            className="dropdown-item"
+            name={motive.name}
+            key={motive.key}
+            id={motive.id}
+            >{motive.key} - {motive.name}
+          </button>
+        );
+      })}
+      </DropDown>
+      <Input className="form-control ml-1" style={{width: "125px"}} placeholder={motive} value={motive} readOnly/>
+    </Row>
   );
 }

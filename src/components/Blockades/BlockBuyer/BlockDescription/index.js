@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Input } from 'reactstrap';
+import { FormGroup, Input } from 'reactstrap';
 
 export default function BlockDescription(props) {
   const [description, setDescription] = useState('');
@@ -8,7 +8,7 @@ export default function BlockDescription(props) {
     props.callback(description);
   }
   return(
-    <Col md={props.col}>
+    <FormGroup>
       <h5>Descreva o motivo (opcional)</h5>
       <Input
         type="textarea"
@@ -20,6 +20,6 @@ export default function BlockDescription(props) {
         value={description}
         callback={(value) => props.callback(value)}
       />
-    </Col>
+    </FormGroup>
   );
 }
