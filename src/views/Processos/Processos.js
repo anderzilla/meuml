@@ -197,8 +197,7 @@ class Processos extends Component {
                                           aria-expanded={this.state.accordion[k]}
                                           aria-controls={"collapse" + k}
                                       >
-                                        <h5 className="tituloProcessos">{p.titulo}</h5>
-                                        <p className="">Conta - {p.account_name}</p>
+                                        <h5 className="tituloProcessos">{p.titulo} - {p.account_name}</h5>
                                         <span>{p.andamento} concluídos</span>
                                       </Button>
                                     </Col>
@@ -206,7 +205,7 @@ class Processos extends Component {
                               <span className="m-0 p-0 text-right">
                                 <sup>
                                   {p.conclusao === null ||
-                                  p.conslusão === "Invalid date"
+                                  p.conslusao === "Invalid date"
                                       ? "iniciado em " + p.criacao + " "
                                       : "finalizado em " + p.conclusao + " "}
                                   <i className="fa fa-clock-o" />
