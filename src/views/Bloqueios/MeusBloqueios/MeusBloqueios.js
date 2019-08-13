@@ -321,7 +321,7 @@ class MeusBloqueios extends Component {
                : <span></span>}
               </Col>
               <Col md="4" sm="4" xs="12">
-              {(this.state.total > 0)? <div className="alert alert-primary fade show">Registros Encontrados:<b> {(this.state.total -1)} </b></div> : <span></span>}
+              {(this.state.total > 0)? <div className="alert alert-primary fade show">Registros Encontrados:<b> {(this.state.total)} </b></div> : <span></span>}
               </Col>
             </Row>
           </CardHeader>
