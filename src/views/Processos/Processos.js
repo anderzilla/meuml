@@ -207,7 +207,7 @@ class Processos extends Component {
                                   {p.conclusao === null ||
                                   p.conslusao === "Invalid date"
                                       ? "iniciado em " + p.criacao + " "
-                                      : "finalizado em " + p.conclusao + " "}
+                                      : "iniciado em " + p.criacao + " e finalizado em " + p.conclusao + " "}
                                   <i className="fa fa-clock-o" />
                                 </sup>
                               </span>
