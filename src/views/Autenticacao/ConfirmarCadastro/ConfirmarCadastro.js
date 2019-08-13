@@ -52,7 +52,7 @@ class ConfirmarCadastro extends Component {
         <Container>
           <Row className="justify-content-center">
             <Col md="6">
-              <Card className="col-md-12 text-muted py-5 d-md-down-none">
+              <Card className="col-md-12">
                 <CardBody className="text-center">
                   <div>
                     <h2><img src={logo} width="60%" className="espacoLogoCadastro" alt="MeuML" /></h2>
