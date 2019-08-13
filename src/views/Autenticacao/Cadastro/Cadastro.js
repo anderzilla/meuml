@@ -44,14 +44,8 @@ class Cadastro extends Component {
     }
   }
 
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value
-    });
+  handleInputChange(e) {
+    this.setState({[e.target.name]: e.target.value });
   }
 
   toggle() {
@@ -82,50 +76,31 @@ class Cadastro extends Component {
     /*}else if (this.state.termos === '' ){
       alert('Aceite os termos de uso!' + this.state.termos);*/
     }else{
-      api.post(`/user`, {
+      const data = {
         "email":this.state.email,
         "name":this.state.userName,
         "password":this.state.password
-      })
-      .then(res => {
-        //console.log(res.data);
-        const status = res.data.status;
-        this.setState({status});
-        if (this.state.status === 'success'){
-          const message = res.data.message;
-          this.setState({message});
-          Swal.fire({html:'<p>Enviamos o link de confirmação para o email informado, verifique o recebimento para concluir o cadastro.</p>', type: "info", showCloseButton: false, showConfirmButton: true, textConfirmButton:"OK"});
-          this.setState({
-            isLoadingCadastro: false,
-      
+      }
+      api.post(`/user`, data)
+        .then(res => {
+          Swal.fire({
+            html:`<p>${res.data.message}</p>`,
+            type: res.data.status,
+            showCloseButton: true
           });
+          this.setState({ isLoadingCadastro: false });
           this.props.history.push("/");
-          //TO DO: Inserir redirect
-        }else{
-          const message = res.data.message;
-          if (res.data.email !== '' || res.data.email !== 'undefined'){
-            this.setState({tipoErro: res.data.data.email});
-          }else if(res.data.data._schema !== '' || res.data.data._schema !== 'undefined'){
-            this.setState({tipoErro: res.data.data._schema});
-          }else{
-            this.setState({tipoErro: "Erro desconhecido, tente novamente!"});
-          }
-          this.setState({message});
-          this.setState({
-            isLoadingCadastro: false,
-      
+          window.location.reload();
+        }).catch((error) => {
+          this.setState({isLoadingCadastro: false});
+          Swal.fire({
+            html:`<p>${error}</p>`,
+            type: 'error',
+            showConfirmButton: true
           });
-          Swal.fire({html:'<p>'+this.state.message+' <br /> <b>'+ this.state.tipoErro +'</b> </p>', type: 'error', showConfirmButton: true});
-        }
-      }).catch((error) => {
-        this.setState({isLoadingCadastro: false});
-        !error.response ?
-        (this.setState({tipoErro: error})) :
-        (this.setState({tipoErro: error.response.data.message}))
-        Swal.fire({html:'<p>'+ this.state.tipoErro+'<br /></p>', type: 'error', showConfirmButton: false, showCancelButton: true, cancelButtonText: 'Fechar'});
-    });
-  }
-  }
+        });
+      }
+    }
 
 
   render() {
@@ -200,11 +175,6 @@ class Cadastro extends Component {
                                      value={this.state.confirmPassword} />
                     </InputGroup>
                     <Row>
-                      <Col xs="12" sm="4">
-                      {/*<InputGroup>
-                        <AppSwitch className={'mx-1'} variant={'3d'} color={'success'} name="termos" onChange={this.mudaTermos} defaultChecked={this.state.termos} label dataOn={'\u2713'} dataOff={'\u2715'}/> Aceito os termos de uso.
-                      </InputGroup>*/}
-                      </Col>
                       <Col xs="12" sm="8" className="text-right">
                       {!isLoadingCadastro ? (
                       <div>
@@ -216,26 +186,10 @@ class Cadastro extends Component {
                       ) : (
                         <ReactLoading type={'spinningBubbles'} color={'#054785'} height={50} width={50}  className='spinnerStyle'/>
                       )}
-                     
                       </Col>
                     </Row>
                   </Form>
                 </CardBody>
-                <CardFooter className="p-4">
-                {/*<div className="card-footer-actions">
-                <b>Termos de Uso</b> <Button className="card-footer-action badge badge-dark badge-pill float-right text-light" data-target="#collapseTermos" onClick={this.toggle}><i className="icon-arrow-down"></i></Button>
-                </div>
-                <Collapse isOpen={this.state.collapse} id="collapseTermos">
-                  <Row>
-                    <Col xs="12" sm="12">
-                      <em>Termos de Uso</em>
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
-                    laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation
-                    ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-                    </Col>
-                  </Row>
-                    </Collapse>*/}
-                </CardFooter>
               </Card>
             </Col>
           </Row>
