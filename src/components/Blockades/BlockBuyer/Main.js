@@ -45,6 +45,7 @@ const Main = () => {
       {(provider) => {
         return (
           <Carton md="8">
+            <button onClick={()=>console.log(accounts)}>Log</button>
             <Row>
               <Row style={{marginLeft: "10px"}}>
                 <FormGroup>
@@ -79,11 +80,10 @@ const Main = () => {
 
 const makeJson = props => {
   const { motive, accounts, buyerReference, blockDescription, blockBids, blockQuestions } = props;
-  console.log(accounts)
   let data = accounts.map(account => {
     return {
       "motive_id": motive,
-      "account_id": account.id,
+      "account_id": account,
       "customer_id": `${buyerReference}`,
       "description": blockDescription,
       "bids": blockBids,
