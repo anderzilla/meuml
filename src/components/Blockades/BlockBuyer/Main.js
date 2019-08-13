@@ -22,7 +22,7 @@ const Main = () => {
     if (e.target.name === 'questions') blockQuestions ? setBlockQuestions(false) : setBlockQuestions(true);
   }
   const blockBuyer = () => {
-    const data = makeJson({ motive, accounts, buyerReference, blockDescription, blockBids, blockBuyer });
+    const data = makeJson({ motive, accounts, buyerReference, blockDescription, blockBids, blockQuestions });
     data.forEach(element => {
       api.post('/blacklist', element).then(response => {
         Swal.fire({
@@ -79,8 +79,9 @@ const Main = () => {
 
 const makeJson = props => {
   const { motive, accounts, buyerReference, blockDescription, blockBids, blockQuestions } = props;
+  console.log(accounts)
   let data = accounts.map(account => {
-      let data = {
+    return {
       "motive_id": motive,
       "account_id": account.id,
       "customer_id": `${buyerReference}`,
@@ -88,8 +89,6 @@ const makeJson = props => {
       "bids": blockBids,
       "questions": blockQuestions
     }
-    console.log(data);
-    return data;
   });
   return data;
 }

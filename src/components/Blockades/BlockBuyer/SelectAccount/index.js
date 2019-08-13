@@ -6,22 +6,29 @@ import { FormGroup } from 'reactstrap';
 
 export default function SelectAccount(props) {
   const [selected, setSelected] = useState([]);
-  const toArray = props => props.map(item => item.name);
+  const [accounts, setAccounts] = useState([]);
+  const [accountId, setAccountId] = useState(0);
+  const toArray = () => accounts.map(item => item.name);
+  const toId = name => accounts.map(item => {
+    let res = 0;
+    if (name === item.name) res = item.id;
+    return res;
+  });
   const handleChange = e => {
     setSelected(e);
-    props.callback(e);
   }
   return (
     <Data.Consumer>
       {(provider) => {
-        const options = toArray(provider.state.accounts);
+        setAccounts(provider.state.accounts);
+        const id = toId(selected);
         return (
           !provider.state.isLoading ? (
             <FormGroup>
               <h5>Selecione uma conta</h5>
               <Picky className="input-group"
                 value={selected}
-                options={options}
+                options={toArray()}
                 onChange={handleChange}
                 open={false}
                 valueKey="value"
@@ -33,7 +40,7 @@ export default function SelectAccount(props) {
                 dropdownHeight={500}
                 manySelectedPlaceholder="%s contas selecionadas"
                 selectAllText="Selecionar todas"
-                callback={(value)=> props.callback(value)}
+                callback={()=> props.callback(id)}
               />
             </FormGroup>
           ):(<h3>Carregando ...</h3>)
