@@ -22,7 +22,7 @@ export default class Carton extends Component {
       <>
         <Col xs={this.props.xs} sm={this.props.sm} md={this.props.md} key={this.props.key}>
           <Fade timeout={this.state.timeout} in={this.state.fadeIn}>
-            <Card className={this.props.className}>
+            <Card className={`${this.props.className} card-accent-primary`}>
               <CardHeader className={this.props.className}>
                 {this.props.header}
               </CardHeader>
