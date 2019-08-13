@@ -202,15 +202,18 @@ class Processos extends Component {
                                       </Button>
                                     </Col>
                                     <Col sm="6" md="6" className="text-right">
-                              <span className="m-0 p-0 text-right">
-                                <sup>
-                                  {p.conclusao === null ||
-                                  p.conslusao === "Invalid date"
-                                      ? "iniciado em " + p.criacao + " "
-                                      : "iniciado em " + p.criacao + " e finalizado em " + p.conclusao + " "}
-                                  <i className="fa fa-clock-o" />
-                                </sup>
-                              </span>
+                                    <span className="m-0 p-0 text-right">
+                                        {p.conclusao === null ||
+                                        p.conslusao === "Invalid date"
+                                            ? <sup>iniciado em {p.criacao}
+                                              <i className="fa fa-clock-o" /> </sup>
+                                            : <sup>iniciado em {p.criacao}
+                                              <i className="fa fa-clock-o" /> <br /> finalizado em  {p.conclusao}
+                                              <i className="fa fa-clock-o" /> </sup>
+                                          }
+                                        <sup>
+                                        </sup>
+                                    </span>
                                     </Col>
                                   </Row>
                                 </CardHeader>
