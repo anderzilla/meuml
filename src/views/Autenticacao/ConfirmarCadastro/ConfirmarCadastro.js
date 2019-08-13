@@ -15,83 +15,54 @@ class ConfirmarCadastro extends Component {
       status: '',
       show: false,
     };
-
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value
-    });
-  }
-
   handleSubmit(event) {
-
     event.preventDefault();
-    
     this.setState({auth: 'true'});
-    
     axios.post(process.env.REACT_APP_API_URL + `/auth/confirm`, {
       "hash":this.state.hash,
       "email":this.state.email,
     })
     .then(res => {
-      const status = res.data.status;
-      this.setState({status});
-      if (this.state.status === 'success'){
-        const message = res.data.message;
-        this.setState({message});
-        Swal.fire({html:'<p>'+this.state.message+'</p>', type: this.state.status, showConfirmButton: true,
-          onClose: () => {
-            this.props.history.push('/login');
-            window.location.reload();
-          }
-        });
-        //TO DO: Inserir redirect
-      }else{
-        const message = res.data.message;
-        this.setState({message});
-        Swal.fire({html:'<p>'+this.state.message+'</p>', type: 'error', showConfirmButton: true,
+      Swal.fire({
+        html:'<p>'+res.data.message+'</p>',
+        type: res.data.status,
+        showConfirmButton: true,
         onClose: () => {
           this.props.history.push('/login');
           window.location.reload();
         }
       });
-      }
     }).catch(error => {
-      Swal.fire({html:'<p>'+error.response.data.message+'<br />'+ this.state.tipoErro +'</p>', type: 'error', showConfirmButton: true,
-      onClose: () => {
-        this.props.history.push('/login');
-        window.location.reload();
-      }
+      Swal.fire({
+        html:'<p>'+error+'</p>',
+        type: 'error',
+        showConfirmButton: true,
+        onClose: () => {
+          this.props.history.push('/login');
+          window.location.reload();
+        }
+      });
     });
-  });
   }
-
   render() {
     return (
       <div className="app flex-row align-items-center">
         <Container>
           <Row className="justify-content-center">
             <Col md="6">
-            
-              <Card className="col-md-12 text-muted py-5 d-md-down-none">
-                
-                  <CardBody className="text-center">
-                    <div>
-                      <h2><img src={logo} width="60%" className="espacoLogoCadastro" alt="MeuML" /></h2>
-                      <Form onSubmit={this.handleSubmit}>
-                        <h2 className="tituloLogin">Confirmar Cadastro</h2>
-                        <p className="alert alert-primary fadeIn show">Se este é o seu email: <b>{this.state.email}</b> Confirme no botão abaixo!</p>
-                        <Button type="submit" color="primary"><i className="fa fa-check"></i> Confirmar</Button>
-                      </Form>
-                    </div>
-                  </CardBody>
+              <Card className="col-md-12">
+                <CardBody className="text-center">
+                  <div>
+                    <h2><img src={logo} width="60%" className="espacoLogoCadastro" alt="MeuML" /></h2>
+                    <Form onSubmit={this.handleSubmit}>
+                      <h2 className="tituloLogin">Confirmar Cadastro</h2>
+                      <p className="alert alert-primary fadeIn show">Se este é o seu email: <b>{this.state.email}</b> Confirme no botão abaixo!</p>
+                      <Button type="submit" color="primary"><i className="fa fa-check"></i> Confirmar</Button>
+                    </Form>
+                  </div>
+                </CardBody>
                 </Card>
             </Col>
           </Row>
@@ -100,5 +71,4 @@ class ConfirmarCadastro extends Component {
     );
   }
 }
-
 export default ConfirmarCadastro;
