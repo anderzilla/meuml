@@ -15,7 +15,7 @@ const ListaContas = () => {
             <div className="animated fadeIn">
               <Row>
                 <a href="#/contas/adicionar" className="botaoAdicionarConta">
-                  <Button className="btn btn-primary float-left">
+                  <Button className="btn btn-dark float-left">
                     <i className="fa fa-plus-circle" /> Adicionar Conta
                   </Button>
                 </a>

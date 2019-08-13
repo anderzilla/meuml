@@ -679,7 +679,7 @@ class BloquearEmMassa extends Component {
                 <ButtonGroup className="fullWidth">
                   <Button
                     className="btn btn-md"
-                    color="primary"
+                    color="dark"
                     onClick={() => this.toggleCustom(0)}
                     aria-expanded={this.state.custom[0]}
                     aria-controls="exampleAccordion1"
@@ -688,7 +688,7 @@ class BloquearEmMassa extends Component {
                   </Button>
                   <Button
                     className="btn btn-md"
-                    color="primary"
+                    color="dark"
                     onClick={() => this.toggleCustom(1)}
                     aria-expanded={this.state.custom[1]}
                     aria-controls="exampleAccordion2"
@@ -697,7 +697,7 @@ class BloquearEmMassa extends Component {
                   </Button>
                   <Button
                     className="btn btn-md"
-                    color="primary"
+                    color="dark"
                     onClick={() => this.toggleCustom(2)}
                     aria-expanded={this.state.custom[2]}
                     aria-controls="exampleAccordion3"
@@ -778,7 +778,7 @@ class BloquearEmMassa extends Component {
                             <AppSwitch
                               className={"mx-1"}
                               variant={"pill"}
-                              color={"danger"}
+                              color={"primary"}
                               name="bids"
                               checked={this.state.bids}
                               onChange={() => this.changeBids(this.state.bids)}
@@ -792,7 +792,7 @@ class BloquearEmMassa extends Component {
                             <AppSwitch
                               className={"mx-1"}
                               variant={"pill"}
-                              color={"danger"}
+                              color={"primary"}
                               name="questions"
                               checked={this.state.questions}
                               onChange={() =>
@@ -869,7 +869,7 @@ class BloquearEmMassa extends Component {
                             <AppSwitch
                               className={"mx-1"}
                               variant={"pill"}
-                              color={"danger"}
+                              color={"primary"}
                               name="bids"
                               checked={this.state.bids}
                               onChange={() => this.changeBids(this.state.bids)}
@@ -883,7 +883,7 @@ class BloquearEmMassa extends Component {
                             <AppSwitch
                               className={"mx-1"}
                               variant={"pill"}
-                              color={"danger"}
+                              color={"primary"}
                               name="questions"
                               checked={this.state.questions}
                               onChange={() =>
@@ -906,7 +906,7 @@ class BloquearEmMassa extends Component {
                 {!isLoadingCadastro ? (
                   <div>
                     <Button
-                      color="primary"
+                      color="dark"
                       onClick={() => this.concluirOperacao()}
                       disabled={this.state.salvar ? true : false}
                     >

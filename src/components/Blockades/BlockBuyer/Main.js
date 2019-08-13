@@ -12,13 +12,13 @@ const Main = () => {
   const [accounts, setAccounts] = useState([]);
   const [buyerReference, setBuyerReference] = useState('');
   const [blockDescription, setBlockDescription] = useState('')
-  const [blockType, setBlockType] = useState(2);
+  const [blockType, setBlockType] = useState(3);
   return(
     <Data.Consumer>
       {(provider) => {
         return (
           <Carton>
-            <button onClick={()=>console.log(blockDescription)}>LOG</button>
+            <button onClick={()=>console.log(blockType)}>LOG</button>
             <SelectAccount callback={(value) => setAccounts(value)}/>
             <BuyerReference callback={(value) => setBuyerReference(value)}/>
             <ChooseMotive callback={(value) => setMotive(value)}/>
@@ -28,7 +28,7 @@ const Main = () => {
               rows="3"
               callback={(value) => setBlockDescription(value)}
             />
-            <BlockType callback={(value) => handleBlockType(value)}/><h1>Termianr de passar o state das PILLS pro MAIN</h1>
+            <BlockType callback={(value) => setBlockType(value)}/>
           </Carton>
         );
       }}

@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import ReactLoading from "react-loading";
-const Main = React.lazy(() => import('../../../components/Blocks/BlockBuyer/Main'));
+const Main = React.lazy(() => import('../../../components/Blockades/BlockBuyer/Main'));
 
 const BlockBuyer = () => {
   return (

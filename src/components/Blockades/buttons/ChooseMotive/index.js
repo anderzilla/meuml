@@ -19,7 +19,10 @@ export default function ChooseMotive(props) {
       else return 'error';
     } catch{}
   }
-  fetchList();
+
+  const callback =e => {
+    console.log(e.target.value)
+  }
   
   return (
     <Row>

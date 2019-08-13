@@ -2,5 +2,5 @@
   "name": "Categorias",
   "version": "0.0.1",
   "private": true,
-  "main": "./Categorias.js"
+  "main": "./index.js"
 }

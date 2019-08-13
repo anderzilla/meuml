@@ -258,7 +258,7 @@ class BloquearLista extends Component {
     return (
       <div className="animated fadeIn">
         <Row>
-          <Col xs="12" sm="12" md="10" xl="8">
+          <Col xs="12" sm="12" md="10" xl="9">
             <Card className="card-accent-primary">
               <Form
                 name="novaLista"
@@ -320,7 +320,7 @@ class BloquearLista extends Component {
                             <AppSwitch
                               className={"mx-1"}
                               variant={"pill"}
-                              color={"danger"}
+                              color={"primary"}
                               name="bids"
                               checked={this.state.bids}
                               onChange={() => this.changeBids(this.state.bids)}
@@ -336,7 +336,7 @@ class BloquearLista extends Component {
                             <AppSwitch
                               className={"mx-1"}
                               variant={"pill"}
-                              color={"danger"}
+                              color={"primary"}
                               name="questions"
                               checked={this.state.questions}
                               onChange={() =>
@@ -355,8 +355,8 @@ class BloquearLista extends Component {
                 <CardFooter className="text-right">
                   {!isLoadingCadastro ? (
                     <div>
-                      <Button type="submit" size="sm" color="primary">
-                        <i className="fa fa-file-text" /> Bloquear Lista
+                      <Button type="submit" size="md" color="dark">
+                        Bloquear Lista
                       </Button>
                     </div>
                   ) : (

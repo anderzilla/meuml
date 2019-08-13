@@ -226,7 +226,7 @@ class DataTable extends React.Component {
                             <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" value={this.state.filter} placeholder={'Pesquisar por descrição...'} onChange={this.handleChange} onClick={this.onFilterChange} />
                             <span className='it-group-btn'>
                                 <button
-                                    className='btn btn-primary'
+                                    className='btn btn-dark'
                                     type='button'
                                     onClick={this.onFilterChange}>
                                     Buscar
