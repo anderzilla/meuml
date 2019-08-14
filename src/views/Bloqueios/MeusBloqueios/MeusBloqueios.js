@@ -133,7 +133,7 @@ class MeusBloqueios extends Component {
         totalDataSize: "",
         sizePerPage: "",
         currentPage: "",
-        nPagina: ""
+        nPagina: "",
       });
     } else {
       this.fetchBlacklist(this.state.contas);
@@ -192,7 +192,6 @@ class MeusBloqueios extends Component {
   }
 
   fetchBlacklist(accountId, pageNumber, filtroID) {
-    console.log(filtroID);
     if (accountId === []) {
       this.setState({ blacklist: [] });
     } else {
@@ -235,7 +234,7 @@ class MeusBloqueios extends Component {
                 html: "<p>" + message + "</p>",
                 type: "info",
                 showConfirmButton: true
-              });
+              }).then(()=>this.setState({arrayValue:[]}))
             }
           }
         })
@@ -278,7 +277,7 @@ class MeusBloqueios extends Component {
               <Col md="4" sm="6" xs="12">
                 {!isLoadingAccounts ? (
                   <Picky
-                    value={this.state.arrayValue}
+                    value={arrayValue}
                     options={accounts}
                     onChange={this.selectMultipleOption}
                     className="multiSelMeusBloqueios"
@@ -301,7 +300,7 @@ class MeusBloqueios extends Component {
                 )}
               </Col>
               <Col md="4" sm="4" xs="12">
-              {(!this.isEmpty(this.state.arrayValue))? 
+              {(!this.isEmpty(arrayValue))? 
                 <FormGroup row>
                 <Col md="12">
                   <InputGroup>
