@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Carton from '../../Card';
 import BlockType from './BlockType';
 import SelectAccount from './SelectAccount';
@@ -17,12 +17,13 @@ const Main = () => {
   const [blockDescription, setBlockDescription] = useState('Sem descrição.')
   const [blockBids, setBlockBids] = useState(false);
   const [blockQuestions, setBlockQuestions] = useState(false);
+  const Context = useContext(Data);
   const handleBlockType = e => {
     if (e.target.name === 'bids') blockBids ? setBlockBids(false) : setBlockBids(true);
     if (e.target.name === 'questions') blockQuestions ? setBlockQuestions(false) : setBlockQuestions(true);
   }
   const blockBuyer = () => {
-    const data = makeJson({ motive, accounts, buyerReference, blockDescription, blockBids, blockQuestions });
+    const data = makeJson();
     data.forEach(element => {
       api.post('/blacklist', element).then(response => {
         Swal.fire({
@@ -40,21 +41,40 @@ const Main = () => {
       });
     });
   }
+  const makeJson = () => {
+    let data = accounts.map(account => {
+      return {
+        "motive_id": motive,
+        "account_id": account,
+        "customer_id": `${buyerReference}`,
+        "description": blockDescription,
+        "bids": blockBids,
+        "questions": blockQuestions
+      }
+    });
+    return data;
+  }
+
+  useEffect(() => {
+    Context.state.accounts.map((account, index) => {
+      if (account.name === accounts[index]) accounts[index] = account.id
+    });
+  }, [accounts])
   return(
     <Data.Consumer>
       {(provider) => {
         return (
           <Carton md="8">
-            <button onClick={()=>console.log(accounts)}>Log</button>
+            {/* <button onClick={()=>console.log('oi',motive, accounts, buyerReference, blockDescription, blockBids, blockQuestions)}>LOG</button> */}
             <Row>
-              <Row style={{marginLeft: "10px"}}>
+              <Row style={{marginLeft: "50px"}}>
                 <FormGroup>
                   <SelectAccount callback={(value) => setAccounts(value)}/>
                   <BuyerReference callback={(value) => setBuyerReference(value)}/>
                   <BlockType onChange={(e) => handleBlockType(e)}/>                
                 </FormGroup>
               </Row>
-              <Row style={{marginLeft: "178px"}}>
+              <Row style={{marginLeft: "110px"}}>
                 <FormGroup>
                   <BlockDescription
                     name="blockMotive"
@@ -66,7 +86,7 @@ const Main = () => {
               </Row>
             </Row>
             <button 
-              onClick={()=>blockBuyer()}
+              onClick={()=> blockBuyer()}
               style={{float: 'right'}}
               className="btn btn-danger"
               ><icon className="fa fa-lock" />
@@ -76,21 +96,6 @@ const Main = () => {
       }}
     </Data.Consumer>
   );
-}
-
-const makeJson = props => {
-  const { motive, accounts, buyerReference, blockDescription, blockBids, blockQuestions } = props;
-  let data = accounts.map(account => {
-    return {
-      "motive_id": motive,
-      "account_id": account,
-      "customer_id": `${buyerReference}`,
-      "description": blockDescription,
-      "bids": blockBids,
-      "questions": blockQuestions
-    }
-  });
-  return data;
 }
 
 export default Main;

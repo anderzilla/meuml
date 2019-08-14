@@ -96,7 +96,7 @@ export class Item extends React.Component {
       showCloseButton: true
     });
   };
-
+  callback = () => this.props.callback();
   callApi = async () => {
     try {
       await this.handleBuild();
@@ -116,7 +116,10 @@ export class Item extends React.Component {
             cancelButtonText: "Cancelar"
           }).then(res => {
             if(res !== null && res !== undefined){
+              this.callback();
               api.put(url, {name:res.value}).then(resT => {
+                // this.props.history.push('/listacontas?status=lista');
+                window.location.reload();
                 Swal.fire({
                   html:`<p>${resT.data.message}</p>`,
                   type: resT.data.status,
@@ -139,21 +142,6 @@ export class Item extends React.Component {
       }
       await this.setState("sleep");
     } catch {}
-  };
-
-  askForIt = () => {
-    if(this.state.ask !== null && this.state.ask !== undefined) {
-      const { value: res } = Swal.fire({
-        html: `<p>${this.state.ask}</p>`,
-        type: "question",
-        input: "text",
-        showConfirmButton: true,
-        showCancelButton: true,
-        cancelButtonText: "Cancelar"
-      }).then((ress) =>{
-        return ress.value;
-      });
-    };
   };
 
   render() {

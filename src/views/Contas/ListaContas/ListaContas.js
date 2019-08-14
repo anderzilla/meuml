@@ -10,6 +10,7 @@ const ListaContas = () => {
   return (
     <Data.Consumer>
       {(provider) => {
+        const fetchAccounts = () => provider.fetchAccounts();
         return(
           <>
             <div className="animated fadeIn">
@@ -35,13 +36,14 @@ const ListaContas = () => {
                     return (
                       <Carton className="card-accent-primary" xs="12" sm="4" md="3" key={acc.id}
                         header={<>
-                          <span id={'nomeConta-'+index}>{acc.name}</span>
+                          <span id={acc.name+index}>{acc.name}</span>
                           <div className="float-right">
                             <DropDown className="vertical-button-group">
                               <Item className="dropdown-item"
                                 http="put"
                                 url={`/accounts/${acc.id}`}
                                 ask="Informe o nome desajado"
+                                callback={()=> fetchAccounts()}
                                 >Renomear
                               </Item>
                               <Item className="dropdown-item"
