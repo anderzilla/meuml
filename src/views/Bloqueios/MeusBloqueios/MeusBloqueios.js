@@ -234,7 +234,7 @@ class MeusBloqueios extends Component {
                 html: "<p>" + message + "</p>",
                 type: "info",
                 showConfirmButton: true
-              }).then(()=>this.setState({arrayValue:[]}))
+              }).then(()=>this.setState({arrayValue:[], total: ""}))
             }
           }
         })
