@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 
 import Pagination from "react-js-pagination";
 import ReactLoading from 'react-loading';
- import Moment from 'moment';
+import Moment from 'moment';
 
 class CategoriasDataTable extends React.Component {
     constructor(props) {
@@ -47,7 +47,6 @@ class CategoriasDataTable extends React.Component {
         // this.fetchCategorias();
     }
 
-
     isEmpty = (obj) => {
         for (var key in obj) {
             if (obj.hasOwnProperty(key))
@@ -57,17 +56,11 @@ class CategoriasDataTable extends React.Component {
     }
 
     fetchCategorias(page = 1) {
-
-
-
         let url = process.env.REACT_APP_API_URL + `/categories?page=${page}&limit=${this.state.sizePerPage}`
-
         if (this.state.filter !== '') {
             url += `&filter=` + this.state.filter
         }
-
         url += '&sortOrder=' + this.state.sortOrder + '&sortName=' + this.state.sortName
-
         axios.get(url,
             { headers: { "Authorization": 'Bearer ' + getToken() } },
         ).then(res => {
@@ -92,9 +85,6 @@ class CategoriasDataTable extends React.Component {
                         totalDataSize: res.data.meta.total - res.data.meta.limit
                     });
                 }
-
-
-
             } else {
                 Swal.fire({ html: '<p>' + res.data.message + '</p>', type: 'error', showConfirmButton: true });
             }
@@ -116,7 +106,6 @@ class CategoriasDataTable extends React.Component {
         }
         return true;
     }
-
 
     onFilterChange() {
         var page = this.state.page
@@ -223,7 +212,7 @@ class CategoriasDataTable extends React.Component {
             <div className="animated fadeIn">
                 <Card>
                     <CardHeader>
-                        <h6 className={"labelAtualiza"}> Atualizado em {Moment.utc(this.state.last_update).format('DD/MM/YYYY HH:MM')} </h6>
+                        <h6 className={"labelAtualiza"}> Atualizado em {Moment.utc(this.state.last_update).format('ddd MMM DD h:mm:ss YYYY')} </h6>
                         <div className='input-group filtro'>
                             <Input type={'text'} className={"col-md"} ref='seachInput' id="inputPesquisa" value={this.state.filter} placeholder={'Pesquisar por descrição...'} onChange={this.handleChange} onClick={this.onFilterChange} />
                             <span className='it-group-btn'>
