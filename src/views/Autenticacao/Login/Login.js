@@ -92,7 +92,20 @@ class Login extends Component {
         }
       })
       .catch(error => {
+        console.log(error);
         this.state.noClick = false;
+        if (error.response === 207){
+          Swal.fire({
+            html:
+              "<p>" +
+              error.response.data.message +
+              "</p>",
+            type: "error",
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: "Fechar"
+          });
+        }else{
         !error.response.data.errors.email
           ? this.setState({ tipoErro: "" })
           : this.setState({ tipoErro: error.response.data.errors.email });
@@ -112,6 +125,7 @@ class Login extends Component {
           showCancelButton: true,
           cancelButtonText: "Fechar"
         });
+      }
       });
   }
 
