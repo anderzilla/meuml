@@ -84,7 +84,7 @@ const ListaContas = () => {
                           </Col>
                           <Col md="6" sm="12">
                             <h5 className="tituloAnuncios">Anúncios</h5>
-                            <h5 className="text-success valores">{acc.count_advertisings || '0'}</h5>
+                            <h5 className="text-success valores">{acc.total_advertisings}</h5>
                           </Col>
                         </Row>
                       </Carton>
