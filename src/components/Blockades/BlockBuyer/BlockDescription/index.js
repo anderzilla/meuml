@@ -8,8 +8,8 @@ export default function BlockDescription(props) {
     props.callback(description);
   }
   return(
-    <FormGroup>
-      <h5>Descreva o motivo (opcional)</h5>
+    <FormGroup style={{marginBottom: "30px"}}>
+      <h6><b>Descreva o motivo (opcional)</b></h6>
       <Input
         type="textarea"
         name={props.name}

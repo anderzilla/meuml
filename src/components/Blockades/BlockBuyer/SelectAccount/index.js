@@ -18,8 +18,8 @@ export default function SelectAccount(props) {
         setAccounts(provider.state.accounts);
         return (
           !provider.state.isLoading ? (
-            <FormGroup>
-              <h5>Selecione uma conta</h5>
+            <FormGroup style={{marginBottom: '50px'}}>
+              <h6><b>Conta do Mercado Livre</b></h6>
               <Picky className="input-group"
                 value={selected}
                 options={toArray()}

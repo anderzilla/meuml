@@ -9,6 +9,7 @@ import BlockDescription from './BlockDescription';
 import { Row, FormGroup } from 'reactstrap';
 import api from '../../../services/api';
 import Swal from 'sweetalert2';
+import { getToken } from '../../../auth';
 
 const Main = () => {
   const [motive, setMotive] = useState('');
@@ -23,15 +24,20 @@ const Main = () => {
     if (e.target.name === 'questions') blockQuestions ? setBlockQuestions(false) : setBlockQuestions(true);
   }
   const blockBuyer = () => {
+    const header = { headers: { 'Authorization': "Bearer " + getToken() } };
+    const url = `${process.env.REACT_APP_API_URL}/blacklist`;
     const data = makeJson();
-    data.forEach(element => {
-      api.post('/blacklist', element).then(response => {
-        Swal.fire({
-          html: `<p>${response.data.message}</p>`,
-          type: response.data.status,
-          showCloseButton: true
-        });
+    data.forEach((element, index) => {
+      api.post(url, element).then(response => {
+        if(index <= 1) {
+          Swal.fire({
+            html: `<p>${response.data.message}</p>`,
+            type: response.data.status,
+            showCloseButton: true
+          });
+        }
       }).catch(error => {
+        console.log(error);
         Swal.fire({
           title: 'Ops, parece que algo deu errado!',
           html: `<p>Por favor, certifique-se de preencher todos os campos!</p>`,
@@ -65,7 +71,7 @@ const Main = () => {
       {(provider) => {
         return (
           <Carton md="8">
-            {/* <button onClick={()=>console.log('oi',motive, accounts, buyerReference, blockDescription, blockBids, blockQuestions)}>LOG</button> */}
+            {/* <button onClick={()=>console.log(buyerReference)}>LOG</button> */}
             <Row>
               <Row style={{marginLeft: "50px"}}>
                 <FormGroup>
@@ -77,11 +83,9 @@ const Main = () => {
               <Row style={{marginLeft: "110px"}}>
                 <FormGroup>
                   <BlockDescription
-                    name="blockMotive"
-                    id="blockMotive"
                     rows="3"
                     callback={(value) => setBlockDescription(value)}/>
-                  <ChooseMotive callback={(value) => setMotive(value)}/>
+                  <ChooseMotive id="ChooseMotive" callback={(value) => setMotive(value)}/>
                 </FormGroup>
               </Row>
             </Row>
@@ -89,7 +93,7 @@ const Main = () => {
               onClick={()=> blockBuyer()}
               style={{float: 'right'}}
               className="btn btn-danger"
-              ><icon className="fa fa-lock" />
+              ><icon className="fa fa-lock" /> Bloquear
             </button>
           </Carton>
         );

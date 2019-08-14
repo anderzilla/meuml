@@ -36,12 +36,17 @@ class DataContainer extends Component {
         this.setState({
           blacklist: response.data,
           paginationSize: response.meta.total,
-          status: response.status,
-          message: response.message
         });
-        Swal.fire({
-          text: this.state.message,
-          type: this.state.status,
+        if(response.status === 'success') {
+          let message = 'Dados atualizados com sucesso.';
+          Swal.fire({
+            text: message,
+            type: response.status,
+            showCloseButton: true
+          });
+        } else Swal.fire({
+          text: response.message,
+          type: response.status,
           showCloseButton: true
         });
       }

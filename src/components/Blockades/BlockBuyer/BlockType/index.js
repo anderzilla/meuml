@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, Row } from 'reactstrap';
+import { FormGroup } from 'reactstrap';
 import { AppSwitch } from '@coreui/react';
 
 export default function BlockType(props) {
