@@ -1,10 +1,11 @@
-import React, { Component } from "react";
-import Swal from "sweetalert2";
-import * as fetch from "./fetch";
-import { DropDown } from "../../buttons/ButtonGroup";
-import { Card, CardHeader, CardBody } from "reactstrap";
-import "react-bootstrap-table/dist//react-bootstrap-table-all.min.css";
-import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import * as fetch from './fetch';
+import { DropDown } from '../../buttons/ButtonGroup';
+import { Card, CardHeader, CardBody } from 'reactstrap';
+import 'react-bootstrap-table/dist//react-bootstrap-table-all.min.css';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 const { Provider, Consumer } = React.createContext();
 
 class DataContainer extends Component {
@@ -22,11 +23,25 @@ class DataContainer extends Component {
 
   componentDidMount() {
     fetch.Accounts().then(res => {
-      this.setState({
-        accounts: res.accounts,
-        numberOfAcc: res.numberOfAcc
-      });
+      this.handleAccounts(res);
     });
+  }
+
+  handleAccounts = props => {
+    if (props === undefined) {
+      Swal.fire({
+        html: `Você precisa <a href="/#/contas/adicionar">adicionar</a> ao menos uma <a href="/#/listacontas">conta.</a>`,
+        type: 'info',
+        showCloseButton: true
+      }).then(function() {
+        window.location.href = "#/listacontas?status=lista";
+      });
+    } else {
+      this.setState({
+        accounts: props.accounts,
+        numberOfAcc: props.numberOfAcc
+      });
+    }
   }
 
   updateBlacklist = async id => {

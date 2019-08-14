@@ -63,15 +63,23 @@ const Main = () => {
 
   useEffect(() => {
     Context.state.accounts.map((account, index) => {
-      if (account.name === accounts[index]) accounts[index] = account.id
+      if (account.name === accounts[index]) accounts[index] = account.id;
+      if (accounts == []) {
+        Swal.fire({
+          html: <p>Você precisa ter ao menos uma conta.</p>,
+          type: 'info',
+          showCloseButton: true
+        }).then(function() {
+          window.location.href = "#/listacontas?status=lista";
+        });
+      }
     });
-  }, [accounts])
+  }, [accounts]);
   return(
     <Data.Consumer>
       {(provider) => {
         return (
           <Carton md="8">
-            {/* <button onClick={()=>console.log(buyerReference)}>LOG</button> */}
             <Row>
               <Row style={{marginLeft: "50px"}}>
                 <FormGroup>
