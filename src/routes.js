@@ -25,9 +25,12 @@ const Perguntas = React.lazy(() => import('./views/Perguntas/Perguntas'));
 //Perguntas
 const Processos = React.lazy(() => import('./views/Processos/Processos'));
 
+//Admin
+const Admin = React.lazy(() => import('./views/Admin'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
+  { path: '/admin', name: 'Admin', component: Admin, exact: true },
   { path: '/', name: 'Início', component: DefaultLayout, exact: true },
   { path: '/inicio', name: 'MeuML', id: 'inicio', component: Inicio },
   //Autenticação

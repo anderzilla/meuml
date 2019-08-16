@@ -24,6 +24,13 @@ import {
 import logo from "../../../assets/img/brand/MeuML-logo2.png";
 import moment from "moment";
 
+const setUserPropsLocalStorage = props => {
+  const { email, name, id } = props;
+  localStorage.setItem('USER_EMAIL', email);
+  localStorage.setItem('USER_NAME', name);
+  localStorage.setItem('USER_ID', id);
+}
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -67,6 +74,8 @@ class Login extends Component {
         const status = res.data.status;
         this.setState({ status });
         if (this.state.status === "success") {
+          const { email, name, id } = res.data.data.user;
+          setUserPropsLocalStorage({ email, name, id });
           const message = res.data.message;
           this.setState({ message });
           const token = res.data.data.jwt;
@@ -90,42 +99,6 @@ class Login extends Component {
             }
           });
         }
-      })
-      .catch(error => {
-        console.log(error);
-        this.state.noClick = false;
-        if (error.response === 207){
-          Swal.fire({
-            html:
-              "<p>" +
-              error.response.data.message +
-              "</p>",
-            type: "error",
-            showConfirmButton: false,
-            showCancelButton: true,
-            cancelButtonText: "Fechar"
-          });
-        }else{
-        !error.response.data.errors.email
-          ? this.setState({ tipoErro: "" })
-          : this.setState({ tipoErro: error.response.data.errors.email });
-        !error.response.data.errors.password
-          ? this.setState({ erroPass: "" })
-          : this.setState({ erroPass: error.response.data.errors.password });
-        Swal.fire({
-          html:
-            "<p>" +
-            error.response.data.message +
-            "<br />" +
-            this.state.tipoErro +
-            this.state.erroPass +
-            "</p>",
-          type: "error",
-          showConfirmButton: false,
-          showCancelButton: true,
-          cancelButtonText: "Fechar"
-        });
-      }
       });
   }
 
