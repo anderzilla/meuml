@@ -35,6 +35,8 @@ class BloquearEmMassa extends Component {
     this.toggleCustom = this.toggleCustom.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
+    this.changeBids = this.changeBids.bind(this);
+    this.changeQuestions = this.changeQuestions.bind(this);
 
     this.state = {
       dropdownOpenConta: false,
@@ -50,8 +52,8 @@ class BloquearEmMassa extends Component {
       lista: "",
       nomeLista: "",
       descricaoLista: "",
-      bids: "",
-      questions: "",
+      bids: false,
+      questions: false,
       changes: "",
       bloqueios: [],
       dataTest: [],
@@ -177,6 +179,15 @@ class BloquearEmMassa extends Component {
       [name]: value,
       isLoadingCadastro: false
     });
+  }
+
+  changeBids(status) {
+    status === false ? (this.state.bids = true) : (this.state.bids = false);
+  }
+  changeQuestions(status) {
+    status === false
+      ? (this.state.questions = true)
+      : (this.state.questions = false);
   }
 
   toggleCustom(tab) {
@@ -413,11 +424,11 @@ class BloquearEmMassa extends Component {
 
                 this.state.bloqueios.push({
                   account_id: s.value,
-                  bids: !this.state.bids ? false : true,
+                  bids: this.state.bids,
                   customer_id: cid.customer_id,
                   motive_description: this.state.motivoBloqueio,
                   motive_id: "9",
-                  questions: !this.state.questions ? false : true
+                  questions: this.state.questions
                 });
               });
             });
@@ -507,11 +518,11 @@ class BloquearEmMassa extends Component {
                     const { customer_id } = this.state;
                     this.state.bloqueios.push({
                       account_id: s.value,
-                      bids: !this.state.bids ? false : true,
+                      bids: this.state.bids,
                       customer_id: cid.customer_id,
                       motive_description: "Outros - Em Massa",
                       motive_id: "9",
-                      questions: !this.state.questions ? false : true
+                      questions: this.state.questions
                     });
                   });
                 });
@@ -538,8 +549,8 @@ class BloquearEmMassa extends Component {
                         {
                           blacklist_name: this.state.nomeLista,
                           accounts: this.state.accountId,
-                          bids: !this.state.bids ? false : true,
-                          questions: !this.state.questions ? false : true
+                          bids: this.state.bids,
+                          questions: this.state.questions
                         },
                         {
                           headers: {
@@ -770,8 +781,8 @@ class BloquearEmMassa extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="bids"
-                              value="1"
-                              onChange={this.handleInputChange}
+                              checked={this.state.bids}
+                              onChange={() => this.changeBids(this.state.bids)}
                             />
                             <span className="textoSwitch">
                               {" "}
@@ -784,8 +795,10 @@ class BloquearEmMassa extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="questions"
-                              value="1"
-                              onChange={this.handleInputChange}
+                              checked={this.state.questions}
+                              onChange={() =>
+                                this.changeQuestions(this.state.questions)
+                              }
                             />
                             <span className="textoSwitch">
                               Bloquear para perguntas
@@ -859,8 +872,8 @@ class BloquearEmMassa extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="bids"
-                              value="1"
-                              onChange={this.handleInputChange}
+                              checked={this.state.bids}
+                              onChange={() => this.changeBids(this.state.bids)}
                             />
                             <span className="textoSwitch">
                               {" "}
@@ -873,8 +886,10 @@ class BloquearEmMassa extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="questions"
-                              value="1"
-                              onChange={this.handleInputChange}
+                              checked={this.state.questions}
+                              onChange={() =>
+                                this.changeQuestions(this.state.questions)
+                              }
                             />
                             <span className="textoSwitch">
                               Bloquear para perguntas

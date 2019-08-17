@@ -7,6 +7,10 @@ import {
   Table,
   Row,
   Col,
+  FormGroup,
+  Input,
+  InputGroup,
+  InputGroupAddon,
   Button,
   Dropdown,
   DropdownToggle,
@@ -33,7 +37,7 @@ class MeusBloqueios extends Component {
 
     this.state = {
       dropdownOpen: false,
-
+      filtroID:'',
       totalDataSize: 0,
       sizePerPage: 50,
       activePage: 1,
@@ -71,8 +75,7 @@ class MeusBloqueios extends Component {
           const listaContas = [];
           const resContas = res.data.data;
           resContas.map((c, k) => {
-            const { id, name } = this.state;
-            listaContas.push({ value: c.id, label: c.name });
+            listaContas.push({ value: c.id, label: c.name, key: k });
           });
           this.setState({
             accounts: listaContas,
@@ -130,7 +133,7 @@ class MeusBloqueios extends Component {
         totalDataSize: "",
         sizePerPage: "",
         currentPage: "",
-        nPagina: ""
+        nPagina: "",
       });
     } else {
       this.fetchBlacklist(this.state.contas);
@@ -163,8 +166,7 @@ class MeusBloqueios extends Component {
           const listaMotivos = [];
           const resMotivos = res.data.data;
           resMotivos.map((m, k) => {
-            const { id, name } = this.state;
-            listaMotivos.push({ id: m.id, name: m.name });
+            listaMotivos.push({ id: m.id, name: m.name, key:parseInt(m.key) });
           });
           this.setState({
             motivos: listaMotivos
@@ -179,23 +181,31 @@ class MeusBloqueios extends Component {
       });
   }
 
-  fetchBlacklist(accountId, pageNumber) {
-    console.log('entrou na fetch'+accountId);
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value,
+      isLoadingCadastro: false
+    });
+  }
+
+  fetchBlacklist(accountId, pageNumber, filtroID) {
     if (accountId === []) {
       this.setState({ blacklist: [] });
     } else {
       if (pageNumber === "" || !pageNumber) {
-        this.state.paginate = 0;
+        this.state.paginate = 1;
       } else {
-        this.state.paginate =
-          pageNumber * this.state.sizePerPage - this.state.sizePerPage;
+        this.state.paginate = pageNumber ;
       }
       this.state.rota =
         "/blacklist?account_id=" +
         accountId +
-        "&offset=" +
+        "&page=" +
         this.state.paginate +
-        "&limit=50";
+        "&limit=50" + (!filtroID? '' : "&filterName=customer_id&filterValue=" + filtroID);
       axios
         .get(process.env.REACT_APP_API_URL + this.state.rota, {
           headers: { Authorization: "Bearer " + getToken() }
@@ -224,7 +234,7 @@ class MeusBloqueios extends Component {
                 html: "<p>" + message + "</p>",
                 type: "info",
                 showConfirmButton: true
-              });
+              }).then(()=>this.setState({arrayValue:[], total: ""}))
             }
           }
         })
@@ -242,7 +252,7 @@ class MeusBloqueios extends Component {
   }
 
   pagaMotivo(motivoId) {
-    const mt = this.state.motivos.find(z => z.id === motivoId).name;
+    const mt = this.state.motivos.find(z => z.key === motivoId).name;
     return mt;
   }
 
@@ -267,7 +277,7 @@ class MeusBloqueios extends Component {
               <Col md="4" sm="6" xs="12">
                 {!isLoadingAccounts ? (
                   <Picky
-                    value={this.state.arrayValue}
+                    value={arrayValue}
                     options={accounts}
                     onChange={this.selectMultipleOption}
                     className="multiSelMeusBloqueios"
@@ -289,16 +299,36 @@ class MeusBloqueios extends Component {
                   <h3>Carregando...</h3>
                 )}
               </Col>
-              {/* <Col md="4" sm="6" xs="4">
-              {(this.state.total > 0)? <div className="alert alert-primary fade show">Registros Encontrados:<b> {(this.state.total -1)} </b></div> : <span></span>}
-            </Col> */}
+              <Col md="4" sm="4" xs="12">
+              {(!this.isEmpty(arrayValue))? 
+                <FormGroup row>
+                <Col md="12">
+                  <InputGroup>
+                    <Input 
+                    type="text" 
+                    id="filtroID" 
+                    name="filtroID" 
+                    onChange={this.handleInputChange}
+                    placeholder="ID do Comprador" 
+                    />
+                    <InputGroupAddon addonType="append">
+                      <Button type="button" color="primary" onClick={() =>this.fetchBlacklist(this.state.contas,1,this.state.filtroID)}><i className="fa fa-search"></i></Button>
+                    </InputGroupAddon>
+                  </InputGroup>
+                </Col>
+              </FormGroup>
+               : <span></span>}
+              </Col>
+              <Col md="4" sm="4" xs="12">
+              {(this.state.total > 0)? <div className="alert alert-primary fade show">Registros Encontrados:<b> {(this.state.total)} </b></div> : <span></span>}
+              </Col>
             </Row>
           </CardHeader>
           <CardBody>
             <Table responsive>
               <thead>
                 <tr>
-                  <th className="tbcol-5">ID do Usuario</th>
+                  <th className="tbcol-5">ID do Comprador</th>
                   <th className="tbcol-5 text-center">Compras</th>
                   <th className="tbcol-5 text-center">Perguntas</th>
                   <th className="tbcol-10 text-center">Conta</th>
@@ -319,9 +349,9 @@ class MeusBloqueios extends Component {
                     </td>
                   </tr>
                 ) : !isLoading ? (
-                  blacklist.map(bl => {
+                  blacklist.map((bl, key) => {
                     return (
-                      <tr key={bl.customer_id}>
+                      <tr key={key}>
                         <td>{bl.customer_id}</td>
                         <td className="text-center">
                           {bl.bids ? (
@@ -359,7 +389,7 @@ class MeusBloqueios extends Component {
             <Pagination
               activePage={this.state.activePage}
               itemsCountPerPage={this.state.sizePerPage}
-              totalItemsCount={this.state.total - 1}
+              totalItemsCount={this.state.total}
               pageRangeDisplayed={5}
               onChange={this.handlePageChange}
               itemClass="btn btn-md btn-outline-info"

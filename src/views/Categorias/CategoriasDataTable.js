@@ -81,12 +81,6 @@ class CategoriasDataTable extends React.Component {
               this.setState({
                 totalDataSize: res.data.meta.total - res.data.meta.limit
               });
-            } else {
-              Swal.fire({
-                html: "<p>" + res.data.message + "</p>",
-                type: "error",
-                showConfirmButton: true
-              });
             }
           }
         }

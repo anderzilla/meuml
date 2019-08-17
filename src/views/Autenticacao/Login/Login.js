@@ -55,6 +55,7 @@ class Login extends Component {
     });
   }
   handleSubmit(event) {
+
     event.preventDefault();
     //Realiza o login testando os dados do usuário no servidor
     axios
@@ -91,7 +92,20 @@ class Login extends Component {
         }
       })
       .catch(error => {
+        console.log(error);
         this.state.noClick = false;
+        if (error.response === 207){
+          Swal.fire({
+            html:
+              "<p>" +
+              error.response.data.message +
+              "</p>",
+            type: "error",
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: "Fechar"
+          });
+        }else{
         !error.response.data.errors.email
           ? this.setState({ tipoErro: "" })
           : this.setState({ tipoErro: error.response.data.errors.email });
@@ -111,6 +125,7 @@ class Login extends Component {
           showCancelButton: true,
           cancelButtonText: "Fechar"
         });
+      }
       });
   }
 
@@ -184,7 +199,7 @@ class Login extends Component {
                           <Input
                             type="submit"
                             value="Entrar"
-                            className="btn btn-block btn-primary active"
+                            className="btn btn-block btn-primary active btn-login"
                           />
                         </Col>
                         <Col xs="7" className="text-right ">

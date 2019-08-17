@@ -57,7 +57,7 @@ class ListaContas extends Component {
       )
       .then(res => {
         if (res.data.status === "success") {
-          this.state.statusMsg = 'ok';
+          this.setState({statusMsg : 'ok'});
           Swal.fire({
             html: "<p>" + res.data.message + "</p>",
             type: "success",
@@ -89,7 +89,7 @@ class ListaContas extends Component {
       })
       .then(res => {
         if (res.data.status === "success") {
-          this.state.statusMsg = 'ok';
+          this.setState({statusMsg : 'ok'});
           Swal.fire({
             html: "<p>" + res.data.message + "</p>",
             type: "success",
@@ -99,7 +99,7 @@ class ListaContas extends Component {
             }
           });
         } else {
-          this.state.statusMsg = 'ok';
+          this.setState({statusMsg : 'ok'});
           Swal.fire({
             html: "<p>" + res.data.message + "</p>",
             type: "error",
@@ -135,7 +135,7 @@ class ListaContas extends Component {
           )
           .then(res => {
             if (res.data.status === "success") {
-              this.state.statusMsg = 'ok';
+              this.setState({statusMsg : 'ok'});
               document.getElementById("nomeConta-" + index).innerHTML = result.value;
             } else {
               Swal.fire({
@@ -165,6 +165,14 @@ class ListaContas extends Component {
       showCancelButton: true,
       cancelButtonText: "Fechar"
       });
+    }else if(this.state.statusMsg === '409'){
+      Swal.fire({
+      html: "<p>Conta do Mercado Livre já cadastrada<br /></p>",
+      type: "info",
+      showConfirmButton: false,
+      showCancelButton: true,
+      cancelButtonText: "Fechar"
+      });
     }else if(this.state.statusMsg === 'addsuccess'){
       Swal.fire({
         html: "<p>Conta do Mercado Livre Adicionada com sucesso!<br /></p>",
@@ -174,9 +182,9 @@ class ListaContas extends Component {
         confirmButtonText: "OK"
         });
     }else if(this.state.statusMsg === 'lista' || this.state.statusMsg === 'ok'){
-      this.state.statusMsg = 'ok';
+      this.setState({statusMsg : 'ok'});
     }else{
-      this.state.statusMsg = 'ok';
+      this.setState({statusMsg : 'ok'});
     }
 
     axios
@@ -185,7 +193,6 @@ class ListaContas extends Component {
       })
       .then(res => {
         if (res.data.status === "success") {
-          const message = res.data.message;
           if (res.data.meta.total !== 0) {
             this.setState({
               noContas: false,
@@ -228,7 +235,7 @@ class ListaContas extends Component {
   }
 
   render() {
-    const { isLoading, contas, error } = this.state;
+    const { isLoading, contas} = this.state;
 
     return (
       <div className="animated fadeIn">
@@ -248,7 +255,6 @@ class ListaContas extends Component {
               </div>
             ) : (
               contas.map((c, k) => {
-                const { username, name, email, id } = this.state;
                 return (
                   <Col xs="12" sm="4" md="3" key={c.id} className="CardConta">
                     <Card className="card-accent-primary">
@@ -307,32 +313,32 @@ class ListaContas extends Component {
                         </div>
                         <div className="text-left">
                           <p className="labelCard">
-                            <i className="fa fa-envelope" /> E-mail:
+                            <i className="fa fa-envelope" /> E-mail:<br></br>
+                            {c.external_data.email}
                           </p>
-                          {c.external_data.email}
-                          <br />
+                          
+                         
                           <p className="labelCard">
-                            <i className="fa fa-user" /> Usuário:
+                            <i className="fa fa-user" /> Usuário:<br></br>
+                            {c.external_data.nickname}
                           </p>
-                          {c.external_data.nickname}
-                          <br />
+                          
                         </div>
                       </CardBody>
                       <CardFooter>
                         <Row>
-                          <Col md="6" sm="12">
+                          <Col >
                             <h5 className="tituloVendas">Vendas</h5>
                             <h5 className="text-success valores">
                               {
-                                c.external_data.seller_reputation.metrics.sales
-                                  .completed
+                                c.total_orders
                               }
                             </h5>
                           </Col>
-                          <Col md="6" sm="12">
+                          <Col >
                             <h5 className="tituloAnuncios">Anúncios</h5>
                             <h5 className="text-success valores">
-                              {c.count_advertisings}
+                              {c.total_advertisings}
                             </h5>
                           </Col>
                         </Row>

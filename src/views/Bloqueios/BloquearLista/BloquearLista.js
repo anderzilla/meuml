@@ -35,13 +35,15 @@ class BloquearLista extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.selectMultipleOption = this.selectMultipleOption.bind(this);
+    this.changeBids = this.changeBids.bind(this);
+    this.changeQuestions = this.changeQuestions.bind(this);
 
     this.state = {
       accountName: "",
       blackListName: "",
       accounts: [],
-      bids: "",
-      questions: "",
+      bids: false,
+      questions: false,
       backlistList: [],
       isLoadingBlacklistList: true,
       isLoadingAccounts: true,
@@ -154,6 +156,15 @@ class BloquearLista extends Component {
     return true;
   }
 
+  changeBids(status) {
+    status === false ? (this.state.bids = true) : (this.state.bids = false);
+  }
+  changeQuestions(status) {
+    status === false
+      ? (this.state.questions = true)
+      : (this.state.questions = false);
+  }
+
   handleSubmit(event) {
     this.setState({ isLoadingCadastro: true });
     event.preventDefault();
@@ -182,8 +193,8 @@ class BloquearLista extends Component {
             {
               blacklist_name: this.state.blackListName,
               accounts: this.state.accountId,
-              bids: !this.state.bids ? false : true,
-              questions: !this.state.questions ? false : true
+              bids: this.state.bids,
+              questions: this.state.questions
             },
             {
               headers: {
@@ -311,8 +322,8 @@ class BloquearLista extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="bids"
-                              value="1"
-                              onChange={this.handleInputChange}
+                              checked={this.state.bids}
+                              onChange={() => this.changeBids(this.state.bids)}
                             />
                             <span className="textoSwitch">
                               {" "}
@@ -327,8 +338,10 @@ class BloquearLista extends Component {
                               variant={"pill"}
                               color={"danger"}
                               name="questions"
-                              value="1"
-                              onChange={this.handleInputChange}
+                              checked={this.state.questions}
+                              onChange={() =>
+                                this.changeQuestions(this.state.questions)
+                              }
                             />
                             <span className="textoSwitch">
                               Bloquear para perguntas
