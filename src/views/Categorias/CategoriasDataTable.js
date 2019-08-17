@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 
 import Pagination from "react-js-pagination";
 import ReactLoading from "react-loading";
-// import Moment from 'moment';
+import Moment from 'moment';
 
 class CategoriasDataTable extends React.Component {
   constructor(props) {
@@ -178,7 +178,7 @@ class CategoriasDataTable extends React.Component {
       <div className="animated fadeIn">
         <Card>
           <CardHeader>
-            {/* <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.state.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6> */}
+            <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.state.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
             <div className="input-group filtro">
               <Input
                 type={"text"}
