@@ -234,18 +234,50 @@ class ListaContas extends Component {
     );
   }
 
+  syncAll = () => {
+    axios
+    .get(
+      process.env.REACT_APP_API_URL + "/accounts/sync/all",
+      { headers: { Authorization: "Bearer " + getToken() } }
+    )
+    .then(res => {
+      console.log(res)
+      if (res.data.status === "success") {
+        Swal.fire({
+          html: "<p>" + res.data.message + "</p>",
+          type: "success",
+          showConfirmButton: true
+        });
+      } else {
+        Swal.fire({
+          html: "<p>" + res.data.message + "</p>",
+          type: "error",
+          showConfirmButton: true
+        });
+      }
+    })
+    .catch(error => {
+      Swal.fire({
+        html: "<p>" + error + "</p>",
+        type: "error",
+        showConfirmButton: true
+      });
+    });
+  }
+
   render() {
     const { isLoading, contas} = this.state;
 
     return (
       <div className="animated fadeIn">
         <Row>
-          <a href="#/contas/adicionar" className="botaoAdicionarConta">
+          <a href="#/contas/adicionar" className="botaoAdicionarConta mr-1">
             <Button className="btn btn-primary float-left">
               {" "}
               <i className="fa fa-plus-circle" /> Adicionar Conta{" "}
             </Button>
           </a>
+          <Button style={{height:"37px"}} onClick={()=> this.syncAll()} className="btn btn-success">Sincronizar Tudo</Button>
         </Row>
         <Row>
           {!isLoading ? (
