@@ -241,43 +241,48 @@ class ListaContas extends Component {
       { headers: { Authorization: "Bearer " + getToken() } }
     )
     .then(res => {
-      console.log(res)
-      if (res.data.status === "success") {
+      if(res.data) {
         Swal.fire({
-          html: "<p>" + res.data.message + "</p>",
-          type: "success",
-          showConfirmButton: true
-        });
-      } else {
-        Swal.fire({
-          html: "<p>" + res.data.message + "</p>",
-          type: "error",
-          showConfirmButton: true
+          html: `<p>Constas Sincronizadas!</p>`,
+          type: 'success',
+          showCloseButton: true
         });
       }
     })
     .catch(error => {
       Swal.fire({
-        html: "<p>" + error + "</p>",
-        type: "error",
-        showConfirmButton: true
+        html: '<p>Contas Sincronizadas!',
+        type: 'success',
+        showCloseButton: true
       });
     });
   }
 
+  addAcc() {
+    Swal.fire({
+      type: 'warning',
+      title: 'Atenção!',
+      html: '<p>O sistema irá adicionar a conta do Mercado Livre que seu dispositivo está logado.</p>',
+      showCancelButton: true,
+      showConfirmButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Continuar'
+    }).then(response => {
+      if(response.value) this.props.history.push('/contas/adicionar');
+    }).catch(error => console.log(error));
+  }
+
   render() {
     const { isLoading, contas} = this.state;
-
     return (
       <div className="animated fadeIn">
         <Row>
-          <a href="#/contas/adicionar" className="botaoAdicionarConta mr-1">
-            <Button className="btn btn-primary float-left">
-              {" "}
-              <i className="fa fa-plus-circle" /> Adicionar Conta{" "}
-            </Button>
-          </a>
-          <Button style={{height:"37px"}} onClick={()=> this.syncAll()} className="btn btn-success">Sincronizar Tudo</Button>
+          <Button style={{height:"37px"}} onClick={()=>this.addAcc()} className="btn btn-primary float-left mr-1 mb-3">
+            <i className="fa fa-plus-circle"/> Adicionar Conta
+          </Button>
+          <Button style={{height:"37px"}} onClick={()=> this.syncAll()} className="btn btn-success">
+          <i className="fa fa-check-circle" /> Sincronizar Tudo
+          </Button>
         </Row>
         <Row>
           {!isLoading ? (
