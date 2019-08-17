@@ -327,7 +327,8 @@ class BloquearEmMassa extends Component {
               process.env.REACT_APP_API_URL + `/blacklist/list`,
               {
                 list_name: this.state.nomeLista,
-                list_description: this.state.descricaoLista
+                list_description: this.state.descricaoLista,
+                motive_description: 'Motivo não especificado'
               },
               {
                 headers: {
