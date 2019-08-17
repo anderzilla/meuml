@@ -157,7 +157,7 @@ class ListaContas extends Component {
   }
 
   fetchAccounts() {
-    if (this.state.statusMsg === '400'){
+    if (this.state.statusMsg === '409'){
       Swal.fire({
       html: "<p>Conta do Mercado Livre pertence a outro usuário<br /></p>",
       type: "error",
@@ -165,7 +165,7 @@ class ListaContas extends Component {
       showCancelButton: true,
       cancelButtonText: "Fechar"
       });
-    }else if(this.state.statusMsg === '409'){
+    }else if(this.state.statusMsg === '400'){
       Swal.fire({
       html: "<p>Conta do Mercado Livre já cadastrada<br /></p>",
       type: "info",
