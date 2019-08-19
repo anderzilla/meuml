@@ -52,6 +52,7 @@ const ListaContas = () => {
                                 >Sincronizar
                               </Item>
                               <Item className="dropdown-item"
+                                callback={()=> this.fetchAccounts()}
                                 http="delete"
                                 url={`/accounts/${acc.id}`}
                                 ask={`Você tem certeza que deseja deletar a conta "${acc.name}"`}
