@@ -70,11 +70,12 @@ export class Item extends React.Component {
   handleBuild = async () => {
     if (this.state.mode === "sleep") {
       try {
-        const { data, http, url, ask } = this.props;
+        const { data, http, url, ask, callback } = this.props;
         if (ask !== undefined) await this.setState({ ask });
         if (data !== undefined) await this.setState({ data });
         if (http !== undefined) await this.setState({ http });
         if (url !== undefined) await this.setState({ url });
+        if (callback !== undefined) await this.callback();
 
         if (http !== null && url !== null){
           await this.setState({ mode: "ready" });
@@ -149,6 +150,7 @@ export class Item extends React.Component {
       <button
         className={this.props.className}
         onClick={() => this.callApi()}
+        callback={() => this.props.callback()}
         name={this.props.name}
         data={this.props.data}
         http={this.props.http}
