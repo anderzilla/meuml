@@ -1,52 +1,78 @@
 import React from "react";
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import axios from "axios";
+import Swal from "sweetalert2";
 import ReactLoading from "react-loading";
-import { Col, Row, Button } from "reactstrap";
-import Carton from "../../../components/Card";
+import { Card, CardBody, CardHeader, Col, Row, Button, FormGroup } from "reactstrap";
 import { Data } from "../../../containers/data";
-import { getToken } from '../../../services/auth';
+import { getToken } from "../../../services/auth";
 import fotoPadrao from "../../../assets/img/avatars/user.svg";
 import { DropDown, Item } from "./../../../components/buttons/ButtonGroup";
 
 function ListaContas() {
+  const timeHandler = async () => {
+    try {
+      const date = new Date();
+      const lastSync = await localStorage.getItem('LAST_SYNC');
+      if (lastSync !== null && lastSync !== undefined) {
+        const nowMinutes = await date.getMinutes();
+        const minutes = lastSync.getMinutes();
+        if (nowMinutes - minutes >= 15) return true
+        else return false;
+      } else {
+        const now = `${date.getHours()}:${date.getMinutes()}`
+        await localStorage.setItem('LAST_SYNC', now);
+        return true;
+      }
+    } catch (error) { console.log(error) }
+  }
+
   const syncAll = () => {
+    const shouldSync = timeHandler();
+    if (shouldSync === true) {
     axios
-    .get(
-      process.env.REACT_APP_API_URL + "/accounts/sync/all",
-      { headers: { Authorization: "Bearer " + getToken() } }
-    )
-    .then(res => {
-      if(res.data) {
+      .get(process.env.REACT_APP_API_URL + "/accounts/sync/all", {
+        headers: { Authorization: "Bearer " + getToken() }
+      })
+      .then(res => {
+        if (res.data) {
+          Swal.fire({
+            html: `<p>Constas Sincronizadas!</p>`,
+            type: "success",
+            showCloseButton: true
+          });
+        }
+      })
+      .catch(error => {
         Swal.fire({
-          html: `<p>Constas Sincronizadas!</p>`,
-          type: 'success',
+          html: "<p>Contas Sincronizadas!",
+          type: "success",
           showCloseButton: true
         });
-      }
-    })
-    .catch(error => {
-      Swal.fire({
-        html: '<p>Contas Sincronizadas!',
-        type: 'success',
-        showCloseButton: true
       });
+    } else Swal.fire({
+      title: 'Atenção!',
+      html: '<p>Suas contas já estão sincronizadas!',
+      type: 'warning',
+      showCloseButton: true
     });
-  }
+  };
 
   const addAcc = () => {
     Swal.fire({
-      type: 'warning',
-      title: 'Atenção!',
-      html: '<p>O sistema irá adicionar a conta do Mercado Livre que seu dispositivo está logado.</p>',
+      type: "warning",
+      title: "Atenção!",
+      html:
+        "<p>O sistema irá adicionar a conta do Mercado Livre que seu dispositivo está logado.</p>",
       showCancelButton: true,
       showConfirmButton: true,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Continuar'
-    }).then(response => {
-      if(response.value) this.props.history.push('/contas/adicionar');
-    }).catch(error => console.log(error));
-  }
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Continuar"
+    })
+      .then(response => {
+        if (response.value) this.props.history.push("/contas/adicionar");
+      })
+      .catch(error => console.log(error));
+  };
 
   return (
     <Data.Consumer>
@@ -85,51 +111,45 @@ function ListaContas() {
                     />
                   </div>
                 ) : (
-                  provider.state.accounts.map((acc, index) => {
-                    return (
-                      <Carton
-                        className="card-accent-primary"
-                        xs="12"
-                        sm="4"
-                        md="3"
-                        key={acc.id}
-                        header={
-                          <>
-                            <span id={acc.name + index}>{acc.name}</span>
-                            <div className="float-right">
-                              <DropDown className="vertical-button-group">
-                                <Item
-                                  className="dropdown-item"
-                                  http="put"
-                                  url={`/accounts/${acc.id}`}
-                                  ask="Informe o nome desajado"
-                                  callback={() => fetchAccounts()}
-                                >
-                                  Renomear
-                                </Item>
-                                <Item
-                                  className="dropdown-item"
-                                  http="get"
-                                  url={`/accounts/${acc.id}/sync`}
-                                >
-                                  Sincronizar
-                                </Item>
-                                <Item
-                                  className="dropdown-item"
-                                  callback={() => this.fetchAccounts()}
-                                  http="delete"
-                                  url={`/accounts/${acc.id}`}
-                                  ask={`Você tem certeza que deseja deletar a conta "${
-                                    acc.name
-                                  }"`}
-                                >
-                                  Excluir
-                                </Item>
-                              </DropDown>
-                            </div>
-                          </>
-                        }
-                      >
+                provider.state.accounts.map((acc, index) => {
+                  return (
+                    <Card
+                      className="card-accent-primary"
+                      xs="3"
+                      sm="3"
+                      key={acc.id}>
+                      <CardHeader>
+                        <span id={acc.name + index}>{acc.name}</span>
+                        <div className="float-right">
+                          <DropDown className="vertical-button-group">
+                            <Item
+                              className="dropdown-item"
+                              http="put"
+                              url={`/accounts/${acc.id}`}
+                              ask="Informe o nome desajado"
+                              callback={() => fetchAccounts()}
+                            >Renomear
+                            </Item>
+                            <Item
+                              className="dropdown-item"
+                              http="get"
+                              url={`/accounts/${acc.id}/sync`}
+                            >Sincronizar
+                            </Item>
+                            <Item
+                              className="dropdown-item"
+                              callback={() => fetchAccounts()}
+                              http="delete"
+                              url={`/accounts/${acc.id}`}
+                              ask={`Você tem certeza que deseja deletar a conta "${
+                                acc.name
+                              }"`}
+                            >Excluir
+                            </Item>
+                          </DropDown>
+                        </div>
+                      </CardHeader>
+                      <CardBody>
                         <div className="imgConta">
                           <img
                             src={
@@ -145,44 +165,37 @@ function ListaContas() {
                         <div
                           className="text-primary text-center nomeDuasLinhas"
                           title={acc.external_name}
-                        >
-                          {acc.external_name}
+                          >{acc.external_name}
                         </div>
                         <div className="text-left">
-                          <Row>
+                          <FormGroup>
                             <p className="labelCard mr-1">
                               <i className="fa fa-envelope" />
                               E-mail: {acc.external_data.email}
                             </p>
-                          </Row>
-                          <Row>
+                          </FormGroup>
+                          <FormGroup>
                             <p className="labelCard mr-1">
                               <i className="fa fa-user" />
                               Usuário: {acc.external_data.nickname}
                             </p>
-                          </Row>
+                          </FormGroup>
                         </div>
                         <Row>
-                          <Col md="6" sm="12">
+                          <FormGroup style={{float:'left', marginLeft:'26%'}}>
                             <h5 className="tituloVendas">Vendas</h5>
                             <h5 className="text-success valores">
-                              {
-                                acc.external_data.seller_reputation.metrics
-                                  .sales.completed
-                              }
+                              {acc.external_data.seller_reputation.metrics.sales.completed}
                             </h5>
-                          </Col>
-                          <Col md="6" sm="12">
+                          </FormGroup>
+                          <FormGroup style={{float:'right', marginLeft:'15%'}}>
                             <h5 className="tituloAnuncios">Anúncios</h5>
-                            <h5 className="text-success valores">
-                              {acc.total_advertisings}
-                            </h5>
-                          </Col>
+                            <h5 className="text-success valores">{acc.total_advertisings}</h5>
+                          </FormGroup>
                         </Row>
-                      </Carton>
-                    );
-                  })
-                )}
+                      </CardBody>
+                    </Card>
+                );}))}
               </Row>
             </div>
           </>
@@ -190,6 +203,6 @@ function ListaContas() {
       }}
     </Data.Consumer>
   );
-};
+}
 
 export default ListaContas;
