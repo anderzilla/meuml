@@ -2,55 +2,68 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import api from '../../../../services/api';
 import { Data } from '../../../../containers/data';
-import { Row } from 'reactstrap';
 import 'react-bootstrap-table/dist//react-bootstrap-table-all.min.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 export default function DataTable(props) {
-  const [selected, setSelected] = useState([]);
-
-  const deleteList = () => {
-    api.delete(`/blacklist/list/${selected}`)
-    .then(response => {
-      if (response.status === 200) {
-        Swal.fire({
-          html: '<p>Lista excluída com sucesso</p>',
-          type: 'success',
-          showConfirmButton: true
-        });
-        
-      } else {
-        Swal.fire({
-          html: '<p>Algo deu errado, tente novamente mais tarde.</p>',
-          type: 'warning',
-          showConfirmButton: true
-        });
-      }
-    }).catch(error => {
-      Swal.fire({
-        html: `<p>Algo deu errado, tente novamente mais tarde.</p>`,
-        type: 'warning',
-        showConfirmButton: true
-      });
+  const refresh = () => props.refresh();
+  const deleteList = props => {
+    Swal.fire({
+      title: 'Você tem certeza?',
+      html:`<p>Você deseja mesmo apagar a lista ${props.name}</p>`,
+      type: 'warning',
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Excluir lista',
+      cancelButtonText: 'Cancelar'
+    }).then(choice => {
+      if(choice.value) {
+        api.delete(`/blacklist/list/${props.id}`)
+          .then(response => {
+            if (response.status === 200) {
+              refresh();
+              Swal.fire({
+                html: '<p>Lista excluída com sucesso</p>',
+                type: 'success',
+                showConfirmButton: true
+              })
+            }
+            else {
+              Swal.fire({
+                html: '<p>Algo deu errado, atualize e tente mais uma vez.</p>',
+                type: 'warning',
+                showConfirmButton: true
+              });
+            }
+          }).catch(error => {
+            Swal.fire({
+              html: `<p>Algo deu errado, tente novamente mais tarde.</p>`,
+              type: 'warning',
+              showConfirmButton: true
+            });
+          });
+        }
     });
   }
 
-  const Checkbox = props => <input type="checkbox" onChange={setSelected(props.id)} checked={props.active} />
-  const CheckboxCell = (cell, row) => <Checkbox id={row.id} active={cell} />;
+  const DeleteButton = props => <button 
+    type="button"
+    className="btn btn-danger btn-sm"
+    onClick={()=>deleteList({ id: props.id, name: props.name })}
+    ><icon className="fa fa-trash" /> {props.name}
+  </button>
+  const Button = (cell, row) => <DeleteButton id={row.id} name={row.name} />;
   return(
     <Data.Consumer>
       {(provider) => {
         return (<>
-          <button
-            style={{marginBottom: '-58px'}}
-            className="btn btn-danger btn-sm mr-5"
-            onClick={() => deleteList()}><icon className="fa fa-trash"></icon></button>
           <BootstrapTable
             version="4"
             striped
             hover
             pagination
             search
+            searchPlaceholder="Procurar ..."
             data={props.blacklistLists}
             paginationSize={props.paginationSize}
             sortIndicator ={true}
@@ -60,17 +73,17 @@ export default function DataTable(props) {
             alwaysShowAllBtns ={false}
             withFirstAndLast ={false}
             >
-          <TableHeaderColumn dataField="id" dataSort>
+          <TableHeaderColumn isKey dataField="id" dataSort>
             Id
           </TableHeaderColumn>
-          <TableHeaderColumn isKey dataField="name">
+          <TableHeaderColumn dataField="name">
             Nome
           </TableHeaderColumn>
           <TableHeaderColumn dataField="description" dataSort>
             Descrição
           </TableHeaderColumn>
-          <TableHeaderColumn dataField="active" dataFormat={ CheckboxCell }>
-            Selecionar
+          <TableHeaderColumn dataField="delete" dataFormat={ Button }>
+            Deletar
           </TableHeaderColumn>
         </BootstrapTable></>);
       }}

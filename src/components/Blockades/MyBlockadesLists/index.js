@@ -28,18 +28,16 @@ export default function Main() {
         type: 'error',
         showCloseButton: true
       });
+    } finally {
+      setLoading(false);
     }
   }
   
-  if(loading === true) {
-    fetchBlockadesLists();
-    setLoading(false);
-  }
+  if(loading === true) fetchBlockadesLists();
   return (
     <DataContainer>
-      <Carton header={
-        <button className="btn btn-dark" onClick={()=> fetchBlockadesLists()}>Atualizar</button>}>
-        <DataTable blacklistLists={blacklistLists} paginationSize={paginationSize} />
+      <Carton header={''}>
+        <DataTable refresh={()=>fetchBlockadesLists()} blacklistLists={blacklistLists} paginationSize={paginationSize} />
       </Carton>
     </DataContainer>
   );
