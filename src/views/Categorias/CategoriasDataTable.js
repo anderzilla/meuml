@@ -13,16 +13,19 @@ import Swal from "sweetalert2";
 
 import Pagination from "react-js-pagination";
 import ReactLoading from "react-loading";
-import Moment from 'moment';
+import Moment from "moment";
 
 class CategoriasDataTable extends React.Component {
   constructor(props) {
     super(props);
+
     this.handlePageChange = this.handlePageChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
+
     this.compareBy.bind(this);
     this.sortBy.bind(this);
+
     this.state = {
       data: [],
       sizePerPage: 50,
@@ -39,7 +42,9 @@ class CategoriasDataTable extends React.Component {
       sortName: "id",
       sortOrder: "ASC"
     };
+
     this.getStorage();
+    // this.fetchCategorias();
   }
 
   isEmpty = obj => {
@@ -123,9 +128,11 @@ class CategoriasDataTable extends React.Component {
   }
 
   handleChange(event) {
-    let pesquisa = {};
+    var pesquisa = {};
     pesquisa = event.target.value;
-    this.setState({ filter: pesquisa });
+    this.setState({
+      filter: pesquisa
+    });
   }
 
   saveStorage(page) {
@@ -164,21 +171,35 @@ class CategoriasDataTable extends React.Component {
   sortBy(key) {
     var sortOrder_ = this.state.sortOrder;
 
-    if (sortOrder_ === "ASC") this.state.sortOrder = "DESC";
-    else this.state.sortOrder = "ASC";
+    if (sortOrder_ === "ASC") {
+      this.state.sortOrder = "DESC";
+    } else {
+      this.state.sortOrder = "ASC";
+    }
     this.state.sortName = key;
+    // this.setState({
+    //     sortName: key,
+    //     sortOrder: sortOrder_
+    // });
+
     var page = this.state.page;
+
     this.fetchCategorias(page);
     this.saveStorage(page);
   }
 
   render() {
     const { isLoading } = this.state.data;
+
     return (
       <div className="animated fadeIn">
         <Card>
           <CardHeader>
-            <h6 className={"labelAtualiza"}> Atualizado em {Moment(this.state.lastUpdate).format('DD/MM/YYYY HH:MM')} </h6>
+            <h6 className={"labelAtualiza"}>
+              {" "}
+              Atualizado em{" "}
+              {Moment(this.state.lastUpdate).format("DD/MM/YYYY HH:MM")}{" "}
+            </h6>
             <div className="input-group filtro">
               <Input
                 type={"text"}
