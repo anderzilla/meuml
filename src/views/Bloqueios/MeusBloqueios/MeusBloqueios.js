@@ -83,8 +83,6 @@ class MeusBloqueios extends Component {
           });
 
           if (res.data.meta.total > 0) {
-            //this.fetchBlacklist(res.data.data[0].id);
-
             if (res.data.meta.total === 1) {
               this.state.contas = res.data.data[0].id;
               this.fetchBlacklist(res.data.data[0].id,1);
@@ -261,13 +259,8 @@ class MeusBloqueios extends Component {
       isLoading,
       isLoadingAccounts,
       blacklist,
-      error,
       accounts,
-      selectedOption,
-      contas,
-      arrayValue,
-      contasMarcadas,
-      offset
+      arrayValue
     } = this.state;
     return (
       <div className="animated fadeIn">
@@ -343,8 +336,7 @@ class MeusBloqueios extends Component {
                       <div
                         role="alert"
                         className="alert alert-primary fade show "
-                      >
-                        Escolha uma conta para gerenciar os bloqueios!
+                        >Escolha uma conta para gerenciar os bloqueios!
                       </div>
                     </td>
                   </tr>

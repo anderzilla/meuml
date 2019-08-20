@@ -31,19 +31,13 @@ class ListaContas extends Component {
       fotoConta: fotoPadrao,
       noContas: true,
       statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('=')[1], 
-    };
-    this.openAuth = this.openAuth.bind(this);
-
-    
+    };    
   }
-  //motor do dropdown
   toggle(i) {
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return index === i ? !element : false;
     });
-    this.setState({
-      dropdownOpen: newArray
-    });
+    this.setState({ dropdownOpen: newArray });
   }
   componentDidMount() {
     this.fetchAccounts();
@@ -224,14 +218,6 @@ class ListaContas extends Component {
           cancelButtonText: "Fechar"
         });
       });
-  }
-
-  openAuth() {
-    window.open(
-      "#/contas/adicionar",
-      "SomeAuthentication",
-      "width=972,height=660,modal=yes,alwaysRaised=yes"
-    );
   }
 
   syncAll = () => {
