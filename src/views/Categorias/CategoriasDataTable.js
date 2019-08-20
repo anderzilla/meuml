@@ -14,6 +14,7 @@ import Swal from "sweetalert2";
 import Pagination from "react-js-pagination";
 import ReactLoading from "react-loading";
 import Moment from "moment";
+import timeConstructor from '../../services/timeHandler';
 
 class CategoriasDataTable extends React.Component {
   constructor(props) {
@@ -73,14 +74,18 @@ class CategoriasDataTable extends React.Component {
             data: 'nenhuma categoria localizada', totalSize: 0
           })
           else {
+            timeConstructor(res.data.meta.last_update).then(lastUpdate => {
+              const data = `${lastUpdate.dia}/${lastUpdate.mes}/${lastUpdate.ano} às ${lastUpdate.horas}:${lastUpdate.minutos}`
+              this.setState({ lastUpdate: data });
+            });
             this.setState({
               data: res.data.data,
               totalSize: total,
               sizePerPage: res.data.meta.limit,
               page: res.data.meta.page,
-              lastUpdate: res.data.meta.last_update,
               last_page: res.data.meta.last_page
             });
+            console.log(this.state.lastUpdate)
             this.saveStorage(res.data.meta.page);
             if (this.state.page >= this.state.last_page) {
               this.setState({
@@ -195,11 +200,7 @@ class CategoriasDataTable extends React.Component {
       <div className="animated fadeIn">
         <Card>
           <CardHeader>
-            <h6 className={"labelAtualiza"}>
-              {" "}
-              Atualizado em{" "}
-              {Moment(this.state.lastUpdate).format("DD/MM/YYYY HH:MM")}{" "}
-            </h6>
+            <h6 className={"labelAtualiza"}>Última atualização em {this.state.lastUpdate}</h6>
             <div className="input-group filtro">
               <Input
                 type={"text"}
