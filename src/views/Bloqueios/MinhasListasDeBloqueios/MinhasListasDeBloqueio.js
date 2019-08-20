@@ -1,32 +1,10 @@
 import React, { Component } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Table,
-  Form,
-  Label,
-  FormGroup,
-  Input,
-  Button,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Col,
-  Row
-} from "reactstrap";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { getToken } from "../../../auth";
+import { Card, CardBody, Button, } from "reactstrap";
 import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory, {
-  PaginationProvider,
-  PaginationListStandalone
-} from "react-bootstrap-table2-paginator";
-import ToolkitProvider from "react-bootstrap-table2-toolkit";
+import paginationFactory from "react-bootstrap-table2-paginator";
 
 class MinhasListasDeBloqueio extends Component {
   constructor(props) {
@@ -104,8 +82,8 @@ class MinhasListasDeBloqueio extends Component {
 
   fetchDeletarLista(id) {
     this.url = process.env.REACT_APP_API_URL + `/blacklist/list/` + id;
-    axios
-      .delete(this.url, { headers: { Authorization: "Bearer " + getToken() } })
+    console.log(this.url);
+    axios.delete(this.url, { headers: { Authorization: "Bearer " + getToken() } })
       .then(res => {
         if (res.status === 200) {
           Swal.fire({
@@ -141,6 +119,7 @@ class MinhasListasDeBloqueio extends Component {
     axios
       .get(this.url, { headers: { Authorization: "Bearer " + getToken() } })
       .then(res => {
+        console.log(res)
         if (res.status === 200) {
           this.setState({
             backlistList: res.data.data,
@@ -188,7 +167,6 @@ class MinhasListasDeBloqueio extends Component {
           }
         )
         .then(res => {
-          //console.log(res.data);
           const status = res.data.status;
           this.setState({ status });
           if (this.state.status === "success") {
@@ -228,73 +206,39 @@ class MinhasListasDeBloqueio extends Component {
   }
 
   render() {
-    const {
-      isLoading,
-      isLoadingAccounts,
-      isLoadingBlacklistList,
-      backlistList,
-      error,
-      accounts
-    } = this.state;
+    const { backlistList } = this.state;
     const columns = [
+      {
+        dataField: "id",
+        text: "ID",
+        sort: true
+      },
       {
         dataField: "name",
         text: "Nome da Lista",
         sort: true
       },
       {
-        dataField: "list_description",
+        dataField: "description",
         text: "Descrição",
         sort: true
       },
       {
-        dataField: "quantidade",
-        text: "Quantidade",
-        sort: true
-      },
-      {
         dataField: "df1",
+        text: "Deletar Lista",
         isDummyField: true,
-        text: " ",
         formatter: (cellContent, row) => {
           return (
             <Button
               onClick={() => this.fetchDeletarLista(row.id)}
-              className="btn btn-danger btn-small"
-            >
-              <i className="fa fa-trash" />
+              className="btn btn-danger btn-sm"
+              style={{float:'right', marginRight:'45%'}}
+              ><i className="fa fa-trash" />
             </Button>
           );
         }
       }
     ];
-
-    // {
-    //   dataField: 'df1',
-    //   isDummyField: true,
-    //   text: 'Action 1',
-    //   formatter: (cellContent, row) => {
-    //     if (row.inStock) {
-    //       return (
-    //         <h5>
-    //           <span className="label label-success"> Available</span>
-    //         </h5>
-    //       );
-    //     }
-    //     return (
-    //       <h5>
-    //         <span className="label label-danger"> Backordered</span>
-    //       </h5>
-    //     );
-    //   }
-    // },
-
-    // const customTotal = (from, to, size) => (
-    //     <span className="react-bootstrap-table-pagination-total">
-    //         Mostrando {from} em {to} de {size} resultados
-    //     </span>
-    // );
-
     const options = {
       hideSizePerPage: true,
       defaultSortName: "name",
@@ -304,13 +248,7 @@ class MinhasListasDeBloqueio extends Component {
       page: this.props.currentPage,
       onSizePerPageList: this.props.onSizePerPageList,
       totalSize: this.props.totalDataSize,
-      onPageChange: (page, sizePerPage) => {
-        // console.log('Page change!!!');
-        // console.log('Newest size per page:' + sizePerPage);
-        // console.log('Newest page:' + page);
-
-        this.props.onPageChange(page, sizePerPage);
-      }
+      onPageChange: (page, sizePerPage) => this.props.onPageChange(page, sizePerPage)
     };
     return (
       <div className="animated fadeIn">
@@ -318,7 +256,7 @@ class MinhasListasDeBloqueio extends Component {
           <CardBody>
             {this.state.nlistas === 0 ? (
               <div className="alert alert-info fade show">
-                Nenhma lista de bloqueio cadastrada
+                Nenhuma lista de bloqueio cadastrada
               </div>
             ) : (
               <BootstrapTable
@@ -328,7 +266,6 @@ class MinhasListasDeBloqueio extends Component {
                 striped
                 hover
                 condensed
-                //noDataIndication={<ReactLoading type={'spinningBubbles'} color={'#054785'} height={100} width={100} className='spinnerStyle' />}
                 pagination={paginationFactory(options)}
                 remote={true}
                 fetchInfo={{ dataTotalSize: this.props.totalDataSize }}

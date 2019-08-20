@@ -85,7 +85,6 @@ class CategoriasDataTable extends React.Component {
               page: res.data.meta.page,
               last_page: res.data.meta.last_page
             });
-            console.log(this.state.lastUpdate)
             this.saveStorage(res.data.meta.page);
             if (this.state.page >= this.state.last_page) {
               this.setState({
