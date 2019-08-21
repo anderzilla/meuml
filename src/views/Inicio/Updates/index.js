@@ -63,39 +63,39 @@ const IconWithTitle = props => {
 
 const Content = props => {
   if (props.info === 0)
-    return (
+    return (<>
       <p>
         Nesta nova versão teremos muito mais flexibilidade e agilidade para
         desenvolver novas ferramentas para você, vendedor.
       </p>
-    );
+    </>);
   else if (props.info === 1)
-    return (
+    return (<>
       <p>
         Para começar, aproveite para usar nossas ferramentas gratuitas, que em
         breve publicaremos novas funcionalidades!
-      </p>
-    );
+      </p><br/><br/>
+    </>);
   else if (props.info === 2)
-    return (
+    return (<>
       <p>
         A versão 2 do MeuML.com continua Multicontas, assim como já era na
         versão 1. Fique a vontade para adicionar quantas contas quiser!
       </p>
-    );
+    </>);
   else if (props.info === 3)
-    return (
+    return (<>
       <p>
         Acompanhe os pesos e dimensões de todas as categorias do MercadoLivre,
         de forma gratuita!
-      </p>
-    );
+      </p><br/><br/><br/>
+    </>);
   else if (props.info === 4)
-    return (
+    return (<>
       <p>
         Bloqueie compradores indesejados de forma simples e rápida, em várias
         contas ao mesmo tempo, de forma gratuita!
-      </p>
-    );
+      </p><br/><br/><br/><br/>
+    </>);
   else return <div />;
 };
