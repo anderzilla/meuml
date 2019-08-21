@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import timeConstructor from '../../../services/timeHandler';
 import {
   Card,
   CardBody,
@@ -30,6 +31,7 @@ class ListaContas extends Component {
       total: 0,
       fotoConta: fotoPadrao,
       noContas: true,
+      errorMessageExibition: false,
       statusMsg: !window.location.href.split('?')[1].split('=')[1]? 'success' : window.location.href.split('?')[1].split('=')[1], 
     };    
   }
@@ -220,28 +222,63 @@ class ListaContas extends Component {
       });
   }
 
-  syncAll = () => {
-    axios
-    .get(
-      process.env.REACT_APP_API_URL + "/accounts/sync/all",
-      { headers: { Authorization: "Bearer " + getToken() } }
-    )
-    .then(res => {
-      if(res.data) {
-        Swal.fire({
-          html: `<p>Constas Sincronizadas!</p>`,
-          type: 'success',
-          showCloseButton: true
-        });
+  shallSync = async () => {
+    try {
+      const item = await localStorage.getItem('LAST_SYNC');
+      if (item !== undefined && item !== null) {
+        const minutes = Number(`${item[3]}${item[4]}`);
+        const hours = Number(`${item[0]}${item[1]}`);
+        const now = new Date();
+        const nowMinutes = now.getMinutes();
+        const nowHours = now.getHours();
+        const equationA = nowMinutes - minutes;
+        if (equationA >= 15) return true
+        else {
+          if (nowHours === hours) return false;
+          else return true;
+        }
+      } else {
+        const date = new Date();
+        await localStorage.setItem('LAST_SYNC', `${date.getHours()}:${date.getMinutes()}`);
+        return true
       }
-    })
-    .catch(error => {
+    } catch (error) { console.log(error); }
+  }
+
+  syncAll = async () => {
+    const response = await this.shallSync();
+    if (response === true) {
+      axios
+      .get(
+        process.env.REACT_APP_API_URL + "/accounts/sync/all",
+        { headers: { Authorization: "Bearer " + getToken() } }
+      )
+      .then(res => {
+        if(res.data) {
+          Swal.fire({
+            html: `<p>Contas Sincronizadas!</p>`,
+            type: 'success',
+            showCloseButton: true
+          });
+        }
+      }).catch(error => {
+        if (error.message === 'Network Error') {
+          Swal.fire({
+            title: 'Erro!',
+            html: `<p>O servidor não está respondendo. Se o erro persistir, por favor, entre em contato com o suporte.</p>`,
+            type: 'error',
+            showCloseButton: true
+          });
+        }
+      });
+    } else {
       Swal.fire({
-        html: '<p>Contas Sincronizadas!',
-        type: 'success',
+        title: 'Atenção!',
+        html: '<p>Você sincronizou todas suas contas há pouco. Aguarde para sincronizar novamente.</p>',
+        type: 'warning',
         showCloseButton: true
       });
-    });
+    }
   }
 
   addAcc() {
@@ -266,9 +303,9 @@ class ListaContas extends Component {
           <Button style={{height:"37px"}} onClick={()=>this.addAcc()} className="btn btn-primary float-left mr-1 mb-3">
             <i className="fa fa-plus-circle"/> Adicionar Conta
           </Button>
-          <Button style={{height:"37px"}} onClick={()=> this.syncAll()} className="btn btn-success">
-          <i className="fa fa-check-circle" /> Sincronizar Tudo
-          </Button>
+          {/* <Button style={{height:"37px"}} onClick={()=> this.syncAll()} className="btn btn-success">
+            <i className="fa fa-check-circle" /> Sincronizar Tudo
+          </Button> */}
         </Row>
         <Row>
           {!isLoading ? (
@@ -331,21 +368,17 @@ class ListaContas extends Component {
                         <div
                           className="text-primary text-center nomeDuasLinhas"
                           title={c.external_name}
-                        >
-                          {c.external_name}
+                          >{c.external_name}
                         </div>
                         <div className="text-left">
                           <p className="labelCard">
                             <i className="fa fa-envelope" /> E-mail:<br></br>
                             {c.external_data.email}
                           </p>
-                          
-                         
                           <p className="labelCard">
                             <i className="fa fa-user" /> Usuário:<br></br>
                             {c.external_data.nickname}
                           </p>
-                          
                         </div>
                       </CardBody>
                       <CardFooter>
@@ -353,12 +386,10 @@ class ListaContas extends Component {
                           <Col >
                             <h5 className="tituloVendas">Vendas</h5>
                             <h5 className="text-success valores">
-                              {
-                                c.total_orders
-                              }
+                              {c.total_orders}
                             </h5>
                           </Col>
-                          <Col >
+                          <Col>
                             <h5 className="tituloAnuncios">Anúncios</h5>
                             <h5 className="text-success valores">
                               {c.total_advertisings}
