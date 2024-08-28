@@ -99,7 +99,7 @@
   "devDependencies": {
     "mutationobserver-shim": "^0.3.3",
     "react-scripts": "^3.0.1",
-    "webpack": "4.29.6"
+    "webpack": "5.94.0"
   },
   "scripts": {
     "start": "react-scripts start",
